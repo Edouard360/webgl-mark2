@@ -21,7 +21,9 @@ var getImage = function(url){
 }
 
 var getImages = function(list){
-  return Promise.all(list.map( url => getImage("./data/img/" + url ) ));
+  return Promise.all(list.map(
+    function(url){return getImage("./data/img/" + url )}
+    ));
 }
   
 var main=function(data) {
@@ -29,6 +31,7 @@ var main=function(data) {
   canvas=document.getElementById("canvas_webgl");
   container = document.createElement( 'div' );
   document.body.appendChild( container );
+
   
 
   try {
@@ -38,34 +41,41 @@ var main=function(data) {
     return false;
   }
 
+  //(GL.getSupportedExtensions()).map((ext)=>{GL.getExtension(ext); return;})
+  GL.getExtension("OES_element_index_uint");
+
   GL.disable(GL.DEPTH_TEST);
   GL.disable(GL.CULL_FACE);
   GL.enable(GL.BLEND);
   GL.blendFunc(GL.SRC_ALPHA, GL.ONE_MINUS_SRC_ALPHA);
+    
+  canvas.width = 600;
+  canvas.height = 600;
 
    // glGetIntegerv(GL_BLEND_SRC_RGB, &blendFuncSrc_);
    // glGetIntegerv(GL_BLEND_DST_RGB, &blendFuncDst_);
    // glBlendFunc(blendFuncSrc_, blendFuncDst_);
    //To be remembered for the cleanup !!
 
- // GL.frontFace(GL.CW);
+   GL.frontFace(GL.CW);
 
   var jellyfish = new Jellyfish(GL,data);
-  var gradient = new Gradient(GL,data.gradient);
+  //var gradient = new Gradient(GL,data.gradient);
 
   var drawing = function(){
     GL.viewport(0, 0, canvas.width, canvas.height);
-    gradient.render();
+    GL.clearColor(1.,1.,1.,1.);
+    //gradient.render();
     jellyfish.render();
   }
   
   function onResize () {
-    canvas.width = canvas.clientWidth
-    canvas.height = canvas.clientHeight;
-    jellyfish.updateViewport(canvas);
+    // canvas.width = canvas.clientWidth
+    // canvas.height = canvas.clientHeight;
+    //jellyfish.updateViewport(canvas);
   }
   window.addEventListener("resize", onResize, false);
-  onResize();
+  //onResize();
   
   var ref = 0;
 
@@ -81,11 +91,11 @@ var main=function(data) {
 var promise_shader_vertex_source = getXHR('./shaders/jellyfish.vert')
 var promise_shader_fragment_source = getXHR('./shaders/jellyfish.frag')
 
-var jellyfish_vertices = getXHR('./data/jellyfish_vertices.json').then(JSON.parse)
-var jellyfish_normals = getXHR('./data/jellyfish_normals.json').then(JSON.parse)
+var jellyfish_vertices = getXHR('./data/jellyfish_vertices_tmp.json').then(JSON.parse)
+var jellyfish_normals = getXHR('./data/jellyfish_normals_tmp.json').then(JSON.parse)
 var jellyfish_texture = getXHR('./data/jellyfish_texture.json').then(JSON.parse)
 var jellyfish_colors = getXHR('./data/jellyfish_colors.json').then(JSON.parse)
-var jellyfish_ifaces = getXHR('./data/jellyfish_ifaces.json').then(JSON.parse)
+var jellyfish_ifaces = getXHR('./data/jellyfish_ifaces_tmp.json').then(JSON.parse)
 
 var jellyfish_list = getXHR('./data/img/list.json').then(JSON.parse).then(getImages)
 

@@ -4,92 +4,117 @@ window.Jellyfish = (function(){
 
     var Jellyfish = function (GL, data) {
         this.GL = GL;
+        this.viewport = {x:600,y:600};
+        console.log(data);
 
+/*
         this.program = new WGLUProgram(GL);
         this.program.attachShaderSource(data.shaders.VS, GL.VERTEX_SHADER);
         this.program.attachShaderSource(data.shaders.FS, GL.FRAGMENT_SHADER);
-
         this.program.bindAttribLocation({
             position:0,
-            normals:1,
-            colors:2,
-            texture:3
+            normals:1
+            //colors:2,
+            //texture:3
         });
-
         this.program.link();
 
+*/
+        var  vertexShader = GL.createShader(GL.VERTEX_SHADER);
+        GL.shaderSource(vertexShader, data.shaders.VS);
+        GL.compileShader(vertexShader);
+
+        var  fragmentShader = GL.createShader(GL.FRAGMENT_SHADER);
+        GL.shaderSource(fragmentShader, data.shaders.FS);
+        GL.compileShader(fragmentShader);
+
+        shaderProgram = GL.createProgram();
+        GL.attachShader(shaderProgram, vertexShader);
+        GL.attachShader(shaderProgram, fragmentShader);
+        GL.linkProgram(shaderProgram);
+
+        this.program = shaderProgram;
+
         this.createAndFillBuffer(data.jellyfish);
-        this.prepareTextures(data.jellyfish.images);
-        this.setUniforms();
+        
+        //this.prepareTextures(data.jellyfish.images);
+        //this.setUniforms();
 
-        this.indexcount = data.jellyfish.faces.length
-
-        this.countLoop=0;
+        this.indexcount = 3;//data.jellyfish.faces.length;
     };
 
     Jellyfish.prototype.createAndFillBuffer = function(data){
 
         //WILL NEED TO BE ENABLED
-        this.verticesBuffer= GL.createBuffer ();
+        this.verticesBuffer= GL.createBuffer();
         GL.bindBuffer(GL.ARRAY_BUFFER, this.verticesBuffer);
-        GL.bufferData(GL.ARRAY_BUFFER,new Float32Array(data.vertices),GL.STATIC_DRAW);  
+        GL.bufferData(GL.ARRAY_BUFFER,new Float32Array(data.vertices),GL.STATIC_DRAW);
 
-        this.textureBuffer= GL.createBuffer();
-        GL.bindBuffer(GL.ARRAY_BUFFER,this.textureBuffer);
-        GL.bufferData(GL.ARRAY_BUFFER,new Float32Array(data.texture),GL.STATIC_DRAW);
+        this.vertexPositionAttribute = GL.getAttribLocation(this.program, "aVertexPosition");  
+        GL.enableVertexAttribArray(this.vertexPositionAttribute);
 
-        this.colorsBuffer= GL.createBuffer ();
-        GL.bindBuffer(GL.ARRAY_BUFFER, this.colorsBuffer);
-        GL.bufferData(GL.ARRAY_BUFFER,new Float32Array(data.colors),GL.STATIC_DRAW);  
-
-        this.normalsBuffer= GL.createBuffer();
+        this.normalsBuffer = GL.createBuffer();
         GL.bindBuffer(GL.ARRAY_BUFFER,this.normalsBuffer);
         GL.bufferData(GL.ARRAY_BUFFER,new Float32Array(data.normals),GL.STATIC_DRAW);
+
+        this.vertexNormalAttribute = GL.getAttribLocation(this.program, "aVertexNormal");
+        GL.enableVertexAttribArray(this.vertexNormalAttribute);
+
+        //this.textureBuffer= GL.createBuffer();
+        //GL.bindBuffer(GL.ARRAY_BUFFER,this.textureBuffer);
+        //GL.bufferData(GL.ARRAY_BUFFER,new Float32Array(data.texture),GL.STATIC_DRAW);
+
+        //this.colorsBuffer= GL.createBuffer ();
+        //GL.bindBuffer(GL.ARRAY_BUFFER, this.colorsBuffer);
+        //GL.bufferData(GL.ARRAY_BUFFER,new Float32Array(data.colors),GL.STATIC_DRAW);  
+
 
         //WILL NOT NEED TO BE ENABLED
         this.indexBuffer= GL.createBuffer();
         GL.bindBuffer(GL.ELEMENT_ARRAY_BUFFER, this.indexBuffer);
-        GL.bufferData(GL.ELEMENT_ARRAY_BUFFER, new Uint16Array(data.faces), GL.STATIC_DRAW);
-
-        GL.enableVertexAttribArray(this.program.attrib.position);
-        GL.enableVertexAttribArray(this.program.attrib.normals);
-        GL.enableVertexAttribArray(this.program.attrib.colors);
-        GL.enableVertexAttribArray(this.program.attrib.texture);
+        GL.bufferData(GL.ELEMENT_ARRAY_BUFFER, new Uint32Array(data.faces), GL.STATIC_DRAW);
+        
+       // GL.enableVertexAttribArray(this.program.attrib.colors);
+       // GL.enableVertexAttribArray(this.program.attrib.texture);
     };
 
     Jellyfish.prototype.bindBuffers = function(){
         GL.bindBuffer(GL.ARRAY_BUFFER, this.verticesBuffer);
-        GL.vertexAttribPointer(this.program.attrib.position, 
+        GL.vertexAttribPointer(this.vertexPositionAttribute, 
             3,
             GL.FLOAT, 
-            false,
-            Float32Array.BYTES_PER_ELEMENT*(3),
+            GL.FALSE,
+            Float32Array.BYTES_PER_ELEMENT*3,
             0
-            );
-        GL.bindBuffer(GL.ARRAY_BUFFER, this.textureBuffer);
-        GL.vertexAttribPointer(this.program.attrib.texture, 
-            3, 
-            GL.FLOAT, 
-            false, 
-            Float32Array.BYTES_PER_ELEMENT*(3),
-            0 
-            );
-        GL.bindBuffer(GL.ARRAY_BUFFER, this.colorsBuffer);
-        GL.vertexAttribPointer(this.program.attrib.colors, 
-            3, 
-            GL.FLOAT, 
-            false, 
-            Float32Array.BYTES_PER_ELEMENT*(3),
-            0 
-            );
+            );   
+
         GL.bindBuffer(GL.ARRAY_BUFFER, this.normalsBuffer);
-        GL.vertexAttribPointer(this.program.attrib.normals, 
-            3, 
-            GL.FLOAT, 
-            false, 
-            Float32Array.BYTES_PER_ELEMENT*(3),
-            0 
-            );
+        GL.vertexAttribPointer(this.vertexNormalAttribute, 
+             3, 
+             GL.FLOAT, 
+             GL.FALSE, 
+            Float32Array.BYTES_PER_ELEMENT*3,
+             0 
+             );
+
+        
+        // GL.bindBuffer(GL.ARRAY_BUFFER, this.textureBuffer);
+        // GL.vertexAttribPointer(this.program.attrib.texture, 
+        //     3, 
+        //     GL.FLOAT, 
+        //     false, 
+        //     Float32Array.BYTES_PER_ELEMENT*(3),
+        //     0 
+        //     );
+        // GL.bindBuffer(GL.ARRAY_BUFFER, this.colorsBuffer);
+        // GL.vertexAttribPointer(this.program.attrib.colors, 
+        //     3, 
+        //     GL.FLOAT, 
+        //     false, 
+        //     Float32Array.BYTES_PER_ELEMENT*(3),
+        //     0 
+        //     );
+      
     }; 
 
     Jellyfish.prototype.prepareTextures = function(images){
@@ -122,7 +147,7 @@ window.Jellyfish = (function(){
         this.lastUpdateTime = 0;
 
         this.lastUpdateTime = (new Date()).getTime();
-        this.uCurrentTime = (this.lastUpdateTime  % 100000000.) / 1000.0;
+        this.uCurrentTime = 0 * (this.lastUpdateTime  % 100000000.) / 1000.0;
         this.whichCaustic = Math.floor((this.uCurrentTime * 30) % 32) + 1;
 
     };
@@ -148,57 +173,54 @@ window.Jellyfish = (function(){
     };
 
     Jellyfish.prototype.updateTime = function(){
-        var now = (new Date()).getTime(); // We are here in ms
-        var elapsedTime = (now - this.lastUpdateTime);
-        this.rotation += (2.0 * elapsedTime) / 1000.0;
-        this.uCurrentTime = (now % 100000000) / 1000.0;
-        this.whichCaustic = Math.floor((this.uCurrentTime * 30) % 32) + 1;
-        this.lastUpdateTime = now;
+        // var now = (new Date()).getTime(); // We are here in ms
+        // var elapsedTime = (now - this.lastUpdateTime);
+        // this.rotation += (2.0 * elapsedTime) / 1000.0;
+        // this.uCurrentTime = (now % 100000000) / 1000.0;
+        // this.whichCaustic = Math.floor((this.uCurrentTime * 30) % 32) + 1;
+        // this.lastUpdateTime = now;
     };
 
     Jellyfish.prototype.render = function(){
         var GL = this.GL;
-        var program = this.program;      
-        this.updateUniforms();
-        this.bindBuffers();
+        var program = this.program; 
 
-        if(this.countLoop++<8){
-            console.log("Rotation : ",this.rotation,"\n")
-            console.log("Last update time: ",this.lastUpdateTime, "\n")
-            console.log("Current time: ",this.uCurrentTime, "\n \n") //between 0 and 10,000
-        }
+        //this.updateUniforms();
+        //this.bindBuffers();
 
-        program.use();
+        //program.use();
+        GL.useProgram(program);
 
         // 1 - Instanciate and bind uniforms
         // 4fv means float vector: vector has to be declared btw []
         // false is only for matrices and is about if need to transpose
 
-        GL.uniformMatrix4fv(program.uniform.uWorld, false, this.world);
-        GL.uniformMatrix4fv(program.uniform.uWorldViewProj, false, this.worldViewProjection);
-        GL.uniformMatrix4fv(program.uniform.uWorldInvTranspose, false, this.worldInverseTranspose);
-        GL.uniform3fv(program.uniform.uLightPos, this.uLightPos);
-        GL.uniform1f(program.uniform.uLightRadius, this.uLightRadius);
-        GL.uniform4fv(program.uniform.uLightCol, this.uLightCol);
-        GL.uniform4fv(program.uniform.uAmbientCol, this.uAmbientCol); 
-        GL.uniform4fv(program.uniform.uFresnelCol, this.uFresnelCol);
-        GL.uniform1f(program.uniform.uFresnelPower, this.uFresnelPower);
-        GL.uniform1f(program.uniform.uCurrentTime, this.uCurrentTime);
+        // GL.uniformMatrix4fv(program.uniform.uWorld, false, this.world);
+        // GL.uniformMatrix4fv(program.uniform.uWorldViewProj, false, this.worldViewProjection);
+        // GL.uniformMatrix4fv(program.uniform.uWorldInvTranspose, false, this.worldInverseTranspose);
+        // GL.uniform3fv(program.uniform.uLightPos, this.uLightPos);
+        // GL.uniform1f(program.uniform.uLightRadius, this.uLightRadius);
+        // GL.uniform4fv(program.uniform.uLightCol, this.uLightCol);
+        // GL.uniform4fv(program.uniform.uAmbientCol, this.uAmbientCol); 
+        // GL.uniform4fv(program.uniform.uFresnelCol, this.uFresnelCol);
+        // GL.uniform1f(program.uniform.uFresnelPower, this.uFresnelPower);
+        // GL.uniform1f(program.uniform.uCurrentTime, this.uCurrentTime);
 
-        // 2 - Bind texture
+        // // 2 - Bind texture
 
-        GL.uniform1i(this.program.uniform.uSampler, 0);
-        GL.uniform1i(this.program.uniform.uSampler1, 1);
+        // GL.uniform1i(this.program.uniform.uSampler, 0);
+        // GL.uniform1i(this.program.uniform.uSampler1, 1);
 
-        GL.activeTexture(GL.TEXTURE0);
-        GL.bindTexture(GL.TEXTURE_2D,this.textures[0]);
+        // GL.activeTexture(GL.TEXTURE0);
+        // GL.bindTexture(GL.TEXTURE_2D,this.textures[0]);
         
-        GL.activeTexture(GL.TEXTURE1);
-        GL.bindTexture(GL.TEXTURE_2D, this.textures[this.whichCaustic]);
+        // GL.activeTexture(GL.TEXTURE1);
+        // GL.bindTexture(GL.TEXTURE_2D, this.textures[0]);
 
-        // 3 - Draw elements    
+        // 3 - Draw elements   
 
-        GL.drawElements(GL.TRIANGLES, this.indexcount, GL.UNSIGNED_SHORT, 0);
+        GL.drawElements(GL.TRIANGLES, this.indexcount, GL.UNSIGNED_INT, 0);
+        //GL.drawArrays(GL.LINE_STRIP, 0, 3);
     };
 
     return Jellyfish;
