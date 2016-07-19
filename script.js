@@ -67,7 +67,6 @@ var main=function(data) {
   window.addEventListener("resize", onResize, false);
   onResize();
   
-
   var ref = 0;
 
   var animate=function() {

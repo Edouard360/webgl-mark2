@@ -23,6 +23,8 @@ window.Jellyfish = (function(){
         this.setUniforms();
 
         this.indexcount = data.jellyfish.faces.length
+
+        this.countLoop=0;
     };
 
     Jellyfish.prototype.createAndFillBuffer = function(data){
@@ -121,7 +123,6 @@ window.Jellyfish = (function(){
 
         this.lastUpdateTime = (new Date()).getTime();
         this.uCurrentTime = (this.lastUpdateTime  % 100000000.) / 1000.0;
-        console.log(this.lastUpdateTime, " ",this.uCurrentTime)
         this.whichCaustic = Math.floor((this.uCurrentTime * 30) % 32) + 1;
 
     };
@@ -130,12 +131,12 @@ window.Jellyfish = (function(){
         this.updateTime();
         this.world = mat4.create();
         mat4.translate(this.world,this.world,   [0.0, 5.0, -75.0]);
-        mat4.rotate(this.world,this.world,      Math.sin(this.rotation / 10.0) * 30.0,   [0.0, 1.0, 0.0]);
-        mat4.rotate(this.world,this.world,      Math.sin(this.rotation / 20.0) * 30.0,   [1.0, 0.0, 0.0]);
+        mat4.rotate(this.world,this.world,      glMatrix.toRadian(Math.sin(this.rotation / 10.0) * 30.0),   [0.0, 1.0, 0.0]);
+        mat4.rotate(this.world,this.world,      glMatrix.toRadian(Math.sin(this.rotation / 20.0) * 30.0),   [1.0, 0.0, 0.0]);
         mat4.scale(this.world,this.world,       [5.0, 5.0, 5.0]);
-        mat4.translate(this.world,this.world,   [0.0, Math.sin(this.rotation / 10.0) * 2.5, 0.0])
+        mat4.translate(this.world,this.world,   [0.0, glMatrix.toRadian(Math.sin(this.rotation / 10.0) * 2.5), 0.0])
 
-        mat4.perspective(this.worldViewProjection, 30.0, this.viewport.x/this.viewport.y, 20.0, 200.0);
+        mat4.perspective(this.worldViewProjection, glMatrix.toRadian(30.0), this.viewport.x/this.viewport.y, 20.0,120.0);
         mat4.multiply(this.worldViewProjection,this.worldViewProjection, this.world);
 
         mat4.invert(this.worldInverseTranspose, this.world);
@@ -160,6 +161,12 @@ window.Jellyfish = (function(){
         var program = this.program;      
         this.updateUniforms();
         this.bindBuffers();
+
+        if(this.countLoop++<8){
+            console.log("Rotation : ",this.rotation,"\n")
+            console.log("Last update time: ",this.lastUpdateTime, "\n")
+            console.log("Current time: ",this.uCurrentTime, "\n \n") //between 0 and 10,000
+        }
 
         program.use();
 
