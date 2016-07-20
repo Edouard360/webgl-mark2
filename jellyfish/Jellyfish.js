@@ -111,6 +111,7 @@ window.Jellyfish = (function(){
         this.textures = images.map(function(img,i){
             texture = GL.createTexture();
             GL.bindTexture(GL.TEXTURE_2D, this.texture);
+            GL.pixelStorei(GL.UNPACK_FLIP_Y_WEBGL, true);
             GL.texParameteri(GL.TEXTURE_2D,GL.TEXTURE_WRAP_S,(i>0?GL.REPEAT:GL.CLAMP_TO_EDGE));
             GL.texParameteri(GL.TEXTURE_2D,GL.TEXTURE_WRAP_T,(i>0?GL.REPEAT:GL.CLAMP_TO_EDGE));
             GL.texParameteri(GL.TEXTURE_2D,GL.TEXTURE_MIN_FILTER,GL.LINEAR);
@@ -160,7 +161,7 @@ window.Jellyfish = (function(){
     };
 
     Jellyfish.prototype.updateUniforms = function(){
-        //this.updateTime();
+        this.updateTime();
 
         this.uWorld = mat4.create();
         mat4.translate(this.uWorld,this.uWorld,   [0.0, 5.0, -75.0]);

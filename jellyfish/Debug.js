@@ -61,6 +61,8 @@ window.Debug = (function(){
 
     Debug.prototype.prepareTextures = function(images){
         this.textures = images.map(function(img,i){
+            GL.pixelStorei(GL.UNPACK_FLIP_Y_WEBGL, true);
+
             texture = GL.createTexture();
             GL.bindTexture(GL.TEXTURE_2D, this.texture);
             GL.texParameteri(GL.TEXTURE_2D,GL.TEXTURE_WRAP_S,(i>0?GL.REPEAT:GL.CLAMP_TO_EDGE));
