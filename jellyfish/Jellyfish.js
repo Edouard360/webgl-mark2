@@ -37,8 +37,10 @@ window.Jellyfish = (function(){
         }
 
         this.program = shaderProgram;
-
         this.createAndFillBuffers(data.jellyfish);
+        this.prepareTextures(data.jellyfish.images);
+        this.getUniformLocation(this.program);
+        this.setUniforms();
 
         this.indexcount = data.jellyfish.faces.length;
     };
@@ -59,7 +61,7 @@ window.Jellyfish = (function(){
 
         this.vertexNormalAttribute = GL.getAttribLocation(this.program, "aVertexNormal");
         GL.enableVertexAttribArray(this.vertexNormalAttribute);
-
+        
         this.colorsBuffer = GL.createBuffer();
         GL.bindBuffer(GL.ARRAY_BUFFER,this.colorsBuffer);
         GL.bufferData(GL.ARRAY_BUFFER,new Float32Array(data.colors),GL.STATIC_DRAW);
@@ -73,9 +75,7 @@ window.Jellyfish = (function(){
 
         this.vertexTextureAttribute = GL.getAttribLocation(this.program, "aTextureCoord");
         GL.enableVertexAttribArray(this.vertexTextureAttribute);
-
-
-
+        
         //WILL NOT NEED TO BE ENABLED
         this.indexBuffer= GL.createBuffer();
         GL.bindBuffer(GL.ELEMENT_ARRAY_BUFFER, this.indexBuffer);
@@ -113,6 +113,24 @@ window.Jellyfish = (function(){
             return texture;
         });
     };
+
+    Jellyfish.prototype.getUniformLocation = function(program){
+        program.uniform = {
+            uWorld:GL.getUniformLocation(program, "uWorld"),
+            uWorldViewProj:GL.getUniformLocation(program, "uWorldViewProj"),
+            uWorldInvTranspose:GL.getUniformLocation(program, "uWorldInvTranspose"),
+            uLightPos:GL.getUniformLocation(program, "uLightPos"),
+            uLightRadius:GL.getUniformLocation(program, "uLightRadius"),
+            uLightCol:GL.getUniformLocation(program, "uLightCol"),
+            uAmbientCol:GL.getUniformLocation(program, "uAmbientCol"),
+            uFresnelCol:GL.getUniformLocation(program, "uFresnelCol"),
+            uFresnelPower:GL.getUniformLocation(program, "uFresnelPower"),
+            uCurrentTime:GL.getUniformLocation(program, "uCurrentTime"),
+
+            uSampler:GL.getUniformLocation(program, "uSampler"),
+            uSampler1:GL.getUniformLocation(program, "uSampler1")
+        }
+    }
 
     Jellyfish.prototype.setUniforms = function(){
         this.world = mat4.create();
@@ -155,25 +173,47 @@ window.Jellyfish = (function(){
     };
 
     Jellyfish.prototype.updateTime = function(){
-        // var now = (new Date()).getTime(); // We are here in ms
-        // var elapsedTime = (now - this.lastUpdateTime);
-        // this.rotation += (2.0 * elapsedTime) / 1000.0;
-        // this.uCurrentTime = (now % 100000000) / 1000.0;
-        // this.whichCaustic = Math.floor((this.uCurrentTime * 30) % 32) + 1;
-        // this.lastUpdateTime = now;
+        var now = (new Date()).getTime(); // We are here in ms
+        var elapsedTime = (now - this.lastUpdateTime);
+        this.rotation += (2.0 * elapsedTime) / 1000.0;
+        this.uCurrentTime = (now % 100000000) / 1000.0;
+        this.whichCaustic = Math.floor((this.uCurrentTime * 30) % 32) + 1;
+        this.lastUpdateTime = now;
     };
+
+    Jellyfish.prototype.bindUniforms = function(program){
+        GL.uniformMatrix4fv(program.uniform.uWorld, false, this.world);
+        GL.uniformMatrix4fv(program.uniform.uWorldViewProj, false, this.worldViewProjection);
+        GL.uniformMatrix4fv(program.uniform.uWorldInvTranspose, false, this.worldInverseTranspose);
+        GL.uniform3fv(program.uniform.uLightPos, this.uLightPos);
+        GL.uniform1f(program.uniform.uLightRadius, this.uLightRadius);
+        GL.uniform4fv(program.uniform.uLightCol, this.uLightCol);
+        GL.uniform4fv(program.uniform.uAmbientCol, this.uAmbientCol); 
+        GL.uniform4fv(program.uniform.uFresnelCol, this.uFresnelCol);
+        GL.uniform1f(program.uniform.uFresnelPower, this.uFresnelPower);
+        GL.uniform1f(program.uniform.uCurrentTime, this.uCurrentTime);
+
+        // 2 - Bind texture
+
+        GL.uniform1i(this.program.uniform.uSampler, 0);
+        GL.uniform1i(this.program.uniform.uSampler1, 1);
+
+        GL.activeTexture(GL.TEXTURE0);
+        GL.bindTexture(GL.TEXTURE_2D,this.textures[0]);
+        
+        GL.activeTexture(GL.TEXTURE1);
+        GL.bindTexture(GL.TEXTURE_2D, this.textures[this.whichCaustic]);
+    } 
 
     Jellyfish.prototype.render = function(){
         var GL = this.GL;
         var program = this.program; 
         this.bufferVertexAttributes();
 
-        //this.updateUniforms();
-        
-
-        //program.use();
-
+        this.updateUniforms();
         GL.useProgram(program);
+        this.bindUniforms(program);
+
         GL.drawElements(GL.TRIANGLES, this.indexcount, GL.UNSIGNED_INT, 0);
     };
 

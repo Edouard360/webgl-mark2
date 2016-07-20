@@ -19,14 +19,16 @@ varying vec4 vWorld;
 varying vec3 vDiffuse;
 varying vec3 vAmbient;
 varying vec3 vFresnel;
-varying vec3 vColor;
+
+//varying vec3 vColor;
   
 void main(void)
 { 
+/*    
     vColor = normalize(aVertexNormal);
     gl_Position = vec4(aVertexPosition, 1.0);
+*/
 
-/*
     //Vertex Animation
     float speed = uCurrentTime / 15.0;
     float offset = smoothstep(0.0, 1.0, max(0.0, -aVertexPosition.y-0.8) / 10.0);
@@ -58,7 +60,7 @@ void main(void)
 
     // texcoord
     vTextureCoord = aTextureCoord.xy;
-*/
+
 
 
 }
