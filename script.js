@@ -98,13 +98,16 @@ var array_promise = [
   jellyfish_ifaces,
   jellyfish_list,
   getXHR('./shaders/gradient.vert'),
-  getXHR('./shaders/gradient.frag')
+  getXHR('./shaders/gradient.frag'),
+  getXHR('./shaders/debug.vert'),
+  getXHR('./shaders/debug.frag')
 ];
 
 Promise.all(array_promise).then(function(values){
     main({
       shaders:{VS:values[0],FS:values[1]},
       gradient:{VS:values[8],FS:values[9]},
+      debug:{VS:values[10],FS:values[11]},
       jellyfish:{vertices:values[2],normals:values[3],texture:values[4],colors:values[5],faces:values[6],images:values[7]}
     });
 });

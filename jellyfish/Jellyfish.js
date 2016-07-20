@@ -140,9 +140,9 @@ window.Jellyfish = (function(){
     }
 
     Jellyfish.prototype.setUniforms = function(){
-        this.world = mat4.create();
-        this.worldViewProjection = mat4.create();
-        this.worldInverseTranspose = mat4.create();
+        this.uWorld = mat4.create();
+        this.uWorldViewProj = mat4.create();
+        this.uWorldInvTranspose = mat4.create();
         this.uLightPos = new Float32Array([10.0, 40.0, -60.0]);
         this.uLightRadius = 200.0;
         this.uLightCol = vec4.fromValues(0.8, 1.3, 1.1, 1.0);
@@ -160,19 +160,21 @@ window.Jellyfish = (function(){
     };
 
     Jellyfish.prototype.updateUniforms = function(){
-        this.updateTime();
-        this.world = mat4.create();
-        mat4.translate(this.world,this.world,   [0.0, 5.0, -75.0]);
-        mat4.rotate(this.world,this.world,      glMatrix.toRadian(Math.sin(this.rotation / 10.0) * 30.0),   [0.0, 1.0, 0.0]);
-        mat4.rotate(this.world,this.world,      glMatrix.toRadian(Math.sin(this.rotation / 20.0) * 30.0),   [1.0, 0.0, 0.0]);
-        mat4.scale(this.world,this.world,       [5.0, 5.0, 5.0]);
-        mat4.translate(this.world,this.world,   [0.0, glMatrix.toRadian(Math.sin(this.rotation / 10.0) * 2.5), 0.0])
+        //this.updateTime();
 
-        mat4.perspective(this.worldViewProjection, glMatrix.toRadian(30.0), this.viewport.x/this.viewport.y, 20.0,120.0);
-        mat4.multiply(this.worldViewProjection,this.worldViewProjection, this.world);
+        this.uWorld = mat4.create();
+        mat4.translate(this.uWorld,this.uWorld,   [0.0, 5.0, -75.0]);
+        mat4.rotate(this.uWorld,this.uWorld,      glMatrix.toRadian(Math.sin(this.rotation / 10.0) * 30.0),   [0.0, 1.0, 0.0]);
+        mat4.rotate(this.uWorld,this.uWorld,      glMatrix.toRadian(Math.sin(this.rotation / 20.0) * 30.0),   [1.0, 0.0, 0.0]);
+        mat4.scale(this.uWorld,this.uWorld,       [5.0, 5.0, 5.0]);
+        mat4.translate(this.uWorld,this.uWorld,   [0.0, Math.sin(this.rotation / 10.0) * 2.5, 0.0])
 
-        mat4.invert(this.worldInverseTranspose, this.world);
-        mat4.transpose(this.worldInverseTranspose, this.worldInverseTranspose);
+        this.uWorldViewProj = mat4.create();
+        mat4.perspective(this.uWorldViewProj, glMatrix.toRadian(30.0), this.viewport.x/this.viewport.y, 20.0,120.0);
+        mat4.multiply(this.uWorldViewProj,this.uWorldViewProj, this.uWorld);
+
+        mat4.invert(this.uWorldInvTranspose, this.uWorld);
+        mat4.transpose(this.uWorldInvTranspose, this.uWorldInvTranspose);
     };
 
     Jellyfish.prototype.updateViewport = function(canvas){
@@ -189,9 +191,9 @@ window.Jellyfish = (function(){
     };
 
     Jellyfish.prototype.bindUniforms = function(program){
-        GL.uniformMatrix4fv(program.uniform.uWorld, false, this.world);
-        GL.uniformMatrix4fv(program.uniform.uWorldViewProj, false, this.worldViewProjection);
-        GL.uniformMatrix4fv(program.uniform.uWorldInvTranspose, false, this.worldInverseTranspose);
+        GL.uniformMatrix4fv(program.uniform.uWorld, false, this.uWorld);
+        GL.uniformMatrix4fv(program.uniform.uWorldViewProj, false, this.uWorldViewProj);
+        GL.uniformMatrix4fv(program.uniform.uWorldInvTranspose, false, this.uWorldInvTranspose);
         GL.uniform3fv(program.uniform.uLightPos, this.uLightPos);
         GL.uniform1f(program.uniform.uLightRadius, this.uLightRadius);
         GL.uniform4fv(program.uniform.uLightCol, this.uLightCol);
