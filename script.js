@@ -31,6 +31,8 @@ var main=function(data) {
   canvas=document.getElementById("canvas_webgl");
   container = document.createElement( 'div' );
   document.body.appendChild( container );
+  stats = new Stats();
+  container.appendChild( stats.dom );
 
   try {
     GL = canvas.getContext("webgl", {antialias: true,alpha:false});
@@ -48,20 +50,54 @@ var main=function(data) {
 
   GL.frontFace(GL.CW);
 
-  var jellyfish = new Jellyfish(GL,data);
+  function moveDataJellyfish(x,y,z){
+    var data_tmp = JSON.parse(JSON.stringify(data));
+    data_tmp.jellyfish.vertices = data_tmp.jellyfish.vertices.map((coord,i)=>{
+      return coord + (((i%3)==0)?x:0) + (((i%3)==1)?y:0) +(((i%3)==2)?z:0)
+    });
+    console.log("OK")
+    return data_tmp
+  }
+  console.log(moveDataJellyfish(0,1,1));
+
+  function moveJellyfish(x,y,z){
+    data.jellyfish.vertices = data.jellyfish.vertices.map((coord,i)=>{
+      return coord + (((i%3)==0)?x:0) + (((i%3)==1)?y:0) +(((i%3)==2)?z:0)
+    })
+  }
+
+  var jellyfish_army = [-5,-4,-3,-2,-1,0,1,2,3,4,5].map((i)=>{
+    var data_tmp = moveDataJellyfish(i,i,i);
+    data_tmp.jellyfish.images = data.jellyfish.images
+    return new Jellyfish(GL,data_tmp);
+  });
+  //var data = JSON.parse(JSON.stringify(data))
+  //console.log(data);
+  //console.log(data);
+
+
+
+  // data.jellyfish.vertices = data.jellyfish.vertices.map((coord,i)=>{
+  //   return ((i%3)==0)?(coord+6):coord;
+  // })
+  //var jellyfish = new Jellyfish(GL,data);
   var gradient = new Gradient(GL,data.gradient);
 
   var drawing = function(){
     GL.viewport(0, 0, canvas.width, canvas.height);
     GL.clearColor(1.,1.,1.,1.);
     gradient.render();
-    jellyfish.render();
+    jellyfish_army.map((jellyfish)=>{
+      jellyfish.render();
+    })
   }
 
   function onResize () {
     canvas.width = canvas.clientWidth
     canvas.height = canvas.clientHeight;
-    jellyfish.updateViewport(canvas);
+    jellyfish_army.map((jellyfish)=>{
+      jellyfish.updateViewport(canvas);
+    })
   }
   window.addEventListener("resize", onResize, false);
   onResize();
@@ -72,6 +108,7 @@ var main=function(data) {
     GL.clear(GL.COLOR_BUFFER_BIT|GL.DEPTH_BUFFER_BIT);
     drawing();
     GL.flush();
+    stats.update();
     requestAnimationFrame(animate);
   };
   animate(0);
