@@ -25,7 +25,7 @@ var getImages = function(list){
     function(url){return getImage("./data/img/" + url )}
     ));
 }
-  
+
 var main=function(data) {
 
   canvas=document.getElementById("canvas_webgl");
@@ -45,19 +45,19 @@ var main=function(data) {
   GL.disable(GL.CULL_FACE);
   GL.enable(GL.BLEND);
   GL.blendFunc(GL.SRC_ALPHA, GL.ONE_MINUS_SRC_ALPHA);
-    
+
   GL.frontFace(GL.CW);
 
   var jellyfish = new Jellyfish(GL,data);
-  //var gradient = new Gradient(GL,data.gradient);
+  var gradient = new Gradient(GL,data.gradient);
 
   var drawing = function(){
     GL.viewport(0, 0, canvas.width, canvas.height);
     GL.clearColor(1.,1.,1.,1.);
-    //gradient.render();
+    gradient.render();
     jellyfish.render();
   }
-  
+
   function onResize () {
     canvas.width = canvas.clientWidth
     canvas.height = canvas.clientHeight;
@@ -65,7 +65,7 @@ var main=function(data) {
   }
   window.addEventListener("resize", onResize, false);
   onResize();
-  
+
   var ref = 0;
 
   var animate=function() {
@@ -89,7 +89,7 @@ var jellyfish_ifaces = getXHR('./data/jellyfish_ifaces.json').then(JSON.parse)
 var jellyfish_list = getXHR('./data/img/list.json').then(JSON.parse).then(getImages)
 
 var array_promise = [
-  promise_shader_vertex_source, 
+  promise_shader_vertex_source,
   promise_shader_fragment_source,
   jellyfish_vertices,
   jellyfish_normals,

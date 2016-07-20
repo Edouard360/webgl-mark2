@@ -4,12 +4,13 @@ window.Jellyfish = (function(){
 
     var Jellyfish = function (GL, data) {
         this.GL = GL;
-        console.log(data);
 
-        this.program = this.createAndInitProgram(data.shaders);
+        this.program = createProgramFromShaders(data.shaders);
 
+        this.getAttribLocation();
         this.createAndFillBuffers(data.jellyfish);
         this.prepareTextures(data.jellyfish.images);
+
         this.getUniformLocation();
         this.setUniforms();
 
@@ -49,6 +50,15 @@ window.Jellyfish = (function(){
         return shaderProgram;
     };
 
+    Jellyfish.prototype.getAttribLocation = function(){
+      this.program.attributes={
+        position: GL.getAttribLocation(this.program, "aVertexPosition"),
+        normals: GL.getAttribLocation(this.program, "aVertexNormal"),
+        colors: GL.getAttribLocation(this.program, "aVertexColor"),
+        texture: GL.getAttribLocation(this.program, "aTextureCoord")
+      }
+    }
+
     Jellyfish.prototype.createAndFillBuffers = function(data){
 
         //WILL NEED TO BE ENABLED
@@ -56,30 +66,23 @@ window.Jellyfish = (function(){
         GL.bindBuffer(GL.ARRAY_BUFFER, this.verticesBuffer);
         GL.bufferData(GL.ARRAY_BUFFER,new Float32Array(data.vertices),GL.STATIC_DRAW);
 
-        this.vertexPositionAttribute = GL.getAttribLocation(this.program, "aVertexPosition");  
-        GL.enableVertexAttribArray(this.vertexPositionAttribute);
-
         this.normalsBuffer = GL.createBuffer();
         GL.bindBuffer(GL.ARRAY_BUFFER,this.normalsBuffer);
         GL.bufferData(GL.ARRAY_BUFFER,new Float32Array(data.normals),GL.STATIC_DRAW);
 
-        this.vertexNormalAttribute = GL.getAttribLocation(this.program, "aVertexNormal");
-        GL.enableVertexAttribArray(this.vertexNormalAttribute);
-        
         this.colorsBuffer = GL.createBuffer();
         GL.bindBuffer(GL.ARRAY_BUFFER,this.colorsBuffer);
         GL.bufferData(GL.ARRAY_BUFFER,new Float32Array(data.colors),GL.STATIC_DRAW);
-
-        this.vertexColorAttribute = GL.getAttribLocation(this.program, "aVertexColor");
-        GL.enableVertexAttribArray(this.vertexColorAttribute);
 
         this.textureBuffer = GL.createBuffer();
         GL.bindBuffer(GL.ARRAY_BUFFER,this.textureBuffer);
         GL.bufferData(GL.ARRAY_BUFFER,new Float32Array(data.texture),GL.STATIC_DRAW);
 
-        this.vertexTextureAttribute = GL.getAttribLocation(this.program, "aTextureCoord");
-        GL.enableVertexAttribArray(this.vertexTextureAttribute);
-        
+        GL.enableVertexAttribArray(this.program.attributes.position);
+        GL.enableVertexAttribArray(this.program.attributes.normals);
+        GL.enableVertexAttribArray(this.program.attributes.colors);
+        GL.enableVertexAttribArray(this.program.attributes.texture);
+
         //WILL NOT NEED TO BE ENABLED
         this.indexBuffer= GL.createBuffer();
         GL.bindBuffer(GL.ELEMENT_ARRAY_BUFFER, this.indexBuffer);
@@ -87,22 +90,22 @@ window.Jellyfish = (function(){
     };
 
     Jellyfish.prototype.bufferVertexAttributes = function(){
-        bufferAttribute(this.verticesBuffer, this.vertexPositionAttribute);
-        bufferAttribute(this.normalsBuffer, this.vertexNormalAttribute);
-        bufferAttribute(this.colorsBuffer, this.vertexColorAttribute);
-        bufferAttribute(this.textureBuffer, this.vertexTextureAttribute);
+        bufferAttribute(this.verticesBuffer, this.program.attributes.position);
+        bufferAttribute(this.normalsBuffer, this.program.attributes.normals);
+        bufferAttribute(this.colorsBuffer, this.program.attributes.colors);
+        bufferAttribute(this.textureBuffer, this.program.attributes.texture);
 
         function bufferAttribute(buffer,position){
             GL.bindBuffer(GL.ARRAY_BUFFER, buffer);
-            GL.vertexAttribPointer(position, 
+            GL.vertexAttribPointer(position,
                 3,
-                GL.FLOAT, 
+                GL.FLOAT,
                 GL.FALSE,
                 Float32Array.BYTES_PER_ELEMENT*3,
                 0
-                );   
+                );
         }
-    }; 
+    };
 
     Jellyfish.prototype.prepareTextures = function(images){
         this.textures = images.map(function(img,i){
@@ -192,7 +195,7 @@ window.Jellyfish = (function(){
         GL.uniform3fv(program.uniform.uLightPos, this.uLightPos);
         GL.uniform1f(program.uniform.uLightRadius, this.uLightRadius);
         GL.uniform4fv(program.uniform.uLightCol, this.uLightCol);
-        GL.uniform4fv(program.uniform.uAmbientCol, this.uAmbientCol); 
+        GL.uniform4fv(program.uniform.uAmbientCol, this.uAmbientCol);
         GL.uniform4fv(program.uniform.uFresnelCol, this.uFresnelCol);
         GL.uniform1f(program.uniform.uFresnelPower, this.uFresnelPower);
         GL.uniform1f(program.uniform.uCurrentTime, this.uCurrentTime);
@@ -204,18 +207,20 @@ window.Jellyfish = (function(){
 
         GL.activeTexture(GL.TEXTURE0);
         GL.bindTexture(GL.TEXTURE_2D,this.textures[0]);
-        
+
         GL.activeTexture(GL.TEXTURE1);
         GL.bindTexture(GL.TEXTURE_2D, this.textures[this.whichCaustic]);
-    } 
+    }
 
     Jellyfish.prototype.render = function(){
         var GL = this.GL;
-        var program = this.program; 
-        this.bufferVertexAttributes();
+        var program = this.program;
 
+        this.bufferVertexAttributes();
         this.updateUniforms();
+
         GL.useProgram(program);
+
         this.bindUniforms(program);
 
         GL.drawElements(GL.TRIANGLES, this.indexcount, GL.UNSIGNED_INT, 0);
@@ -224,4 +229,3 @@ window.Jellyfish = (function(){
     return Jellyfish;
 
 })();
-

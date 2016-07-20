@@ -3,7 +3,7 @@ precision highp float;
 uniform sampler2D uSampler;
 uniform sampler2D uSampler1;
 uniform float uCurrentTime;
-  
+
 varying vec2 vTextureCoord;
 varying vec4 vWorld;
 varying vec3 vDiffuse;
