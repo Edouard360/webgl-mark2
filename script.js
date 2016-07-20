@@ -66,8 +66,8 @@ var main=function(data) {
     })
   }
 
-  var jellyfish_army = [-5,-4,-3,-2,-1,0,1,2,3,4,5].map((i)=>{
-    var data_tmp = moveDataJellyfish(i,i,i);
+  var jellyfish_army = data.army_coordinates.map((coord)=>{
+    var data_tmp = moveDataJellyfish(coord[0],coord[1],coord[2]);
     data_tmp.jellyfish.images = data.jellyfish.images
     return new Jellyfish(GL,data_tmp);
   });
@@ -137,7 +137,8 @@ var array_promise = [
   getXHR('./shaders/gradient.vert'),
   getXHR('./shaders/gradient.frag'),
   getXHR('./shaders/debug.vert'),
-  getXHR('./shaders/debug.frag')
+  getXHR('./shaders/debug.frag'),
+  getXHR('./data/jellyfish_army_coordinates.json').then(JSON.parse)
 ];
 
 Promise.all(array_promise).then(function(values){
@@ -145,6 +146,7 @@ Promise.all(array_promise).then(function(values){
       shaders:{VS:values[0],FS:values[1]},
       gradient:{VS:values[8],FS:values[9]},
       debug:{VS:values[10],FS:values[11]},
-      jellyfish:{vertices:values[2],normals:values[3],texture:values[4],colors:values[5],faces:values[6],images:values[7]}
+      jellyfish:{vertices:values[2],normals:values[3],texture:values[4],colors:values[5],faces:values[6],images:values[7]},
+      army_coordinates: values[12]
     });
 });
