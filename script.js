@@ -91,11 +91,11 @@ var main=function(data) {
 var promise_shader_vertex_source = getXHR('./shaders/jellyfish.vert')
 var promise_shader_fragment_source = getXHR('./shaders/jellyfish.frag')
 
-var jellyfish_vertices = getXHR('./data/jellyfish_vertices_tmp.json').then(JSON.parse)
-var jellyfish_normals = getXHR('./data/jellyfish_normals_tmp.json').then(JSON.parse)
+var jellyfish_vertices = getXHR('./data/jellyfish_vertices.json').then(JSON.parse)
+var jellyfish_normals = getXHR('./data/jellyfish_normals.json').then(JSON.parse)
 var jellyfish_texture = getXHR('./data/jellyfish_texture.json').then(JSON.parse)
 var jellyfish_colors = getXHR('./data/jellyfish_colors.json').then(JSON.parse)
-var jellyfish_ifaces = getXHR('./data/jellyfish_ifaces_tmp.json').then(JSON.parse)
+var jellyfish_ifaces = getXHR('./data/jellyfish_ifaces.json').then(JSON.parse)
 
 var jellyfish_list = getXHR('./data/img/list.json').then(JSON.parse).then(getImages)
 

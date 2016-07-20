@@ -40,7 +40,7 @@ window.Jellyfish = (function(){
 
         this.createAndFillBuffers(data.jellyfish);
 
-        this.indexcount = 3;//data.jellyfish.faces.length;
+        this.indexcount = data.jellyfish.faces.length;
     };
 
     Jellyfish.prototype.createAndFillBuffers = function(data){
@@ -60,6 +60,22 @@ window.Jellyfish = (function(){
         this.vertexNormalAttribute = GL.getAttribLocation(this.program, "aVertexNormal");
         GL.enableVertexAttribArray(this.vertexNormalAttribute);
 
+        this.colorsBuffer = GL.createBuffer();
+        GL.bindBuffer(GL.ARRAY_BUFFER,this.colorsBuffer);
+        GL.bufferData(GL.ARRAY_BUFFER,new Float32Array(data.colors),GL.STATIC_DRAW);
+
+        this.vertexColorAttribute = GL.getAttribLocation(this.program, "aVertexColor");
+        GL.enableVertexAttribArray(this.vertexColorAttribute);
+
+        this.textureBuffer = GL.createBuffer();
+        GL.bindBuffer(GL.ARRAY_BUFFER,this.textureBuffer);
+        GL.bufferData(GL.ARRAY_BUFFER,new Float32Array(data.texture),GL.STATIC_DRAW);
+
+        this.vertexTextureAttribute = GL.getAttribLocation(this.program, "aTextureCoord");
+        GL.enableVertexAttribArray(this.vertexTextureAttribute);
+
+
+
         //WILL NOT NEED TO BE ENABLED
         this.indexBuffer= GL.createBuffer();
         GL.bindBuffer(GL.ELEMENT_ARRAY_BUFFER, this.indexBuffer);
@@ -69,6 +85,8 @@ window.Jellyfish = (function(){
     Jellyfish.prototype.bufferVertexAttributes = function(){
         bufferAttribute(this.verticesBuffer, this.vertexPositionAttribute);
         bufferAttribute(this.normalsBuffer, this.vertexNormalAttribute);
+        bufferAttribute(this.colorsBuffer, this.vertexColorAttribute);
+        bufferAttribute(this.textureBuffer, this.vertexTextureAttribute);
 
         function bufferAttribute(buffer,position){
             GL.bindBuffer(GL.ARRAY_BUFFER, buffer);
@@ -157,9 +175,6 @@ window.Jellyfish = (function(){
 
         GL.useProgram(program);
         GL.drawElements(GL.TRIANGLES, this.indexcount, GL.UNSIGNED_INT, 0);
-
-
-        //GL.drawArrays(GL.LINE_STRIP, 0, 3);
     };
 
     return Jellyfish;
