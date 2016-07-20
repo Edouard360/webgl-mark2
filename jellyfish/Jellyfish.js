@@ -4,11 +4,21 @@ window.Jellyfish = (function(){
 
     var Jellyfish = function (GL, data) {
         this.GL = GL;
-        this.viewport = {x:600,y:600};
         console.log(data);
 
-        var  vertexShader = GL.createShader(GL.VERTEX_SHADER);
-        GL.shaderSource(vertexShader, data.shaders.VS);
+        this.program = this.createAndInitProgram(data.shaders);
+
+        this.createAndFillBuffers(data.jellyfish);
+        this.prepareTextures(data.jellyfish.images);
+        this.getUniformLocation();
+        this.setUniforms();
+
+        this.indexcount = data.jellyfish.faces.length;
+    };
+
+    Jellyfish.prototype.createAndInitProgram = function(shaders){
+        var vertexShader = GL.createShader(GL.VERTEX_SHADER);
+        GL.shaderSource(vertexShader, shaders.VS);
         GL.compileShader(vertexShader);
 
         if (!GL.getShaderParameter(vertexShader, GL.COMPILE_STATUS)) {
@@ -16,8 +26,8 @@ window.Jellyfish = (function(){
             return null;
         }
 
-        var  fragmentShader = GL.createShader(GL.FRAGMENT_SHADER);
-        GL.shaderSource(fragmentShader, data.shaders.FS);
+        var fragmentShader = GL.createShader(GL.FRAGMENT_SHADER);
+        GL.shaderSource(fragmentShader, shaders.FS);
         GL.compileShader(fragmentShader);
 
         if (!GL.getShaderParameter(fragmentShader, GL.COMPILE_STATUS)) {
@@ -36,13 +46,7 @@ window.Jellyfish = (function(){
             throw "Could not compile WebGL program. \n\n" + info;
         }
 
-        this.program = shaderProgram;
-        this.createAndFillBuffers(data.jellyfish);
-        this.prepareTextures(data.jellyfish.images);
-        this.getUniformLocation(this.program);
-        this.setUniforms();
-
-        this.indexcount = data.jellyfish.faces.length;
+        return shaderProgram;
     };
 
     Jellyfish.prototype.createAndFillBuffers = function(data){
@@ -114,21 +118,21 @@ window.Jellyfish = (function(){
         });
     };
 
-    Jellyfish.prototype.getUniformLocation = function(program){
-        program.uniform = {
-            uWorld:GL.getUniformLocation(program, "uWorld"),
-            uWorldViewProj:GL.getUniformLocation(program, "uWorldViewProj"),
-            uWorldInvTranspose:GL.getUniformLocation(program, "uWorldInvTranspose"),
-            uLightPos:GL.getUniformLocation(program, "uLightPos"),
-            uLightRadius:GL.getUniformLocation(program, "uLightRadius"),
-            uLightCol:GL.getUniformLocation(program, "uLightCol"),
-            uAmbientCol:GL.getUniformLocation(program, "uAmbientCol"),
-            uFresnelCol:GL.getUniformLocation(program, "uFresnelCol"),
-            uFresnelPower:GL.getUniformLocation(program, "uFresnelPower"),
-            uCurrentTime:GL.getUniformLocation(program, "uCurrentTime"),
+    Jellyfish.prototype.getUniformLocation = function(){
+        this.program.uniform = {
+            uWorld:GL.getUniformLocation(this.program, "uWorld"),
+            uWorldViewProj:GL.getUniformLocation(this.program, "uWorldViewProj"),
+            uWorldInvTranspose:GL.getUniformLocation(this.program, "uWorldInvTranspose"),
+            uLightPos:GL.getUniformLocation(this.program, "uLightPos"),
+            uLightRadius:GL.getUniformLocation(this.program, "uLightRadius"),
+            uLightCol:GL.getUniformLocation(this.program, "uLightCol"),
+            uAmbientCol:GL.getUniformLocation(this.program, "uAmbientCol"),
+            uFresnelCol:GL.getUniformLocation(this.program, "uFresnelCol"),
+            uFresnelPower:GL.getUniformLocation(this.program, "uFresnelPower"),
+            uCurrentTime:GL.getUniformLocation(this.program, "uCurrentTime"),
 
-            uSampler:GL.getUniformLocation(program, "uSampler"),
-            uSampler1:GL.getUniformLocation(program, "uSampler1")
+            uSampler:GL.getUniformLocation(this.program, "uSampler"),
+            uSampler1:GL.getUniformLocation(this.program, "uSampler1")
         }
     }
 

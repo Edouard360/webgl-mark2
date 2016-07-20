@@ -32,8 +32,6 @@ var main=function(data) {
   container = document.createElement( 'div' );
   document.body.appendChild( container );
 
-  
-
   try {
     GL = canvas.getContext("webgl", {antialias: true,alpha:false});
   } catch (e) {
@@ -41,7 +39,6 @@ var main=function(data) {
     return false;
   }
 
-  //(GL.getSupportedExtensions()).map((ext)=>{GL.getExtension(ext); return;})
   GL.getExtension("OES_element_index_uint");
 
   GL.disable(GL.DEPTH_TEST);
@@ -49,15 +46,7 @@ var main=function(data) {
   GL.enable(GL.BLEND);
   GL.blendFunc(GL.SRC_ALPHA, GL.ONE_MINUS_SRC_ALPHA);
     
-  canvas.width = 600;
-  canvas.height = 600;
-
-   // glGetIntegerv(GL_BLEND_SRC_RGB, &blendFuncSrc_);
-   // glGetIntegerv(GL_BLEND_DST_RGB, &blendFuncDst_);
-   // glBlendFunc(blendFuncSrc_, blendFuncDst_);
-   //To be remembered for the cleanup !!
-
-   GL.frontFace(GL.CW);
+  GL.frontFace(GL.CW);
 
   var jellyfish = new Jellyfish(GL,data);
   //var gradient = new Gradient(GL,data.gradient);
@@ -70,12 +59,12 @@ var main=function(data) {
   }
   
   function onResize () {
-    // canvas.width = canvas.clientWidth
-    // canvas.height = canvas.clientHeight;
-    //jellyfish.updateViewport(canvas);
+    canvas.width = canvas.clientWidth
+    canvas.height = canvas.clientHeight;
+    jellyfish.updateViewport(canvas);
   }
   window.addEventListener("resize", onResize, false);
-  //onResize();
+  onResize();
   
   var ref = 0;
 
