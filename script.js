@@ -60,12 +60,6 @@ var main=function(data) {
   }
   console.log(moveDataJellyfish(0,1,1));
 
-  function moveJellyfish(x,y,z){
-    data.jellyfish.vertices = data.jellyfish.vertices.map((coord,i)=>{
-      return coord + (((i%3)==0)?x:0) + (((i%3)==1)?y:0) +(((i%3)==2)?z:0)
-    })
-  }
-
   var jellyfish_army = data.army_coordinates.map((coord)=>{
     var data_tmp = moveDataJellyfish(coord[0],coord[1],coord[2]);
     data_tmp.jellyfish.images = data.jellyfish.images
@@ -90,6 +84,7 @@ var main=function(data) {
     jellyfish_army.map((jellyfish)=>{
       jellyfish.render();
     })
+
   }
 
   function onResize () {
