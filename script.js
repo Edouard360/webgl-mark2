@@ -10,25 +10,29 @@ var getXHR = function(url){
   })
 }
 
-var getImage = function(url){
-  return new Promise(function(resolve,reject){
-    var image = new Image();
-    image.onload = function(){
-      resolve(image);
-    }
-    image.src = url
-  })
-}
-
 var getImages = function(list){
   return Promise.all(list.map(
     function(url){return getImage("./data/img/" + url )}
     ));
+
+  function getImage(url){
+    return new Promise(function(resolve,reject){
+      var image = new Image();
+      image.onload = function(){
+        resolve(image);
+      }
+      image.src = url
+    })
+  }
 }
 
 var main=function(data) {
 
+<<<<<<< HEAD
   var useInstantiation = false;
+=======
+  var useInstantiation = true;
+>>>>>>> origin/Removing-Utilities
 
   canvas=document.getElementById("canvas_webgl");
   container = document.createElement( 'div' );
@@ -63,7 +67,11 @@ var main=function(data) {
   }
 
   if(!useInstantiation){
+<<<<<<< HEAD
       var jellyfish_army = data.army_coordinates.map((coord)=>{
+=======
+      var jellyfish_army = data.jellyfish.offset.map((coord)=>{
+>>>>>>> origin/Removing-Utilities
       var data_tmp = moveDataJellyfish(coord[0],coord[1],coord[2]);
       data_tmp.jellyfish.images = data.jellyfish.images
       return new Jellyfish(GL,data_tmp);
@@ -116,6 +124,7 @@ var main=function(data) {
 }
 
 var object_promise = {
+<<<<<<< HEAD
   shaders:{
     VS: undefined,
     FS: undefined
@@ -128,6 +137,11 @@ var object_promise = {
     VS: undefined,
     FS: undefined
   },
+=======
+  shaders:{VS: undefined,FS: undefined},
+  gradient:{VS: undefined,FS: undefined},
+  debug:{VS: undefined,FS: undefined},
+>>>>>>> origin/Removing-Utilities
   jellyfish:{
     vertices: undefined,
     normals: undefined,
@@ -136,8 +150,12 @@ var object_promise = {
     faces: undefined,
     images: undefined,
     offset: undefined
+<<<<<<< HEAD
   },
   army_coordinates: undefined
+=======
+  }
+>>>>>>> origin/Removing-Utilities
 }
 
 var array_promise =[
@@ -156,6 +174,10 @@ getXHR('./data/img/list.json').then(JSON.parse).then(getImages).then(function(va
 getXHR('./data/group/jellyfish_army_coordinates_full.json').then(JSON.parse).then(function(value){object_promise.jellyfish.offset= value;object_promise.army_coordinates= value;})
 ]
 
+<<<<<<< HEAD
 Promise.all(array_promise).then(function(values){
+=======
+Promise.all(array_promise).then(function(){
+>>>>>>> origin/Removing-Utilities
     main(object_promise);
 });
