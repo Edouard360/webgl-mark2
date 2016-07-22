@@ -1,4 +1,3 @@
-VR = !!navigator.getVRDisplays;
 useInstantiation = false;
 
 var getXHR = function(url){
@@ -65,8 +64,6 @@ var main=function(data) {
         var jellyfishGroup = new InstancedJellyfish(GL,GLext,data);
     }
 
-
-
   var gradient = new Gradient(GL,data.gradient);
 
   var drawing = function(){
@@ -83,7 +80,6 @@ var main=function(data) {
         GL.viewport(canvas.width * 0.5, 0, canvas.width * 0.5, canvas.height);
         gradient.render();
         jellyfishGroup.renderRight();
-
     }
   }
 
