@@ -1,3 +1,6 @@
+VR = !!navigator.getVRDisplays;
+useInstantiation = false;
+
 var getXHR = function(url){
     return new Promise(function(resolve,reject){
       loadTextResource(url, function (err, data) {
@@ -28,12 +31,6 @@ var getImages = function(list){
 
 var main=function(data) {
 
-<<<<<<< HEAD
-  var useInstantiation = false;
-=======
-  var useInstantiation = true;
->>>>>>> origin/Removing-Utilities
-
   canvas=document.getElementById("canvas_webgl");
   container = document.createElement( 'div' );
   document.body.appendChild( container );
@@ -41,10 +38,15 @@ var main=function(data) {
   container.appendChild( stats.dom );
 
   try {
-    GL = canvas.getContext("webgl", {antialias: true,alpha:false});
+    GL = canvas.getContext("webgl", {antialias: true,alpha:false,preserveDrawingBuffer:true});//||canvas.getContext("experimental-webgl", {antialias: true,alpha:false});
   } catch (e) {
     alert("You are not webgl compatible :(") ;
     return false;
+  }
+
+  var vrDisplay = data.vrDisplay;
+  if(vrDisplay){
+    vrDisplay.requestPresent([{source:canvas}]);
   }
 
   GLext = GL.getExtension("ANGLE_instanced_arrays");
@@ -54,94 +56,75 @@ var main=function(data) {
   GL.disable(GL.CULL_FACE);
   GL.enable(GL.BLEND);
   GL.blendFunc(GL.SRC_ALPHA, GL.ONE_MINUS_SRC_ALPHA);
-
   GL.frontFace(GL.CW);
 
-  function moveDataJellyfish(x,y,z){
-    var data_tmp = JSON.parse(JSON.stringify(data));
-    data_tmp.jellyfish.vertices = data_tmp.jellyfish.vertices.map((coord,i)=>{
-      return coord + (((i%3)==0)?x:0) + (((i%3)==1)?y:0) +(((i%3)==2)?z:0)
-    });
-    console.log("OK")
-    return data_tmp
-  }
 
-  if(!useInstantiation){
-<<<<<<< HEAD
-      var jellyfish_army = data.army_coordinates.map((coord)=>{
-=======
-      var jellyfish_army = data.jellyfish.offset.map((coord)=>{
->>>>>>> origin/Removing-Utilities
-      var data_tmp = moveDataJellyfish(coord[0],coord[1],coord[2]);
-      data_tmp.jellyfish.images = data.jellyfish.images
-      return new Jellyfish(GL,data_tmp);
-    });
-  }else{
-      var instancedJellyfish = new InstancedJellyfish(GL,GLext,data);
-  }
-
-
-  //var gradient = new Gradient(GL,data.gradient);
-
-  var drawing = function(){
-    GL.viewport(0, 0, canvas.width, canvas.height);
-    GL.clearColor(1.,1.,1.,1.);
-    //gradient.render();
     if(!useInstantiation){
-      jellyfish_army.map((jellyfish)=>{
-        jellyfish.render();
-      })
+        var jellyfishGroup = new JellyfishGroup(GL, data);
     }else{
-      instancedJellyfish.render();
+        var jellyfishGroup = new InstancedJellyfish(GL,GLext,data);
     }
 
+
+
+  var gradient = new Gradient(GL,data.gradient);
+
+  var drawing = function(){
+    if(!vrDisplay || !vrDisplay.isPresenting){
+      GL.viewport(0, 0, canvas.width, canvas.height);
+      GL.clearColor(1.,1.,1.,1.);
+      gradient.render();
+      jellyfishGroup.render();
+    }else{
+        pose = vrDisplay.getPose();
+        GL.viewport(0, 0, canvas.width * 0.5, canvas.height);
+        //jellyfishGroup.render("left");
+        gradient.render();
+        jellyfishGroup.render();
+        GL.viewport(canvas.width * 0.5, 0, canvas.width * 0.5, canvas.height);
+        //jellyfishGroup.render("right");
+        gradient.render();
+        jellyfishGroup.render();
+
+    }
   }
 
   function onResize () {
-    canvas.width = canvas.clientWidth
-    canvas.height = canvas.clientHeight;
-    if(!useInstantiation){
-      jellyfish_army.map((jellyfish)=>{
-        jellyfish.updateViewport(canvas);
-      })
-    }else{
-      instancedJellyfish.updateViewport(canvas);
+    if (vrDisplay && vrDisplay.isPresenting) {
+      var leftEye = vrDisplay.getEyeParameters("left");
+      var rightEye = vrDisplay.getEyeParameters("right");
+      canvas.width = Math.max(leftEye.renderWidth, rightEye.renderWidth) * 2;
+      canvas.height = Math.max(leftEye.renderHeight, rightEye.renderHeight);
     }
+    else{
+      canvas.width = canvas.clientWidth;
+      canvas.height = canvas.clientHeight;
+    }
+    jellyfishGroup.updateViewport(canvas);
   }
   window.addEventListener("resize", onResize, false);
   onResize();
 
-  var ref = 0;
-
   var animate=function() {
     GL.clear(GL.COLOR_BUFFER_BIT|GL.DEPTH_BUFFER_BIT);
     drawing();
-    GL.flush();
+
+    if(vrDisplay){
+      vrDisplay.submitFrame(pose);
+      vrDisplay.requestAnimationFrame(animate);
+    }else{
+      requestAnimationFrame(animate);
+    }
+
     stats.update();
-    requestAnimationFrame(animate);
   };
   animate(0);
 }
 
 var object_promise = {
-<<<<<<< HEAD
-  shaders:{
-    VS: undefined,
-    FS: undefined
-  },
-  gradient:{
-    VS: undefined,
-    FS: undefined
-  },
-  debug:{
-    VS: undefined,
-    FS: undefined
-  },
-=======
   shaders:{VS: undefined,FS: undefined},
   gradient:{VS: undefined,FS: undefined},
   debug:{VS: undefined,FS: undefined},
->>>>>>> origin/Removing-Utilities
   jellyfish:{
     vertices: undefined,
     normals: undefined,
@@ -150,20 +133,16 @@ var object_promise = {
     faces: undefined,
     images: undefined,
     offset: undefined
-<<<<<<< HEAD
   },
-  army_coordinates: undefined
-=======
-  }
->>>>>>> origin/Removing-Utilities
+  vrDisplay:undefined
 }
 
 var array_promise =[
 getXHR('./shaders/jellyfish/instanced_jellyfish.vert').then(function(value){object_promise.shaders.VS = value}),
 getXHR('./shaders/jellyfish/jellyfish.frag').then(function(value){object_promise.shaders.FS = value}),
-getXHR('./shaders/gradient/gradient.vert').then(function(value){object_promise.gradient.FS = value}),
+getXHR('./shaders/gradient/gradient.vert').then(function(value){object_promise.gradient.VS = value}),
 getXHR('./shaders/gradient/gradient.frag').then(function(value){object_promise.gradient.FS = value}),
-getXHR('./shaders/debug/debug.vert').then(function(value){object_promise.debug.FS = value}),
+getXHR('./shaders/debug/debug.vert').then(function(value){object_promise.debug.VS = value}),
 getXHR('./shaders/debug/debug.frag').then(function(value){object_promise.debug.FS = value}),
 getXHR('./data/attributes/jellyfish_vertices.json').then(JSON.parse).then(function(value){object_promise.jellyfish.vertices = value}),
 getXHR('./data/attributes/jellyfish_normals.json').then(JSON.parse).then(function(value){object_promise.jellyfish.normals = value}),
@@ -171,13 +150,11 @@ getXHR('./data/attributes/jellyfish_texture.json').then(JSON.parse).then(functio
 getXHR('./data/attributes/jellyfish_colors.json').then(JSON.parse).then(function(value){object_promise.jellyfish.colors = value}),
 getXHR('./data/attributes/jellyfish_ifaces.json').then(JSON.parse).then(function(value){object_promise.jellyfish.faces = value}),
 getXHR('./data/img/list.json').then(JSON.parse).then(getImages).then(function(value){object_promise.jellyfish.images = value}),
-getXHR('./data/group/jellyfish_army_coordinates_full.json').then(JSON.parse).then(function(value){object_promise.jellyfish.offset= value;object_promise.army_coordinates= value;})
+getXHR('./data/group/jellyfish_army_coordinates.json').then(JSON.parse).then(function(value){object_promise.jellyfish.offset= value;}),
+//navigator.getVRDisplays().then(function(value){object_promise.vrDisplay=value[0]})
 ]
 
-<<<<<<< HEAD
-Promise.all(array_promise).then(function(values){
-=======
+
 Promise.all(array_promise).then(function(){
->>>>>>> origin/Removing-Utilities
     main(object_promise);
 });
