@@ -23,6 +23,8 @@ window.Gradient = (function(){
           position: GL.getAttribLocation(this.program, "position"),
           uvIn: GL.getAttribLocation(this.program, "uvIn")
         }
+        GL.enableVertexAttribArray(this.program.attributes.position)
+        GL.enableVertexAttribArray(this.program.attributes.uvIn)
     }
 
     Gradient.prototype.createAndFillBuffer = function(data){
