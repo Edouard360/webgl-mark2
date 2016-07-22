@@ -16,7 +16,6 @@ window.Debug = (function(){
         this.createAndFillBuffer(data);
         this.prepareTextures(images);
         this.getUniformLocation();
-        console.log(this.textures)
     };
 
     Debug.prototype.getAttribLocation = function(){
@@ -24,6 +23,8 @@ window.Debug = (function(){
           position: GL.getAttribLocation(this.program, "position"),
           uvCoordinates: GL.getAttribLocation(this.program, "uvCoordinates")
         }
+        GL.enableVertexAttribArray(this.program.attributes.position);
+        GL.enableVertexAttribArray(this.program.attributes.uvCoordinates);
     }
 
     Debug.prototype.createAndFillBuffer = function(data){
