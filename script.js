@@ -78,13 +78,11 @@ var main=function(data) {
     }else{
         pose = vrDisplay.getPose();
         GL.viewport(0, 0, canvas.width * 0.5, canvas.height);
-        //jellyfishGroup.render("left");
         gradient.render();
-        jellyfishGroup.render();
+        jellyfishGroup.renderLeft();
         GL.viewport(canvas.width * 0.5, 0, canvas.width * 0.5, canvas.height);
-        //jellyfishGroup.render("right");
         gradient.render();
-        jellyfishGroup.render();
+        jellyfishGroup.renderRight();
 
     }
   }
@@ -150,7 +148,7 @@ getXHR('./data/attributes/jellyfish_texture.json').then(JSON.parse).then(functio
 getXHR('./data/attributes/jellyfish_colors.json').then(JSON.parse).then(function(value){object_promise.jellyfish.colors = value}),
 getXHR('./data/attributes/jellyfish_ifaces.json').then(JSON.parse).then(function(value){object_promise.jellyfish.faces = value}),
 getXHR('./data/img/list.json').then(JSON.parse).then(getImages).then(function(value){object_promise.jellyfish.images = value}),
-getXHR('./data/group/jellyfish_army_coordinates.json').then(JSON.parse).then(function(value){object_promise.jellyfish.offset= value;}),
+getXHR('./data/group/jellyfish_army_coordinates_full.json').then(JSON.parse).then(function(value){object_promise.jellyfish.offset= value;}),
 //navigator.getVRDisplays().then(function(value){object_promise.vrDisplay=value[0]})
 ]
 

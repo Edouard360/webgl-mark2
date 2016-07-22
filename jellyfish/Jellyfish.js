@@ -236,7 +236,9 @@ window.Jellyfish = (function(){
 //Create an array of different jellyfish each with different program
 
 window.JellyfishGroup = (function(){
+  
   var JellyfishGroup = function(GL,data){
+    this.vrDisplay = data.vrDisplay;
     this.jellyfishGroup = data.jellyfish.offset.map((coord)=>{
       var data_tmp = newDataJellyfishWithOffset(coord[0],coord[1],coord[2]);
       data_tmp.jellyfish.images = data.jellyfish.images;
@@ -245,7 +247,6 @@ window.JellyfishGroup = (function(){
 
     function newDataJellyfishWithOffset(x,y,z){
       var data_tmp = JSON.parse(JSON.stringify(data));
-      data_tmp.vrDisplay = data.vrDisplay;
       data_tmp.jellyfish.vertices = data_tmp.jellyfish.vertices.map((coord,i)=>{
         return coord + (((i%3)==0)?x:0) + (((i%3)==1)?y:0) +(((i%3)==2)?z:0)
       });
@@ -293,7 +294,7 @@ window.JellyfishGroup = (function(){
 
   };
 
-  JellyfishGroup.prototype.updateUniforms = function(){
+  JellyfishGroup.prototype.updateUniforms = function(side){
     this.updateTime();
 
     this.uWorld = mat4.create();
@@ -303,12 +304,16 @@ window.JellyfishGroup = (function(){
     mat4.scale(this.uWorld,this.uWorld,       [5.0, 5.0, 5.0]);
     mat4.translate(this.uWorld,this.uWorld,   [0.0, Math.sin(this.rotation / 10.0) * 2.5, 0.0])
 
-    this.uWorldViewProj = mat4.create();
-    mat4.perspective(this.uWorldViewProj, glMatrix.toRadian(30.0), this.viewport.x/this.viewport.y, 20.0,120.0);
-    mat4.multiply(this.uWorldViewProj,this.uWorldViewProj, this.uWorld);
-
     mat4.invert(this.uWorldInvTranspose, this.uWorld);
     mat4.transpose(this.uWorldInvTranspose, this.uWorldInvTranspose);
+
+    if(this.vrDisplay){
+      this.updateUniformsVR(side);
+    }else{
+      this.uWorldViewProj = mat4.create();
+      mat4.perspective(this.uWorldViewProj, glMatrix.toRadian(30.0), this.viewport.x/this.viewport.y, 20.0,120.0);
+      mat4.multiply(this.uWorldViewProj,this.uWorldViewProj, this.uWorld);
+    }
 
     this.jellyfishGroup.map((jellyfish)=>{
       jellyfish.uWorld = this.uWorld;
@@ -321,6 +326,31 @@ window.JellyfishGroup = (function(){
       jellyfish.whichCaustic = this.whichCaustic;
     });
   };
+
+  JellyfishGroup.prototype.updateUniformsVR = function(side){
+    var pose = this.vrDisplay.getPose();
+    if(side){
+      var eye = this.vrDisplay.getEyeParameters(side);
+    }
+    var orientation = pose.orientation;
+    var position = pose.position;
+    if (!orientation) { orientation = [0, 0, 0, 1]; }
+    if (!position) { position = [0, 0, 0]; }
+
+    var viewMatrix = mat4.create();
+    if (eye)
+      mat4.perspectiveFromFieldOfView(this.uWorldViewProj, eye.fieldOfView, 0.1, 1024.0);
+    else
+      mat4.perspective(this.uWorldViewProj, Math.PI*0.4, canvas.width / canvas.height, 0.1, 1024.0);
+    mat4.fromRotationTranslation(viewMatrix, orientation, position);
+    if (eye){
+      mat4.translate(viewMatrix, viewMatrix, eye.offset);
+    }
+    mat4.invert(viewMatrix, viewMatrix);
+
+    mat4.multiply(this.uWorldViewProj,this.uWorldViewProj, viewMatrix);
+    mat4.multiply(this.uWorldViewProj,this.uWorldViewProj, this.uWorld);
+  }
 
   JellyfishGroup.prototype.updateTime = function(){
     var now = (new Date()).getTime(); // We are here in ms
@@ -336,7 +366,21 @@ window.JellyfishGroup = (function(){
     this.jellyfishGroup.map((jellyfish)=>{
       jellyfish.render();
     })
-  }
+  };
+
+  JellyfishGroup.prototype.renderLeft = function(){
+    this.updateUniforms("left");
+    this.jellyfishGroup.map((jellyfish)=>{
+      jellyfish.render();
+    })
+  };
+
+  JellyfishGroup.prototype.renderRight = function(){
+    this.updateUniforms("right");
+    this.jellyfishGroup.map((jellyfish)=>{
+      jellyfish.render();
+    })
+  };
 
   return JellyfishGroup;
 })();
