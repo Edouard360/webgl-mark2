@@ -14,6 +14,7 @@ window.Jellyfish = (function(){
     this.prepareTextures(data.jellyfish.images);
 
     this.getUniformLocation();
+    this.setUniforms();
 
     this.indexcount = data.jellyfish.faces.length;
   };
@@ -220,6 +221,7 @@ window.Jellyfish = (function(){
     var GL = this.GL;
     var program = this.program;
 
+    this.updateUniforms();
     this.bufferVertexAttributes();
 
     GL.useProgram(program);
@@ -231,156 +233,4 @@ window.Jellyfish = (function(){
 
   return Jellyfish;
 
-})();
-
-//Create an array of different jellyfish each with different program
-
-window.JellyfishGroup = (function(){
-  
-  var JellyfishGroup = function(GL,data){
-    this.vrDisplay = data.vrDisplay;
-    this.jellyfishGroup = data.jellyfish.offset.map((coord)=>{
-      var data_tmp = newDataJellyfishWithOffset(coord[0],coord[1],coord[2]);
-      data_tmp.jellyfish.images = data.jellyfish.images;
-      return new Jellyfish(GL,data_tmp);
-    });
-
-    function newDataJellyfishWithOffset(x,y,z){
-      var data_tmp = JSON.parse(JSON.stringify(data));
-      data_tmp.jellyfish.vertices = data_tmp.jellyfish.vertices.map((coord,i)=>{
-        return coord + (((i%3)==0)?x:0) + (((i%3)==1)?y:0) +(((i%3)==2)?z:0)
-      });
-      return data_tmp
-    }
-    this.setUniforms();
-  }
-
-  JellyfishGroup.prototype.updateViewport = function(canvas){
-    this.viewport = {x:canvas.width,y:canvas.height};
-    this.jellyfishGroup.map((jellyfish)=>{
-      jellyfish.updateViewport(canvas);
-    });
-  }
-
-  JellyfishGroup.prototype.setUniforms = function(){
-    this.rotation = 0;
-    this.uCurrentTime = 0;
-    this.lastUpdateTime = 0;
-
-    this.lastUpdateTime = (new Date()).getTime();
-    this.uCurrentTime = 0 * (this.lastUpdateTime  % 100000000.) / 1000.0;
-    this.whichCaustic = Math.floor((this.uCurrentTime * 30) % 32) + 1;
-
-    this.uWorld = mat4.create();
-    this.uWorldViewProj = mat4.create();
-    this.uWorldInvTranspose = mat4.create();
-
-    this.jellyfishGroup.map((jellyfish)=>{
-      jellyfish.uWorld = this.uWorld;
-      jellyfish.uWorldViewProj = this.uWorldViewProj;
-      jellyfish.uWorldInvTranspose = this.uWorldInvTranspose;
-      jellyfish.uLightPos = new Float32Array([10.0, 40.0, -60.0]);
-      jellyfish.uLightRadius = 200.0;
-      jellyfish.uLightCol = vec4.fromValues(0.8, 1.3, 1.1, 1.0);
-      jellyfish.uAmbientCol = vec4.fromValues(0.3, 0.2, 1.0, 1.0);
-      jellyfish.uFresnelCol = vec4.fromValues(0.8, 0.7, 0.6, 1.1);
-      jellyfish.uFresnelPower = 1.0;
-
-      jellyfish.rotation = 0;
-      jellyfish.lastUpdateTime = this.lastUpdateTime;
-      jellyfish.uCurrentTime = this.uCurrentTime;
-      jellyfish.whichCaustic = this.whichCaustic;
-    });
-
-  };
-
-  JellyfishGroup.prototype.updateUniforms = function(side){
-    this.updateTime();
-
-    this.uWorld = mat4.create();
-    mat4.translate(this.uWorld,this.uWorld,   [0.0, 5.0, -75.0]);
-    mat4.rotate(this.uWorld,this.uWorld,      glMatrix.toRadian(Math.sin(this.rotation / 10.0) * 30.0),   [0.0, 1.0, 0.0]);
-    mat4.rotate(this.uWorld,this.uWorld,      glMatrix.toRadian(Math.sin(this.rotation / 20.0) * 30.0),   [1.0, 0.0, 0.0]);
-    mat4.scale(this.uWorld,this.uWorld,       [5.0, 5.0, 5.0]);
-    mat4.translate(this.uWorld,this.uWorld,   [0.0, Math.sin(this.rotation / 10.0) * 2.5, 0.0])
-
-    mat4.invert(this.uWorldInvTranspose, this.uWorld);
-    mat4.transpose(this.uWorldInvTranspose, this.uWorldInvTranspose);
-
-    if(this.vrDisplay){
-      this.updateUniformsVR(side);
-    }else{
-      this.uWorldViewProj = mat4.create();
-      mat4.perspective(this.uWorldViewProj, glMatrix.toRadian(30.0), this.viewport.x/this.viewport.y, 20.0,120.0);
-      mat4.multiply(this.uWorldViewProj,this.uWorldViewProj, this.uWorld);
-    }
-
-    this.jellyfishGroup.map((jellyfish)=>{
-      jellyfish.uWorld = this.uWorld;
-      jellyfish.uWorldViewProj = this.uWorldViewProj;
-      jellyfish.uWorldInvTranspose = this.uWorldInvTranspose;
-
-      jellyfish.rotation = this.rotation;
-      jellyfish.lastUpdateTime = this.lastUpdateTime;
-      jellyfish.uCurrentTime = this.uCurrentTime;
-      jellyfish.whichCaustic = this.whichCaustic;
-    });
-  };
-
-  JellyfishGroup.prototype.updateUniformsVR = function(side){
-    var pose = this.vrDisplay.getPose();
-    if(side){
-      var eye = this.vrDisplay.getEyeParameters(side);
-    }
-    var orientation = pose.orientation;
-    var position = pose.position;
-    if (!orientation) { orientation = [0, 0, 0, 1]; }
-    if (!position) { position = [0, 0, 0]; }
-
-    var viewMatrix = mat4.create();
-    if (eye)
-      mat4.perspectiveFromFieldOfView(this.uWorldViewProj, eye.fieldOfView, 0.1, 1024.0);
-    else
-      mat4.perspective(this.uWorldViewProj, Math.PI*0.4, canvas.width / canvas.height, 0.1, 1024.0);
-    mat4.fromRotationTranslation(viewMatrix, orientation, position);
-    if (eye){
-      mat4.translate(viewMatrix, viewMatrix, eye.offset);
-    }
-    mat4.invert(viewMatrix, viewMatrix);
-
-    mat4.multiply(this.uWorldViewProj,this.uWorldViewProj, viewMatrix);
-    mat4.multiply(this.uWorldViewProj,this.uWorldViewProj, this.uWorld);
-  }
-
-  JellyfishGroup.prototype.updateTime = function(){
-    var now = (new Date()).getTime(); // We are here in ms
-    var elapsedTime = (now - this.lastUpdateTime);
-    this.rotation += (2.0 * elapsedTime) / 1000.0;
-    this.uCurrentTime = (now % 100000000) / 1000.0;
-    this.whichCaustic = Math.floor((this.uCurrentTime * 30) % 32) + 1;
-    this.lastUpdateTime = now;
-  };
-
-  JellyfishGroup.prototype.render = function(){
-    this.updateUniforms();
-    this.jellyfishGroup.map((jellyfish)=>{
-      jellyfish.render();
-    })
-  };
-
-  JellyfishGroup.prototype.renderLeft = function(){
-    this.updateUniforms("left");
-    this.jellyfishGroup.map((jellyfish)=>{
-      jellyfish.render();
-    })
-  };
-
-  JellyfishGroup.prototype.renderRight = function(){
-    this.updateUniforms("right");
-    this.jellyfishGroup.map((jellyfish)=>{
-      jellyfish.render();
-    })
-  };
-
-  return JellyfishGroup;
 })();
