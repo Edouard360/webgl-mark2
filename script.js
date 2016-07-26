@@ -29,10 +29,6 @@ var getImages = function(list){
 var main=function(data) {
 
   canvas=document.getElementById("canvas_webgl");
-  container = document.createElement( 'div' );
-  document.body.appendChild( container );
-  stats = new Stats();
-  container.appendChild( stats.dom );
 
   try {
     GL = canvas.getContext("webgl", {antialias: true,alpha:false,preserveDrawingBuffer:true});
@@ -73,7 +69,6 @@ var main=function(data) {
     GL.clear(GL.COLOR_BUFFER_BIT|GL.DEPTH_BUFFER_BIT);
     drawing();
     requestAnimationFrame(animate);
-    stats.update();
   };
   animate(0);
 }
@@ -103,7 +98,6 @@ getXHR('./data/attributes/jellyfish_colors.json').then(JSON.parse).then(function
 getXHR('./data/attributes/jellyfish_ifaces.json').then(JSON.parse).then(function(value){object_promise.jellyfish.faces = value}),
 getXHR('./data/img/list.json').then(JSON.parse).then(getImages).then(function(value){object_promise.jellyfish.images = value})
 ]
-
 
 Promise.all(array_promise).then(function(){
     main(object_promise);

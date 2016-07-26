@@ -16,6 +16,11 @@ window.Jellyfish = (function(){
     this.getUniformLocation();
     this.setUniforms();
 
+    this.startTime = (new Date()).getTime();
+
+    this.accumulatedTimeInMs = 0;
+    this.countForFPS = 0;
+
     this.indexcount = data.jellyfish.faces.length;
   };
 
@@ -185,12 +190,20 @@ window.Jellyfish = (function(){
   };
 
   Jellyfish.prototype.updateTime = function(){
-    var now = (new Date()).getTime(); // We are here in ms
-    var elapsedTime = (now - this.lastUpdateTime);
-    this.rotation += (2.0 * elapsedTime) / 1000.0;
-    this.uCurrentTime = (now % 100000000) / 1000.0;
+    this.now = (new Date()).getTime(); // We are here in ms
+    this.elapsedTime = (this.now - this.lastUpdateTime);
+    this.rotation += (2.0 * this.elapsedTime) / 1000.0;
+    this.uCurrentTime = (this.now % 100000000) / 1000.0;
     this.whichCaustic = Math.floor((this.uCurrentTime * 30) % 32) + 1;
-    this.lastUpdateTime = now;
+    this.lastUpdateTime = this.now;
+
+    if (this.countForFPS++ == 5000) {
+      this.endTime = this.now;
+      this.countForFPS = 0;  
+      console.log("Average FPS :", 5000 * 1000 / (this.endTime - this.startTime));
+      this.startTime = this.endTime;
+    }
+
   };
 
   Jellyfish.prototype.bindUniforms = function(program){
@@ -218,17 +231,15 @@ window.Jellyfish = (function(){
   }
 
   Jellyfish.prototype.render = function(){
-    var GL = this.GL;
-    var program = this.program;
 
     this.updateUniforms();
     this.bufferVertexAttributes();
 
-    GL.useProgram(program);
+    this.GL.useProgram(this.program);
 
-    this.bindUniforms(program);
+    this.bindUniforms(this.program);
 
-    GL.drawElements(GL.TRIANGLES, this.indexcount, GL.UNSIGNED_INT, 0);
+    this.GL.drawElements(GL.TRIANGLES, this.indexcount, GL.UNSIGNED_INT, 0);
   };
 
   return Jellyfish;
