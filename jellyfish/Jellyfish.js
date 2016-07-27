@@ -4,9 +4,6 @@ window.Jellyfish = (function(){
 
   var Jellyfish = function (GL, data) {
     this.GL = GL;
-    console.log(data);
-    this.vrDisplay = data.vrDisplay;
-
     this.program = createProgramFromShaders(data.shaders);
 
     this.getAttribLocation();
@@ -22,39 +19,6 @@ window.Jellyfish = (function(){
     this.countForFPS = 0;
 
     this.indexcount = data.jellyfish.faces.length;
-  };
-
-  Jellyfish.prototype.createAndInitProgram = function(shaders){
-    var vertexShader = GL.createShader(GL.VERTEX_SHADER);
-    GL.shaderSource(vertexShader, shaders.VS);
-    GL.compileShader(vertexShader);
-
-    if (!GL.getShaderParameter(vertexShader, GL.COMPILE_STATUS)) {
-      console.log(GL.getShaderInfoLog(vertexShader));
-      return null;
-    }
-
-    var fragmentShader = GL.createShader(GL.FRAGMENT_SHADER);
-    GL.shaderSource(fragmentShader, shaders.FS);
-    GL.compileShader(fragmentShader);
-
-    if (!GL.getShaderParameter(fragmentShader, GL.COMPILE_STATUS)) {
-      console.log(GL.getShaderInfoLog(fragmentShader));
-      return null;
-    }
-
-    shaderProgram = GL.createProgram();
-    GL.attachShader(shaderProgram, vertexShader);
-    GL.attachShader(shaderProgram, fragmentShader);
-
-    GL.linkProgram(shaderProgram);
-
-    if ( !GL.getProgramParameter( shaderProgram, GL.LINK_STATUS) ) {
-      var info = GL.getProgramInfoLog(shaderProgram);
-      throw "Could not compile WebGL program. \n\n" + info;
-    }
-
-    return shaderProgram;
   };
 
   Jellyfish.prototype.getAttribLocation = function(){
@@ -203,7 +167,6 @@ window.Jellyfish = (function(){
       console.log("Average FPS :", 5000 * 1000 / (this.endTime - this.startTime));
       this.startTime = this.endTime;
     }
-
   };
 
   Jellyfish.prototype.bindUniforms = function(program){
