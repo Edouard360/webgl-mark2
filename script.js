@@ -31,7 +31,7 @@ var main=function(data) {
   canvas=document.getElementById("canvas_webgl");
 
   try {
-    GL = canvas.getContext("webgl", {antialias: true,alpha:false,preserveDrawingBuffer:true});
+    GL = canvas.getContext("webgl", {antialias: true,alpha:false});
   } catch (e) {
     alert("You are not webgl compatible :(") ;
     return false;
@@ -46,7 +46,9 @@ var main=function(data) {
   GL.blendFunc(GL.SRC_ALPHA, GL.ONE_MINUS_SRC_ALPHA);
   GL.frontFace(GL.CW);
 
-  var jellyfish = new JellyfishGroup(GL, data);
+  //var jellyfish = new Jellyfish(GL, data);
+  //var jellyfish = new JellyfishGroup(GL, data);
+  var jellyfish = new InstancedJellyfish(GL, GLext, data);
 
   var gradient = new Gradient(GL,data.gradient);
 
@@ -98,7 +100,7 @@ getXHR('./data/attributes/jellyfish_texture.json').then(JSON.parse).then(functio
 getXHR('./data/attributes/jellyfish_colors.json').then(JSON.parse).then(function(value){object_promise.jellyfish.colors = value}),
 getXHR('./data/attributes/jellyfish_ifaces.json').then(JSON.parse).then(function(value){object_promise.jellyfish.faces = value}),
 getXHR('./data/img/list.json').then(JSON.parse).then(getImages).then(function(value){object_promise.jellyfish.images = value}),
-getXHR('./data/group/jellyfish_army_coordinates.json').then(JSON.parse).then(function(value){object_promise.jellyfish.offset= value;})
+getXHR('./data/group/offset.json').then(JSON.parse).then(function(value){object_promise.jellyfish.offset= value;})
 ]
 
 Promise.all(array_promise).then(function(){
