@@ -208,3 +208,37 @@ window.Jellyfish = (function(){
   return Jellyfish;
 
 })();
+
+//Create an array of different jellyfish each with different program
+
+window.JellyfishGroup = (function(){
+  var JellyfishGroup = function(GL,data){
+    this.jellyfishGroup = data.jellyfish.offset.map((coord)=>{
+      var data_tmp = newDataJellyfishWithOffset(coord[0],coord[1],coord[2]);
+      data_tmp.jellyfish.images = data.jellyfish.images;
+      return new Jellyfish(GL,data_tmp);
+    });
+
+    function newDataJellyfishWithOffset(x,y,z){
+      var data_tmp = JSON.parse(JSON.stringify(data));
+      data_tmp.jellyfish.vertices = data_tmp.jellyfish.vertices.map((coord,i)=>{
+        return coord + (((i%3)==0)?x:0) + (((i%3)==1)?y:0) +(((i%3)==2)?z:0)
+      });
+      return data_tmp
+    }
+  }
+
+  JellyfishGroup.prototype.updateViewport = function(canvas){
+    this.jellyfishGroup.map((jellyfish)=>{
+      jellyfish.updateViewport(canvas);
+    });
+  }
+
+  JellyfishGroup.prototype.render = function(){
+    this.jellyfishGroup.map((jellyfish)=>{
+      jellyfish.render();
+    })
+  };
+
+  return JellyfishGroup;
+})();

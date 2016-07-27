@@ -46,7 +46,7 @@ var main=function(data) {
   GL.blendFunc(GL.SRC_ALPHA, GL.ONE_MINUS_SRC_ALPHA);
   GL.frontFace(GL.CW);
 
-  var jellyfish = new Jellyfish(GL, data);
+  var jellyfish = new JellyfishGroup(GL, data);
 
   var gradient = new Gradient(GL,data.gradient);
 
@@ -82,7 +82,8 @@ var object_promise = {
     texture: undefined,
     colors: undefined,
     faces: undefined,
-    images: undefined
+    images: undefined,
+    offset: undefined
   }
 }
 
@@ -96,7 +97,8 @@ getXHR('./data/attributes/jellyfish_normals.json').then(JSON.parse).then(functio
 getXHR('./data/attributes/jellyfish_texture.json').then(JSON.parse).then(function(value){object_promise.jellyfish.texture = value}),
 getXHR('./data/attributes/jellyfish_colors.json').then(JSON.parse).then(function(value){object_promise.jellyfish.colors = value}),
 getXHR('./data/attributes/jellyfish_ifaces.json').then(JSON.parse).then(function(value){object_promise.jellyfish.faces = value}),
-getXHR('./data/img/list.json').then(JSON.parse).then(getImages).then(function(value){object_promise.jellyfish.images = value})
+getXHR('./data/img/list.json').then(JSON.parse).then(getImages).then(function(value){object_promise.jellyfish.images = value}),
+getXHR('./data/group/jellyfish_army_coordinates.json').then(JSON.parse).then(function(value){object_promise.jellyfish.offset= value;})
 ]
 
 Promise.all(array_promise).then(function(){
