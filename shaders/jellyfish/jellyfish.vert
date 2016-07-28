@@ -2,7 +2,7 @@ attribute vec3 position;
 attribute vec3 normal;
 attribute vec3 color;
 attribute vec3 texture;
-//ONLY FOR INSTANCED JELLYFISH attribute vec3 aInstancedOffset;
+//ONLY FOR INSTANCED JELLYFISH attribute vec3 offset;
 
 uniform mat4 uWorld;
 uniform mat4 uWorldViewProj;
@@ -32,12 +32,12 @@ void main(void)
 
     //Vertex Animation
     float speed = uCurrentTime / 15.0;
-    float offset = smoothstep(0.0, 1.0, max(0.0, -position.y-0.8) / 10.0);
-    vec3 pos = position + //ONLY FOR INSTANCED JELLYFISH aInstancedOffset +
+    float localoffset = smoothstep(0.0, 1.0, max(0.0, -position.y-0.8) / 10.0);
+    vec3 pos = position + //ONLY FOR INSTANCED JELLYFISH offset +
         color / 12.0 *
-        sin(speed * 15.0 + position.y / 2.0) * (1.0 - offset);
+        sin(speed * 15.0 + position.y / 2.0) * (1.0 - localoffset);
     pos = pos + color / 8.0 *
-        sin(speed * 30.0 + position.y / 0.5) * (1.0 - offset);
+        sin(speed * 30.0 + position.y / 0.5) * (1.0 - localoffset);
     vec4 pos4 = vec4(pos, 1.0);
     gl_Position = uWorldViewProj * pos4; 
 
