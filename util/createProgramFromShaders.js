@@ -30,3 +30,19 @@ createProgramFromShaders = function(shaders){
 
 		return shaderProgram;
 };
+
+createTexture = function(images){
+	return images.map(function(img,i){
+      texture = GL.createTexture();
+      GL.bindTexture(GL.TEXTURE_2D, texture);
+      GL.pixelStorei(GL.UNPACK_FLIP_Y_WEBGL, true);
+      GL.texParameteri(GL.TEXTURE_2D,GL.TEXTURE_WRAP_S,(i>0?GL.REPEAT:GL.CLAMP_TO_EDGE));
+      GL.texParameteri(GL.TEXTURE_2D,GL.TEXTURE_WRAP_T,(i>0?GL.REPEAT:GL.CLAMP_TO_EDGE));
+      GL.texParameteri(GL.TEXTURE_2D,GL.TEXTURE_MIN_FILTER,GL.LINEAR);
+      GL.texParameteri(GL.TEXTURE_2D,GL.TEXTURE_MAG_FILTER,GL.LINEAR);
+      GL.texImage2D(GL.TEXTURE_2D,0, GL.RGBA,GL.RGBA,GL.UNSIGNED_BYTE,img);
+      GL.bindTexture(GL.TEXTURE_2D,null);
+      return texture;
+    });
+}
+

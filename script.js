@@ -46,11 +46,11 @@ var main=function(data) {
   GL.blendFunc(GL.SRC_ALPHA, GL.ONE_MINUS_SRC_ALPHA);
   GL.frontFace(GL.CW);
 
-  //var jellyfish = new Jellyfish(GL, data);
+  var jellyfish = new Jellyfish(GL, data);
   //var jellyfish = new JellyfishGroup(GL, data);
-  var jellyfish = new InstancedJellyfish(GL, GLext, data);
+  //var jellyfish = new InstancedJellyfish(GL, GLext, data);
 
-  var gradient = new Gradient(GL,data.gradient);
+  var gradient = new Gradient(data.gradient);
 
   var drawing = function(){
     GL.viewport(0, 0, canvas.width, canvas.height);
@@ -79,11 +79,11 @@ var object_promise = {
   shaders:{VS: undefined,FS: undefined},
   gradient:{VS: undefined,FS: undefined},
   jellyfish:{
-    vertices: undefined,
-    normals: undefined,
+    position: undefined,
+    normal: undefined,
     texture: undefined,
-    colors: undefined,
-    faces: undefined,
+    color: undefined,
+    index: undefined,
     images: undefined,
     offset: undefined
   }
@@ -94,11 +94,11 @@ getXHR('./shaders/jellyfish/jellyfish.vert').then(function(value){object_promise
 getXHR('./shaders/jellyfish/jellyfish.frag').then(function(value){object_promise.shaders.FS = value}),
 getXHR('./shaders/gradient/gradient.vert').then(function(value){object_promise.gradient.VS = value}),
 getXHR('./shaders/gradient/gradient.frag').then(function(value){object_promise.gradient.FS = value}),
-getXHR('./data/attributes/jellyfish_vertices.json').then(JSON.parse).then(function(value){object_promise.jellyfish.vertices = value}),
-getXHR('./data/attributes/jellyfish_normals.json').then(JSON.parse).then(function(value){object_promise.jellyfish.normals = value}),
+getXHR('./data/attributes/jellyfish_position.json').then(JSON.parse).then(function(value){object_promise.jellyfish.position = value}),
+getXHR('./data/attributes/jellyfish_normal.json').then(JSON.parse).then(function(value){object_promise.jellyfish.normal = value}),
 getXHR('./data/attributes/jellyfish_texture.json').then(JSON.parse).then(function(value){object_promise.jellyfish.texture = value}),
-getXHR('./data/attributes/jellyfish_colors.json').then(JSON.parse).then(function(value){object_promise.jellyfish.colors = value}),
-getXHR('./data/attributes/jellyfish_ifaces.json').then(JSON.parse).then(function(value){object_promise.jellyfish.faces = value}),
+getXHR('./data/attributes/jellyfish_color.json').then(JSON.parse).then(function(value){object_promise.jellyfish.color = value}),
+getXHR('./data/attributes/jellyfish_index.json').then(JSON.parse).then(function(value){object_promise.jellyfish.index = value}),
 getXHR('./data/img/list.json').then(JSON.parse).then(getImages).then(function(value){object_promise.jellyfish.images = value}),
 getXHR('./data/group/offset.json').then(JSON.parse).then(function(value){object_promise.jellyfish.offset= value;})
 ]

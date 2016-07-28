@@ -1,7 +1,7 @@
-attribute vec3 aVertexPosition;
-attribute vec3 aVertexNormal;
-attribute vec3 aVertexColor;
-attribute vec3 aTextureCoord;
+attribute vec3 position;
+attribute vec3 normal;
+attribute vec3 color;
+attribute vec3 texture;
 //ONLY FOR INSTANCED JELLYFISH attribute vec3 aInstancedOffset;
 
 uniform mat4 uWorld;
@@ -26,23 +26,23 @@ varying vec3 vFresnel;
 void main(void)
 { 
 /*    
-    vColor = normalize(aVertexNormal);
-    gl_Position = vec4(aVertexPosition, 1.0);
+    vColor = normalize(normal);
+    gl_Position = vec4(position, 1.0);
 */
 
     //Vertex Animation
     float speed = uCurrentTime / 15.0;
-    float offset = smoothstep(0.0, 1.0, max(0.0, -aVertexPosition.y-0.8) / 10.0);
-    vec3 pos = aVertexPosition + //ONLY FOR INSTANCED JELLYFISH aInstancedOffset +
-        aVertexColor / 12.0 *
-        sin(speed * 15.0 + aVertexPosition.y / 2.0) * (1.0 - offset);
-    pos = pos + aVertexColor / 8.0 *
-        sin(speed * 30.0 + aVertexPosition.y / 0.5) * (1.0 - offset);
+    float offset = smoothstep(0.0, 1.0, max(0.0, -position.y-0.8) / 10.0);
+    vec3 pos = position + //ONLY FOR INSTANCED JELLYFISH aInstancedOffset +
+        color / 12.0 *
+        sin(speed * 15.0 + position.y / 2.0) * (1.0 - offset);
+    pos = pos + color / 8.0 *
+        sin(speed * 30.0 + position.y / 0.5) * (1.0 - offset);
     vec4 pos4 = vec4(pos, 1.0);
     gl_Position = uWorldViewProj * pos4; 
 
     vWorld = uWorld * pos4;
-    vec3 vVertexNormal = normalize((uWorldInvTranspose * vec4(aVertexNormal, 1.0)).xyz);
+    vec3 vVertexNormal = normalize((uWorldInvTranspose * vec4(normal, 1.0)).xyz);
 
     //diffuse
     vec3 lightDir = normalize(uLightPos - vWorld.xyz);
@@ -60,7 +60,7 @@ void main(void)
     vFresnel = uFresnelCol.rgb * vec3(uFresnelCol.a * fresnelProduct);
 
     // texcoord
-    vTextureCoord = aTextureCoord.xy;
+    vTextureCoord = texture.xy;
 
 
 
