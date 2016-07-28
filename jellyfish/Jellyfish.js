@@ -13,18 +13,21 @@ window.Jellyfish = (function(){
     this.program.attributes = {};
     this.buffer = {};
 
-    this.uniform = [
-    {name:"uWorld",             value: mat4.create(), type: GL.uniformMatrix4fv},
-    {name:"uWorldViewProj",     value: mat4.create(), type: GL.uniformMatrix4fv},
-    {name:"uWorldInvTranspose", value: mat4.create(), type: GL.uniformMatrix4fv},
-    {name:"uLightPos",          value:new Float32Array([10.0, 40.0, -60.0]),type: GL.uniform3fv },
-    {name:"uLightRadius",       value:200.0,          type: GL.uniform1f},
-    {name:"uLightCol",          value:vec4.fromValues(0.8, 1.3, 1.1, 1.0),type: GL.uniform4fv},
-    {name:"uAmbientCol",        value:vec4.fromValues(0.3, 0.2, 1.0, 1.0),type: GL.uniform4fv},
-    {name:"uFresnelCol",        value:vec4.fromValues(0.8, 0.7, 0.6, 1.1),type: GL.uniform4fv},
-    {name:"uFresnelPower  ",    value:1.0,            type: GL.uniform1f},
-    {name:"uCurrentTime",       value: 0.0,           type: GL.uniform1f}
-    ]
+    this.uniform = {
+      uWorld:             {value: mat4.create(), func: GL.uniformMatrix4fv},
+      uWorldViewProj:     {value: mat4.create(), func: GL.uniformMatrix4fv},
+      uWorldInvTranspose: {value: mat4.create(), func: GL.uniformMatrix4fv},
+      uLightPos:          {value:new Float32Array([10.0, 40.0, -60.0]),func: GL.uniform3fv },
+      uLightRadius:       {value:200.0,          func: GL.uniform1f},
+      uLightCol:          {value:vec4.fromValues(0.8, 1.3, 1.1, 1.0),func: GL.uniform4fv},
+      uAmbientCol:        {value:vec4.fromValues(0.3, 0.2, 1.0, 1.0),func: GL.uniform4fv},
+      uFresnelCol:        {value:vec4.fromValues(0.8, 0.7, 0.6, 1.1),func: GL.uniform4fv},
+      uFresnelPower:      {value: 1.0,           func: GL.uniform1f},
+      uCurrentTime:       {value: 0.0,           func: GL.uniform1f},
+      uSampler:           {},
+      uSampler1:          {}
+    }
+    
 
     this.getAttribLocation();
     this.createAndFillBuffers(data.jellyfish);
@@ -70,24 +73,15 @@ window.Jellyfish = (function(){
   };
 
   Jellyfish.prototype.getUniformLocation = function(){
-    this.program.uniform = {
-      uWorld:GL.getUniformLocation(this.program, "uWorld"),
-      uWorldViewProj:GL.getUniformLocation(this.program, "uWorldViewProj"),
-      uWorldInvTranspose:GL.getUniformLocation(this.program, "uWorldInvTranspose"),
-      uLightPos:GL.getUniformLocation(this.program, "uLightPos"),
-      uLightRadius:GL.getUniformLocation(this.program, "uLightRadius"),
-      uLightCol:GL.getUniformLocation(this.program, "uLightCol"),
-      uAmbientCol:GL.getUniformLocation(this.program, "uAmbientCol"),
-      uFresnelCol:GL.getUniformLocation(this.program, "uFresnelCol"),
-      uFresnelPower:GL.getUniformLocation(this.program, "uFresnelPower"),
-      uCurrentTime:GL.getUniformLocation(this.program, "uCurrentTime"),
-
-      uSampler:GL.getUniformLocation(this.program, "uSampler"),
-      uSampler1:GL.getUniformLocation(this.program, "uSampler1")
+    for (var name in this.uniform){
+      if (this.uniform.hasOwnProperty(name)) {
+           this.uniform[name].location = GL.getUniformLocation(this.program, name);
+      }
     }
   }
 
   Jellyfish.prototype.setUniforms = function(){
+
 
     // store into a subobject
     this.uWorld = mat4.create();
@@ -148,21 +142,21 @@ window.Jellyfish = (function(){
   };
 
   Jellyfish.prototype.bindUniforms = function(program){
-    GL.uniformMatrix4fv(program.uniform.uWorld, false, this.uWorld);
-    GL.uniformMatrix4fv(program.uniform.uWorldViewProj, false, this.uWorldViewProj);
-    GL.uniformMatrix4fv(program.uniform.uWorldInvTranspose, false, this.uWorldInvTranspose);
-    GL.uniform3fv(program.uniform.uLightPos, this.uLightPos);
-    GL.uniform1f(program.uniform.uLightRadius, this.uLightRadius);
-    GL.uniform4fv(program.uniform.uLightCol, this.uLightCol);
-    GL.uniform4fv(program.uniform.uAmbientCol, this.uAmbientCol);
-    GL.uniform4fv(program.uniform.uFresnelCol, this.uFresnelCol);
-    GL.uniform1f(program.uniform.uFresnelPower, this.uFresnelPower);
-    GL.uniform1f(program.uniform.uCurrentTime, this.uCurrentTime);
+    GL.uniformMatrix4fv(this.uniform.uWorld.location, false, this.uWorld);
+    GL.uniformMatrix4fv(this.uniform.uWorldViewProj.location, false, this.uWorldViewProj);
+    GL.uniformMatrix4fv(this.uniform.uWorldInvTranspose.location, false, this.uWorldInvTranspose);
+    GL.uniform3fv(this.uniform.uLightPos.location, this.uLightPos);
+    GL.uniform1f(this.uniform.uLightRadius.location, this.uLightRadius);
+    GL.uniform4fv(this.uniform.uLightCol.location, this.uLightCol);
+    GL.uniform4fv(this.uniform.uAmbientCol.location, this.uAmbientCol);
+    GL.uniform4fv(this.uniform.uFresnelCol.location, this.uFresnelCol);
+    GL.uniform1f(this.uniform.uFresnelPower.location, this.uFresnelPower);
+    GL.uniform1f(this.uniform.uCurrentTime.location, this.uCurrentTime);
 
     // 2 - Bind texture
 
-    GL.uniform1i(this.program.uniform.uSampler, 0);
-    GL.uniform1i(this.program.uniform.uSampler1, 1);
+    GL.uniform1i(this.uniform.uSampler.location, 0);
+    GL.uniform1i(this.uniform.uSampler1.location, 1);
 
     GL.activeTexture(GL.TEXTURE0);
     GL.bindTexture(GL.TEXTURE_2D,this.textures[0]);
