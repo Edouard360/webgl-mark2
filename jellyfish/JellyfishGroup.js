@@ -1,6 +1,5 @@
 // *** JellyfishGroup
 
-
 class JellyfishGroup{
   constructor(GL,data){
     this.jellyfishGroup = data.jellyfish.offset.map((coord)=>{

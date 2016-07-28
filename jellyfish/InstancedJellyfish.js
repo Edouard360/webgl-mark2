@@ -1,13 +1,12 @@
 // *** InstancedJellyfish
 
-class InstancedJellyfish extends Jellyfish{
-  constructor(GL,GLext,data) {
+class InstancedJellyfish extends AbstractJellyfish{
+  constructor(GL,data) {
     data.shaders.VS = data.shaders.VS.replace("//ONLY FOR INSTANCED JELLYFISH ","").replace("//ONLY FOR INSTANCED JELLYFISH ","");
     data.jellyfish.offset = [].concat.apply([], data.jellyfish.offset);
-    var attrib = ["position","normal","color","texture","offset"];
-    super(GL,data,attrib);
-    this.GLext = GLext;
+    super(GL,data);   
     this.jellyfishcount = data.jellyfish.offset.length;
+    this.GLext = this.GL.getExtension("ANGLE_instanced_arrays");;
   };
 
   bufferVertexAttributes(){
@@ -15,19 +14,10 @@ class InstancedJellyfish extends Jellyfish{
     this.GLext.vertexAttribDivisorANGLE(this.program.attributes.offset, 3);
   };
 
-  render(){
-    this.GL.useProgram(this.program);
-    this.attribName.map((name)=>{this.GL.enableVertexAttribArray(this.program.attributes[name])});
+  drawElements(){
+     this.GLext.drawElementsInstancedANGLE(GL.TRIANGLES, this.indexcount, GL.UNSIGNED_INT, 0,this.jellyfishcount);
+  }
 
-    this.updateTime();
-    this.updateUniforms();
-    this.bufferVertexAttributes();
-    this.GL.bindBuffer(this.GL.ELEMENT_ARRAY_BUFFER, this.buffer.index);
-    
-    this.bindUniforms();
-
-    this.GLext.drawElementsInstancedANGLE(GL.TRIANGLES, this.indexcount, GL.UNSIGNED_INT, 0,this.jellyfishcount);
-
-    this.attribName.map((name)=>{this.GL.disableVertexAttribArray(this.program.attributes[name])});
-  };
 };
+
+InstancedJellyfish.prototype.attributes = ["position","normal","color","texture","offset"];

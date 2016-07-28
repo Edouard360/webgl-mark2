@@ -37,7 +37,6 @@ var main=function(data) {
     return false;
   }
 
-  GLext = GL.getExtension("ANGLE_instanced_arrays");
   GL.getExtension("OES_element_index_uint");
 
   GL.disable(GL.DEPTH_TEST);
@@ -47,8 +46,8 @@ var main=function(data) {
   GL.frontFace(GL.CW);
 
   //var jellyfish = new SingleJellyfish(GL, data);
-  var jellyfish = new JellyfishGroup(GL, data);
-  //var jellyfish = new InstancedJellyfish(GL, GLext, data);
+  var jellyfish = new InstancedJellyfish(GL, data);
+  //var jellyfish = new InstancedJellyfish(GL, data);
 
   var gradient = new Gradient(data.gradient);
 

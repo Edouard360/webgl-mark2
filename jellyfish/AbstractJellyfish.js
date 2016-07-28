@@ -1,10 +1,10 @@
 // *** Jellyfish
 
-class Jellyfish {
-  constructor(GL,data,attrib) {
+class AbstractJellyfish {
+  constructor(GL,data) {
     this.GL = GL;
     this.program = createProgramFromShaders(data.shaders);
-    this.attribName = attrib;
+    this.attribName = this.attributes;
     this.program.attributes = {};
     this.buffer = {};
 
@@ -36,6 +36,11 @@ class Jellyfish {
     this.indexcount = data.jellyfish.index.length;
   };
 
+  drawElements(){
+    throw "The method drawElements should be overridden.";
+  }
+
+
   getAttribLocation(){
     this.attribName.map((name)=>{
       this.program.attributes[name] = this.GL.getAttribLocation(this.program, name);
@@ -59,6 +64,7 @@ class Jellyfish {
       this.GL.vertexAttribPointer(this.program.attributes[name],3,this.GL.FLOAT,this.GL.FALSE,Float32Array.BYTES_PER_ELEMENT*3,0);
     });
   };
+  
   getUniformLocation(){
     for (var name in this.uniform){
       if (this.uniform.hasOwnProperty(name)) {
@@ -125,4 +131,20 @@ class Jellyfish {
     this.GL.activeTexture(this.GL.TEXTURE1);
     this.GL.bindTexture(this.GL.TEXTURE_2D, this.textures[this.whichCaustic]);
   };
+
+  render(){
+    this.GL.useProgram(this.program);
+    this.attribName.map((name)=>{this.GL.enableVertexAttribArray(this.program.attributes[name])});
+
+    this.updateTime();
+    this.updateUniforms();
+    this.bufferVertexAttributes();
+    this.GL.bindBuffer(this.GL.ELEMENT_ARRAY_BUFFER, this.buffer.index);
+    
+    this.bindUniforms();
+    this.drawElements();
+
+    this.attribName.map((name)=>{this.GL.disableVertexAttribArray(this.program.attributes[name])});
+  }
 }
+AbstractJellyfish.prototype.attributes = [];
