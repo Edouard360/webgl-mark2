@@ -9,6 +9,22 @@ window.Jellyfish = (function(){
   var Jellyfish = function (GL, data) {
     this.GL = GL;
     this.program = createProgramFromShaders(data.shaders);
+    this.attribName = ["position","normal","color","texture"];
+    this.program.attributes = {};
+    this.buffer = {};
+
+    this.uniform = [
+    {name:"uWorld",             value: mat4.create(), type: GL.uniformMatrix4fv},
+    {name:"uWorldViewProj",     value: mat4.create(), type: GL.uniformMatrix4fv},
+    {name:"uWorldInvTranspose", value: mat4.create(), type: GL.uniformMatrix4fv},
+    {name:"uLightPos",          value:new Float32Array([10.0, 40.0, -60.0]),type: GL.uniform3fv },
+    {name:"uLightRadius",       value:200.0,          type: GL.uniform1f},
+    {name:"uLightCol",          value:vec4.fromValues(0.8, 1.3, 1.1, 1.0),type: GL.uniform4fv},
+    {name:"uAmbientCol",        value:vec4.fromValues(0.3, 0.2, 1.0, 1.0),type: GL.uniform4fv},
+    {name:"uFresnelCol",        value:vec4.fromValues(0.8, 0.7, 0.6, 1.1),type: GL.uniform4fv},
+    {name:"uFresnelPower  ",    value:1.0,            type: GL.uniform1f},
+    {name:"uCurrentTime",       value: 0.0,           type: GL.uniform1f}
+    ]
 
     this.getAttribLocation();
     this.createAndFillBuffers(data.jellyfish);
@@ -26,65 +42,27 @@ window.Jellyfish = (function(){
   };
 
   Jellyfish.prototype.getAttribLocation = function(){
-
-    var attribName = ["position","normal","color","texture"];
-    this.program.attributes = {};
-
-    attribName.map((name)=>{
+    this.attribName.map((name)=>{
       this.program.attributes[name] = GL.getAttribLocation(this.program, name);
     })
   }
 
   Jellyfish.prototype.createAndFillBuffers = function(data){
-
-    //WILL NEED TO BE ENABLED
-    var buffersToBind = [
-      {data:data.vertices, attribute:this.program.attributes.position},
-      {data:data.normal, attribute:this.program.attributes.normal},
-      {data:data.color, attribute:this.program.attributes.color},
-      {data:data.texture, attribute:this.program.attributes.texture},
-      ];
-
-    this.positionBuffer = GL.createBuffer();
-    GL.bindBuffer(GL.ARRAY_BUFFER, this.positionBuffer);
-    GL.bufferData(GL.ARRAY_BUFFER,new Float32Array(data.position),GL.STATIC_DRAW);
-    
-    // 1 - realign names of attributes and buffers, plural and names
-    // 2 - create iterations when needed
-    this.normalBuffer = GL.createBuffer();
-    GL.bindBuffer(GL.ARRAY_BUFFER,this.normalBuffer);
-    GL.bufferData(GL.ARRAY_BUFFER,new Float32Array(data.normal),GL.STATIC_DRAW);
-
-    this.colorBuffer = GL.createBuffer();
-    GL.bindBuffer(GL.ARRAY_BUFFER,this.colorBuffer);
-    GL.bufferData(GL.ARRAY_BUFFER,new Float32Array(data.color),GL.STATIC_DRAW);
-
-    this.textureBuffer = GL.createBuffer();
-    GL.bindBuffer(GL.ARRAY_BUFFER,this.textureBuffer);
-    GL.bufferData(GL.ARRAY_BUFFER,new Float32Array(data.texture),GL.STATIC_DRAW);
-
-    //WILL NOT NEED TO BE ENABLED
-    this.indexBuffer= GL.createBuffer();
-    GL.bindBuffer(GL.ELEMENT_ARRAY_BUFFER, this.indexBuffer);
+    this.attribName.map((name)=>{
+      this.buffer[name] = GL.createBuffer();
+      GL.bindBuffer(GL.ARRAY_BUFFER, this.buffer[name]);
+      GL.bufferData(GL.ARRAY_BUFFER,new Float32Array(data[name]),GL.STATIC_DRAW);
+    })
+    this.buffer.index= GL.createBuffer();
+    GL.bindBuffer(GL.ELEMENT_ARRAY_BUFFER, this.buffer.index);
     GL.bufferData(GL.ELEMENT_ARRAY_BUFFER, new Uint32Array(data.index), GL.STATIC_DRAW);
   };
 
   Jellyfish.prototype.bufferVertexAttributes = function(){
-    bufferAttribute(this.positionBuffer, this.program.attributes.position);
-    bufferAttribute(this.normalBuffer, this.program.attributes.normal);
-    bufferAttribute(this.colorBuffer, this.program.attributes.color);
-    bufferAttribute(this.textureBuffer, this.program.attributes.texture);
-
-    function bufferAttribute(buffer,position){
-      GL.bindBuffer(GL.ARRAY_BUFFER, buffer);
-      GL.vertexAttribPointer(position,
-        3,
-        GL.FLOAT,
-        GL.FALSE,
-        Float32Array.BYTES_PER_ELEMENT*3,
-        0
-      );
-    }
+    this.attribName.map((name)=>{
+      GL.bindBuffer(GL.ARRAY_BUFFER, this.buffer[name]);
+      GL.vertexAttribPointer(this.program.attributes[name],3,GL.FLOAT,GL.FALSE,Float32Array.BYTES_PER_ELEMENT*3,0);
+    });
   };
 
   Jellyfish.prototype.prepareTextures = function(images){
@@ -212,7 +190,7 @@ window.Jellyfish = (function(){
 
     this.updateUniforms();
     this.bufferVertexAttributes();
-    GL.bindBuffer(GL.ELEMENT_ARRAY_BUFFER, this.indexBuffer);
+    GL.bindBuffer(GL.ELEMENT_ARRAY_BUFFER, this.buffer.index);
 
     this.GL.useProgram(this.program);
 
