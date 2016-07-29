@@ -4,7 +4,8 @@
   "description": "Port of glmark2 in Webgl",
   "main": "script.js",
   "dependencies": {
-    "gl-matrix": "^2.3.2"
+    "gl-matrix": "^2.3.2",
+    "simple-server": "^1.0.1"
   },
   "devDependencies": {},
   "scripts": {
