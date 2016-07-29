@@ -5,6 +5,9 @@
 [![Linux Build][travis-image]][travis-url]
 [![Test Coverage][coveralls-image]][coveralls-url]
 
+## Credit to glmark2
+
+The jellyfish example is inspired from the [glmark2 repository](https://github.com/glmark2/glmark2). 
 
 ## Install
 

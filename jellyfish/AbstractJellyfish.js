@@ -14,7 +14,7 @@ class AbstractJellyfish {
     this.buffer = {};
 
     this.uniform = {
-      uWorld:             {value: mat4.create(),                      func: "uniformMatrix4fv"},
+      uWorld:             {value: mat4.create(), func: "uniformMatrix4fv"},
       uWorldViewProj:     {value: mat4.create(), func: "uniformMatrix4fv"},
       uWorldInvTranspose: {value: mat4.create(), func: "uniformMatrix4fv"},
       uLightPos:          {value: vec3.fromValues(10.0, 40.0, -60.0),func: "uniform3fv" },
@@ -28,7 +28,7 @@ class AbstractJellyfish {
       uSampler1:          {value:1,              func: "uniform1i"}
     }
     
-    this.getAttribLocation();
+    this.setAttribLocation();
     this.createAndFillBuffers(data.jellyfish);
     this.textures = createTexture(data.jellyfish.images, this.GL);
   
@@ -48,7 +48,7 @@ class AbstractJellyfish {
   /**
    * Set program.attributes to contain the location of all the attributes used in the program.
    */
-  getAttribLocation(){
+  setAttribLocation(){
     this.attribName.map((name)=>{
       this.program.attributes[name] = this.GL.getAttribLocation(this.program, name);
     })
@@ -131,10 +131,11 @@ class AbstractJellyfish {
     this.whichCaustic = Math.floor((this.uniform.uCurrentTime.value * 30) % 32) + 1;
     this.lastUpdateTime = this.now;
 
-    if (this.countForFPS++ == 5000) {
+    if (this.countForFPS++ == 200) {
       this.endTime = this.now;
       this.countForFPS = 0;  
-      console.log("Average FPS :", 5000 * 1000 / (this.endTime - this.startTime));
+      info.textContent = "Average FPS : "+ (200 * 1000 / (this.endTime - this.startTime)).toPrecision(4);+"\n";
+      //console.log();
       this.startTime = this.endTime;
     }
   };

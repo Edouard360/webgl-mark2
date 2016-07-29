@@ -1,7 +1,4 @@
 
-
-
-
 var main=function(data) {
 
   canvas=document.getElementById("canvas_webgl");
@@ -21,9 +18,9 @@ var main=function(data) {
   GL.blendFunc(GL.SRC_ALPHA, GL.ONE_MINUS_SRC_ALPHA);
   GL.frontFace(GL.CW);
 
-  //var jellyfish = new SingleJellyfish(GL, data);
+  var jellyfish = new SingleJellyfish(GL, data);
   //var jellyfish = new InstancedJellyfish(GL, data);
-  var jellyfish = new InstancedJellyfish(GL, data);
+  //var jellyfish = new InstancedJellyfish(GL, data);
 
   var gradient = new Gradient(data.gradient);
 
