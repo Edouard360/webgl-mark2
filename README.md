@@ -23,7 +23,7 @@ This project should work with Firefox 49+ or Chrome 51+.
 ## Results
 
 WIP
-
+![Awesome group of jellyfish](https://github.com/Edouard360/webgl-mark2/blob/master/data/img/Trim.gif)
 
 ## License
 
