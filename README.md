@@ -25,6 +25,8 @@ This project should work with Firefox 49+ or Chrome 51+.
 WIP
 
 
+![Awesome group of jellyfish](https://github.com/Edouard360/webgl-mark2/blob/master/data/img/Trim.gif)
+
 ## License
 
 This software is  maintained with love by [Inovia Team](https://inovia-team.com).
