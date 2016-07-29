@@ -1,6 +1,6 @@
-# Benchmark Webgl glmark2
+#  Webgl-mark2
 
-> Port of glmark2 in webgl.
+> Port of glmark2 in webgl. It is a benchmark of the webgl rendering engine in JS.
 
 [![Linux Build][travis-image]][travis-url]
 [![Test Coverage][coveralls-image]][coveralls-url]

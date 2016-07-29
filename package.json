@@ -13,7 +13,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/Edouard360/BenchmarkJS.git"
+    "url": "git+https://github.com/Edouard360/webgl-mark2.git"
   },
   "keywords": [
     "js",
@@ -29,7 +29,7 @@
   "author": "Edouard Mehlman",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/Edouard360/BenchmarkJS/issues"
+    "url": "https://github.com/Edouard360/webgl-mark2/issues"
   },
-  "homepage": "https://github.com/Edouard360/BenchmarkJS#readme"
+  "homepage": "https://github.com/Edouard360/webgl-mark2#readme"
 }
