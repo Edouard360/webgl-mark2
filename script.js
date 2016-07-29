@@ -1,30 +1,6 @@
-var getXHR = function(url){
-    return new Promise(function(resolve,reject){
-      loadTextResource(url, function (err, data) {
-          if (err) {
-            reject(err);
-          }else{
-            resolve(data);
-          }
-      })
-  })
-}
 
-var getImages = function(list){
-  return Promise.all(list.map(
-    function(url){return getImage("./data/img/" + url )}
-    ));
 
-  function getImage(url){
-    return new Promise(function(resolve,reject){
-      var image = new Image();
-      image.onload = function(){
-        resolve(image);
-      }
-      image.src = url
-    })
-  }
-}
+
 
 var main=function(data) {
 
@@ -46,14 +22,13 @@ var main=function(data) {
   GL.frontFace(GL.CW);
 
   //var jellyfish = new SingleJellyfish(GL, data);
-  var jellyfish = new InstancedJellyfish(GL, data);
   //var jellyfish = new InstancedJellyfish(GL, data);
+  var jellyfish = new InstancedJellyfish(GL, data);
 
   var gradient = new Gradient(data.gradient);
 
   var drawing = function(){
     GL.viewport(0, 0, canvas.width, canvas.height);
-    GL.clearColor(1.,1.,1.,1.);
     gradient.render();
     jellyfish.render();
   }
@@ -61,7 +36,7 @@ var main=function(data) {
   function onResize () {
     canvas.width = canvas.clientWidth;
     canvas.height = canvas.clientHeight;
-    jellyfish.updateViewport(canvas);
+    jellyfish.updateViewport(canvas.width,canvas.height);
   }
   window.addEventListener("resize", onResize, false);
   onResize();
@@ -89,17 +64,17 @@ var object_promise = {
 }
 
 var array_promise =[
-getXHR('./shaders/jellyfish/jellyfish.vert').then(function(value){object_promise.shaders.VS = value}),
-getXHR('./shaders/jellyfish/jellyfish.frag').then(function(value){object_promise.shaders.FS = value}),
-getXHR('./shaders/gradient/gradient.vert').then(function(value){object_promise.gradient.VS = value}),
-getXHR('./shaders/gradient/gradient.frag').then(function(value){object_promise.gradient.FS = value}),
-getXHR('./data/attributes/jellyfish_position.json').then(JSON.parse).then(function(value){object_promise.jellyfish.position = value}),
-getXHR('./data/attributes/jellyfish_normal.json').then(JSON.parse).then(function(value){object_promise.jellyfish.normal = value}),
-getXHR('./data/attributes/jellyfish_texture.json').then(JSON.parse).then(function(value){object_promise.jellyfish.texture = value}),
-getXHR('./data/attributes/jellyfish_color.json').then(JSON.parse).then(function(value){object_promise.jellyfish.color = value}),
-getXHR('./data/attributes/jellyfish_index.json').then(JSON.parse).then(function(value){object_promise.jellyfish.index = value}),
-getXHR('./data/img/list.json').then(JSON.parse).then(getImages).then(function(value){object_promise.jellyfish.images = value}),
-getXHR('./data/group/offset.json').then(JSON.parse).then(function(value){object_promise.jellyfish.offset= value;})
+getText('./shaders/jellyfish/jellyfish.vert').then(function(value){object_promise.shaders.VS = value}),
+getText('./shaders/jellyfish/jellyfish.frag').then(function(value){object_promise.shaders.FS = value}),
+getText('./shaders/gradient/gradient.vert').then(function(value){object_promise.gradient.VS = value}),
+getText('./shaders/gradient/gradient.frag').then(function(value){object_promise.gradient.FS = value}),
+getText('./data/attributes/jellyfish_position.json').then(JSON.parse).then(function(value){object_promise.jellyfish.position = value}),
+getText('./data/attributes/jellyfish_normal.json').then(JSON.parse).then(function(value){object_promise.jellyfish.normal = value}),
+getText('./data/attributes/jellyfish_texture.json').then(JSON.parse).then(function(value){object_promise.jellyfish.texture = value}),
+getText('./data/attributes/jellyfish_color.json').then(JSON.parse).then(function(value){object_promise.jellyfish.color = value}),
+getText('./data/attributes/jellyfish_index.json').then(JSON.parse).then(function(value){object_promise.jellyfish.index = value}),
+getText('./data/img/list.json').then(JSON.parse).then(getImages).then(function(value){object_promise.jellyfish.images = value}),
+getText('./data/group/offset.json').then(JSON.parse).then(function(value){object_promise.jellyfish.offset= value;})
 ]
 
 Promise.all(array_promise).then(function(){

@@ -1,5 +1,4 @@
-// *** InstancedJellyfish
-
+/** Class representing a group of jellyfish. */
 class InstancedJellyfish extends AbstractJellyfish{
   constructor(GL,data) {
     data.shaders.VS = data.shaders.VS.replace("//ONLY FOR INSTANCED JELLYFISH ","").replace("//ONLY FOR INSTANCED JELLYFISH ","");

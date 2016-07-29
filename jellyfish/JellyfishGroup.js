@@ -1,5 +1,4 @@
-// *** JellyfishGroup
-
+/** Class representing a group of jellyfish. */
 class JellyfishGroup{
   constructor(GL,data){
     this.jellyfishGroup = data.jellyfish.offset.map((coord)=>{
