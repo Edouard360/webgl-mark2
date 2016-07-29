@@ -1,0 +1,35 @@
+{
+  "name": "benchmark-js",
+  "version": "0.0.1",
+  "description": "Port of glmark2 in Webgl",
+  "main": "script.js",
+  "dependencies": {
+    "gl-matrix": "^2.3.2"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node ./bin/server-start.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Edouard360/BenchmarkJS.git"
+  },
+  "keywords": [
+    "js",
+    "gl",
+    "webgl",
+    "javascript",
+    "glmark2",
+    "benchmark",
+    "jellyfish",
+    "3d",
+    "web"
+  ],
+  "author": "Edouard Mehlman",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Edouard360/BenchmarkJS/issues"
+  },
+  "homepage": "https://github.com/Edouard360/BenchmarkJS#readme"
+}
