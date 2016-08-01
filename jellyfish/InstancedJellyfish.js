@@ -1,12 +1,16 @@
 /** Class representing a group of jellyfish. */
 class InstancedJellyfish extends AbstractJellyfish{
   constructor(GL,data) {
-    data.shaders.VS = data.shaders.VS.replace("//ONLY FOR INSTANCED JELLYFISH ","").replace("//ONLY FOR INSTANCED JELLYFISH ","");
-    data.jellyfish.offset = [].concat.apply([], data.jellyfish.offset);
-    super(GL,data);   
-    this.jellyfishcount = data.jellyfish.offset.length;
+    var data_ = JSON.parse(JSON.stringify(data));
+    data_.jellyfish.images = data.jellyfish.images;
+    data_.jellyfish.offset = [].concat.apply([], data.jellyfish.offset);
+    super(GL,data_);   
     this.GLext = this.GL.getExtension("ANGLE_instanced_arrays");;
   };
+
+  createProgram(data) {
+    return createProgramFromShaders({VS:data.shaders.VS.replace(new RegExp("//ONLY FOR INSTANCED JELLYFISH ",'g'),""),FS:data.shaders.FS},this.GL)
+  }
 
   bufferVertexAttributes(){
     super.bufferVertexAttributes();
@@ -14,7 +18,8 @@ class InstancedJellyfish extends AbstractJellyfish{
   };
 
   drawElements(){
-     this.GLext.drawElementsInstancedANGLE(GL.TRIANGLES, this.indexcount, GL.UNSIGNED_INT, 0,this.jellyfishcount);
+     this.GLext.drawElementsInstancedANGLE(this.GL.TRIANGLES, this.indexcount, this.GL.UNSIGNED_INT, 0,3*this.jellyfishCount);
+     this.GL.hasBeenModified = true;
   }
 
 };

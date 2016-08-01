@@ -8,7 +8,7 @@ class AbstractJellyfish {
    */
   constructor(GL,data) {
     this.GL = GL;
-    this.program = createProgramFromShaders(data.shaders);
+    this.program = this.createProgram(data);
     this.attribName = this.attributes;
     this.program.attributes = {};
     this.buffer = {};
@@ -43,6 +43,10 @@ class AbstractJellyfish {
 
   drawElements(){
     throw "The method drawElements should be overridden.";
+  }
+
+  createProgram(data){
+    return createProgramFromShaders(data.shaders,this.GL);
   }
 
   /**
@@ -131,12 +135,12 @@ class AbstractJellyfish {
     this.whichCaustic = Math.floor((this.uniform.uCurrentTime.value * 30) % 32) + 1;
     this.lastUpdateTime = this.now;
 
-    if (this.countForFPS++ == 200) {
+    if (this.countForFPS++ == 5000) {
       this.endTime = this.now;
       this.countForFPS = 0;  
-      info.textContent = "Average FPS : "+ (200 * 1000 / (this.endTime - this.startTime)).toPrecision(4);+"\n";
-      //console.log();
+      info.textContent = "Average FPS : "+ (5000 * 1000 / (this.endTime - this.startTime)).toPrecision(4);+"\n";
       this.startTime = this.endTime;
+
     }
   };
 
@@ -165,13 +169,13 @@ class AbstractJellyfish {
    */
   render(){
     this.GL.useProgram(this.program);
-    this.attribName.map((name)=>{this.GL.enableVertexAttribArray(this.program.attributes[name])});
+    this.attribName.map((name)=>{this.GL.enableVertexAttribArray(this.program.attributes[name] )});
 
     this.updateTime();
     this.updateUniforms();
     this.bufferVertexAttributes();
     this.GL.bindBuffer(this.GL.ELEMENT_ARRAY_BUFFER, this.buffer.index);
-    
+
     this.bindUniforms();
     this.drawElements();
 

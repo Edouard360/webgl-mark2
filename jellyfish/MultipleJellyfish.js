@@ -1,5 +1,5 @@
 /** Class representing a group of jellyfish. */
-class JellyfishGroup{
+class MultipleJellyfish{
   constructor(GL,data){
     this.jellyfishGroup = data.jellyfish.offset.map((coord)=>{
       var data_tmp = newDataJellyfishWithOffset(coord[0],coord[1],coord[2]);
@@ -15,9 +15,9 @@ class JellyfishGroup{
       return data_tmp
     }
   };
-  updateViewport(canvas){
+  updateViewport(x,y){
     this.jellyfishGroup.map((jellyfish)=>{
-      jellyfish.updateViewport(canvas);
+      jellyfish.updateViewport(x,y);
     });
   };
   render(){

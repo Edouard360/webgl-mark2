@@ -1,49 +1,75 @@
 
 var main=function(data) {
-
   canvas=document.getElementById("canvas_webgl");
-
   try {
-    GL = canvas.getContext("webgl", {antialias: true,alpha:false});
-  } catch (e) {
+    var GL = canvas.getContext("webgl", {antialias: true,alpha:false});
+    var jellyfishCount = 1;
+  }catch (e) {
     alert("You are not webgl compatible :(") ;
     return false;
   }
-
   GL.getExtension("OES_element_index_uint");
 
-  GL.disable(GL.DEPTH_TEST);
-  GL.disable(GL.CULL_FACE);
-  GL.enable(GL.BLEND);
-  GL.blendFunc(GL.SRC_ALPHA, GL.ONE_MINUS_SRC_ALPHA);
-  GL.frontFace(GL.CW);
+  document.getElementById("select").addEventListener("change",function(event){
+    switch(event.target.value){
+      case "single":
+        resetToInitialState(GL);
+        refresh(SingleJellyfish,jellyfishCount);
+        break;
+      case "instanced":
+        resetToInitialState(GL);
+        refresh(InstancedJellyfish,jellyfishCount);
+        break;
+      case "multiple":
+        resetToInitialState(GL);
+        refresh(MultipleJellyfish,jellyfishCount)
+        break;
+      default:
+       throw 'dont know option ' + event.target.value
+    }
+  })
 
-  var jellyfish = new SingleJellyfish(GL, data);
-  //var jellyfish = new InstancedJellyfish(GL, data);
-  //var jellyfish = new InstancedJellyfish(GL, data);
+  document.getElementById("input").addEventListener("input",function(event){
+      jellyfishCount = event.target.value;
+      refresh(SingleJellyfish,jellyfishCount)
+  });
 
-  var gradient = new Gradient(data.gradient);
+function refresh(BenchmarkClass,jellyfishCount) {
 
-  var drawing = function(){
-    GL.viewport(0, 0, canvas.width, canvas.height);
-    gradient.render();
-    jellyfish.render();
+   // To do delete program
+    GL.disable(GL.DEPTH_TEST);
+    GL.disable(GL.CULL_FACE);
+    GL.enable(GL.BLEND);
+    GL.blendFunc(GL.SRC_ALPHA, GL.ONE_MINUS_SRC_ALPHA);
+    GL.frontFace(GL.CW);
+
+    var gradient = new Gradient(GL,data.gradient);
+
+    var benchmark = new BenchmarkClass(GL,data);
+    benchmark.jellyfishCount = jellyfishCount;
+
+    var drawing = function(){
+      GL.viewport(0, 0, canvas.width, canvas.height);
+      gradient.render();
+      benchmark.render();
+    }
+
+    function onResize () {
+      canvas.width = canvas.clientWidth;
+      canvas.height = canvas.clientHeight;
+      benchmark.updateViewport(canvas.width,canvas.height);
+    }
+    window.addEventListener("resize", onResize, false);
+    onResize();
+
+    var animate=function() {
+      GL.clear(GL.COLOR_BUFFER_BIT|GL.DEPTH_BUFFER_BIT);
+      drawing();
+      requestAnimationFrame(animate);
+    };
+    animate(0);
   }
-
-  function onResize () {
-    canvas.width = canvas.clientWidth;
-    canvas.height = canvas.clientHeight;
-    jellyfish.updateViewport(canvas.width,canvas.height);
-  }
-  window.addEventListener("resize", onResize, false);
-  onResize();
-
-  var animate=function() {
-    GL.clear(GL.COLOR_BUFFER_BIT|GL.DEPTH_BUFFER_BIT);
-    drawing();
-    requestAnimationFrame(animate);
-  };
-  animate(0);
+  refresh(SingleJellyfish,1);
 }
 
 var object_promise = {
@@ -71,7 +97,7 @@ getText('./data/attributes/jellyfish_texture.json').then(JSON.parse).then(functi
 getText('./data/attributes/jellyfish_color.json').then(JSON.parse).then(function(value){object_promise.jellyfish.color = value}),
 getText('./data/attributes/jellyfish_index.json').then(JSON.parse).then(function(value){object_promise.jellyfish.index = value}),
 getText('./data/img/list.json').then(JSON.parse).then(getImages).then(function(value){object_promise.jellyfish.images = value}),
-getText('./data/group/offset.json').then(JSON.parse).then(function(value){object_promise.jellyfish.offset= value;})
+getText('./data/group/offset.json').then(JSON.parse).then(function(value){object_promise.jellyfish.offset = value;})
 ]
 
 Promise.all(array_promise).then(function(){
