@@ -1,27 +1,33 @@
-
+'use strict';
+/**
+ * The main function. It creates an new canvas and prepare listeners for changing benchmarks.
+ * The structure of the 'data' parameter is at the end of this script: object_promise.
+ * @param {Object} data - The data asynchronously loaded for running the benchmark.
+ */
 var main=function(data) {
-  canvas=document.getElementById("canvas_webgl");
-  try {
-    var GL = canvas.getContext("webgl", {antialias: true,alpha:false});
-    var jellyfishCount = 1;
-  }catch (e) {
-    alert("You are not webgl compatible :(") ;
-    return false;
-  }
-  GL.getExtension("OES_element_index_uint");
+  var canvas_container = document.getElementById("canvas_container");
+  var input = document.getElementById("input");
+  var select = document.getElementById("select");
+  var canvas = getNewCanvas(canvas_container);
 
-  document.getElementById("select").addEventListener("change",function(event){
+  var handle = undefined; // The handle to cancel the requestAnimationFrame
+  var jellyfishCount = 1; // The initial count of jellyfish
+  
+  select.addEventListener("change",function(event){
+    canvas = getNewCanvas(canvas_container);
+    cancelAnimationFrame(handle);
     switch(event.target.value){
       case "single":
-        resetToInitialState(GL);
+        input.hidden = true;
+        input.value = 1;
         refresh(SingleJellyfish,jellyfishCount);
         break;
       case "instanced":
-        resetToInitialState(GL);
+        input.hidden = false;
         refresh(InstancedJellyfish,jellyfishCount);
         break;
       case "multiple":
-        resetToInitialState(GL);
+        input.hidden = false;
         refresh(MultipleJellyfish,jellyfishCount)
         break;
       default:
@@ -29,14 +35,23 @@ var main=function(data) {
     }
   })
 
-  document.getElementById("input").addEventListener("input",function(event){
+  input.addEventListener("input",function(event){
       jellyfishCount = event.target.value;
-      refresh(SingleJellyfish,jellyfishCount)
+      canvas = getNewCanvas(canvas_container);
+      cancelAnimationFrame(handle);
+      refresh(InstancedJellyfish,jellyfishCount)
   });
 
-function refresh(BenchmarkClass,jellyfishCount) {
+  refresh(SingleJellyfish,1); // Launch the initial benchmark with a single jellyfish
 
-   // To do delete program
+  /**
+   * The refresh function. It gets a context from the current canvas of the main scope.
+   * @param {class} BenchmarkClass - The class to instantiate and benchmark.
+   * @param {int} jellyfishCount - The number of jellyfish to be displayed. 
+   */
+  function refresh(BenchmarkClass,jellyfishCount) {
+    var GL = canvas.getContext("webgl", {antialias: true,alpha:false});
+    GL.getExtension("OES_element_index_uint");
     GL.disable(GL.DEPTH_TEST);
     GL.disable(GL.CULL_FACE);
     GL.enable(GL.BLEND);
@@ -44,8 +59,7 @@ function refresh(BenchmarkClass,jellyfishCount) {
     GL.frontFace(GL.CW);
 
     var gradient = new Gradient(GL,data.gradient);
-
-    var benchmark = new BenchmarkClass(GL,data);
+    var benchmark = new BenchmarkClass(GL,data.jellyfish);
     benchmark.jellyfishCount = jellyfishCount;
 
     var drawing = function(){
@@ -58,24 +72,26 @@ function refresh(BenchmarkClass,jellyfishCount) {
       canvas.width = canvas.clientWidth;
       canvas.height = canvas.clientHeight;
       benchmark.updateViewport(canvas.width,canvas.height);
+      console.log(BenchmarkClass);
     }
-    window.addEventListener("resize", onResize, false);
+    window.addEventListener("resize",onResize, false);
     onResize();
 
-    var animate=function() {
+    var animate=function(){
       GL.clear(GL.COLOR_BUFFER_BIT|GL.DEPTH_BUFFER_BIT);
       drawing();
-      requestAnimationFrame(animate);
+      handle = requestAnimationFrame(animate);
     };
     animate(0);
   }
-  refresh(SingleJellyfish,1);
 }
 
 var object_promise = {
-  shaders:{VS: undefined,FS: undefined},
-  gradient:{VS: undefined,FS: undefined},
+  gradient:{
+    shaders:{VS: undefined,FS: undefined}
+  },
   jellyfish:{
+    shaders:{VS: undefined,FS: undefined},
     position: undefined,
     normal: undefined,
     texture: undefined,
@@ -87,10 +103,10 @@ var object_promise = {
 }
 
 var array_promise =[
-getText('./shaders/jellyfish/jellyfish.vert').then(function(value){object_promise.shaders.VS = value}),
-getText('./shaders/jellyfish/jellyfish.frag').then(function(value){object_promise.shaders.FS = value}),
-getText('./shaders/gradient/gradient.vert').then(function(value){object_promise.gradient.VS = value}),
-getText('./shaders/gradient/gradient.frag').then(function(value){object_promise.gradient.FS = value}),
+getText('./shaders/jellyfish/jellyfish.vert').then(function(value){object_promise.jellyfish.shaders.VS = value}),
+getText('./shaders/jellyfish/jellyfish.frag').then(function(value){object_promise.jellyfish.shaders.FS = value}),
+getText('./shaders/gradient/gradient.vert').then(function(value){object_promise.gradient.shaders.VS = value}),
+getText('./shaders/gradient/gradient.frag').then(function(value){object_promise.gradient.shaders.FS = value}),
 getText('./data/attributes/jellyfish_position.json').then(JSON.parse).then(function(value){object_promise.jellyfish.position = value}),
 getText('./data/attributes/jellyfish_normal.json').then(JSON.parse).then(function(value){object_promise.jellyfish.normal = value}),
 getText('./data/attributes/jellyfish_texture.json').then(JSON.parse).then(function(value){object_promise.jellyfish.texture = value}),

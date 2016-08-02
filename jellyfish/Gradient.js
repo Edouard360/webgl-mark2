@@ -1,8 +1,8 @@
 // *** Gradient Object *** //
 
-function Gradient(GL,shaders){
+function Gradient(GL,gradient){
 
-    var program = createProgramFromShaders(shaders,GL);
+    var program = createProgramFromShaders(GL,gradient.shaders);
     var data = {
             vertices:[-1.0,-1.0,-1.0, 1.0,1.0, -1.0, 1.0, 1.0],
             uvIn:[1.0, 1.0, 0.0, 0.0, 1.0, 1.0, 0.0, 0.0]

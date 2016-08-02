@@ -5,4 +5,4 @@ class SingleJellyfish extends AbstractJellyfish{
   }
 };
 
-SingleJellyfish.prototype.attributes = ["position","normal","color","texture"];
+SingleJellyfish.prototype.attributeList = ["position","normal","color","texture"];
