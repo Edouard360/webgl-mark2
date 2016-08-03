@@ -20,4 +20,15 @@ createTexture = function(images,GL){
     });
 }
 
-
+getTexturesJellyfish = function(imagesList){
+  var loader = new THREE.TextureLoader();
+  return imagesList.map(function(url,i){
+    return loader.load(url, function(texture){
+      texture.minFilter = THREE.LinearFilter;
+      texture.magFilter = THREE.LinearFilter;
+      texture.wrapS = (i>0?THREE.RepeatWrapping:THREE.ClampToEdgeWrapping);
+      texture.wrapT = (i>0?THREE.RepeatWrapping:THREE.ClampToEdgeWrapping);
+      return texture;
+    });
+  })
+}

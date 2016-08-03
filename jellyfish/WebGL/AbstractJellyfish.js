@@ -1,5 +1,5 @@
 /** Abstract class representing a jellyfish. */
-class AbstractJellyfish {
+class AbstractJellyfish extends AbstractTimer{
 
   /**
    * Constructor for the abstract Jellyfish.
@@ -16,6 +16,7 @@ class AbstractJellyfish {
    * @param {Array} jellyfish.offset - The offset of each independant jellyfish (only for class InstancedJellyfish)   
    */
   constructor(GL,jellyfish) {
+    super();
     this.GL = GL;
     this.program = this.createProgram(jellyfish.shaders);
     
@@ -41,10 +42,6 @@ class AbstractJellyfish {
     this.getUniformLocation(); // Update this.uniform 
 
     this.textures = createTexture(jellyfish.images, this.GL);    
-
-    this.rotation = 0;
-    this.lastUpdateTime = this.startTime = (new Date()).getTime();
-    this.countForFPS = 0;
 
     this.indexcount = jellyfish.index.length;
   };
@@ -118,11 +115,16 @@ class AbstractJellyfish {
    * Update the uniforms values.
    */
   updateUniforms(){
+    this.rotation += (2.0 * this.elapsedTime) / 1000.0;
+    this.uniform.uCurrentTime.value = (this.now % 100000000) / 1000.0;
+    this.whichCaustic = Math.floor((this.uniform.uCurrentTime.value * 30) % 32) + 1;
+
     let uWorld = mat4.create();
     mat4.translate(uWorld,uWorld,   [0.0, 5.0, -75.0]);
     mat4.rotate(uWorld,uWorld,      glMatrix.toRadian(Math.sin(this.rotation / 10.0) * 30.0),   [0.0, 1.0, 0.0]);
     mat4.rotate(uWorld,uWorld,      glMatrix.toRadian(Math.sin(this.rotation / 20.0) * 30.0),   [1.0, 0.0, 0.0]);
     mat4.scale(uWorld,uWorld,       [5.0, 5.0, 5.0]);
+
     mat4.translate(uWorld,uWorld,   [0.0, Math.sin(this.rotation / 10.0) * 2.5, 0.0])
     this.uniform.uWorld.value = uWorld;
 
@@ -145,26 +147,6 @@ class AbstractJellyfish {
    */
   updateViewport(x,y){
     this.viewport = {x:x,y:y};
-  };
-
-  /**
-   * Update the time parameters of the class.
-   */
-  updateTime(){
-    this.now = (new Date()).getTime(); // We are here in ms
-    this.elapsedTime = (this.now - this.lastUpdateTime);
-    this.rotation += (2.0 * this.elapsedTime) / 1000.0;
-    this.uniform.uCurrentTime.value = (this.now % 100000000) / 1000.0;
-    this.whichCaustic = Math.floor((this.uniform.uCurrentTime.value * 30) % 32) + 1;
-    this.lastUpdateTime = this.now;
-
-    // Display the time only every 200 FPS - otherwise, the influence is not negligible.
-    if (this.countForFPS++ == 200) {
-      this.endTime = this.now;
-      this.countForFPS = 0;  
-      info.textContent = "Average FPS : "+ (200 * 1000 / (this.endTime - this.startTime)).toPrecision(4);+"\n";
-      this.startTime = this.endTime;
-    }
   };
 
   /**

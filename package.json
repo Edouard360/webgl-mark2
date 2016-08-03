@@ -5,7 +5,8 @@
   "main": "script.js",
   "dependencies": {
     "gl-matrix": "^2.3.2",
-    "simple-server": "^1.0.1"
+    "simple-server": "^1.0.1",
+    "three.js":"^0.77.0"
   },
   "devDependencies": {},
   "scripts": {

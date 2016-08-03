@@ -72,7 +72,6 @@ var main=function(data) {
       canvas.width = canvas.clientWidth;
       canvas.height = canvas.clientHeight;
       benchmark.updateViewport(canvas.width,canvas.height);
-      console.log(BenchmarkClass);
     }
     window.addEventListener("resize",onResize, false);
     onResize();

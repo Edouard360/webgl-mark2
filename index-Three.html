@@ -3,6 +3,7 @@
 	<head>
 		<meta charset='utf-8'/>
 		<script src="node_modules/gl-matrix/dist/gl-matrix-min.js"></script>
+		<script type="text/javascript" src="node_modules/three.js/node_modules/three/three.min.js"></script>
 		<link rel="stylesheet" type="text/css" href="style.css">
 
 		<script type="text/javascript" src="./util/getTextAndImages.js"></script>
@@ -10,23 +11,23 @@
 		<script type="text/javascript" src="./util/createTexture.js"></script>
 		<script type="text/javascript" src="./util/getNewCanvas.js"></script>
 
+
 		<script type="text/javascript" src="./jellyfish/AbstractTimer.js"></script>
+
 		<script type="text/javascript" src="./jellyfish/WebGL/AbstractJellyfish.js"></script>
 		<script type="text/javascript" src="./jellyfish/WebGL/SingleJellyfish.js"></script>
 		<script type="text/javascript" src="./jellyfish/WebGL/MultipleJellyfish.js"></script>
 		<script type="text/javascript" src="./jellyfish/WebGL/InstancedJellyfish.js"></script>
 		<script type="text/javascript" src="./jellyfish/WebGL/Gradient.js"></script>
+
+		<script type="text/javascript" src="./jellyfish/ThreeJS/ThreeAbstractJellyfish.js"></script>
+		<script type="text/javascript" src="./jellyfish/ThreeJS/ThreeSingleJellyfish.js"></script>
+		<script type="text/javascript" src="./jellyfish/ThreeJS/ThreeInstancedJellyfish.js"></script>
+		<script type="text/javascript" src="./jellyfish/ThreeJS/ThreeGradient.js"></script>
 	</head>
 <body style='margin:0px;background-color: black'>
+	<canvas id="my_canvas"></canvas>
 	<div id='canvas_container'></div>
-	<div id="info"> Please wait for FPS evalutation... It might take a few seconds</div>
-	<select name="Benchmark" class="select" id="select" autocomplete="off">
-		<option id="single" value="single" selected>Single Jellyfish</option>
-	  	<option id="instanced" value="instanced" >Instanced Jellyfish</option>
-	  	<option id="multiple" value="multiple">Multiple Jellyfish</option>
-	</select>
-	<br/>
-	<input id="input" name="input" class="select" hidden value='1'></input>
 </body>
-<script type="text/javascript" src="./script.js"></script>
+<script type="text/javascript" src="./script-Three.js"></script>
 </html>
