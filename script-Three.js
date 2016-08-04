@@ -61,7 +61,7 @@ var main=function(data) {
    */
   function refresh(BenchmarkClass,jellyfishCount) {
     var scene = new THREE.Scene(); // position initialized at 0,0,0
-    var camera = new THREE.PerspectiveCamera( 30, window.innerWidth / window.innerHeight, 20.0, 120.0); //In degrees not radians
+    var camera = new THREE.PerspectiveCamera(CAMERA.ANGLE, window.innerWidth / window.innerHeight, CAMERA.NEAR, CAMERA.FAR); //In degrees not radians
 
     var benchmark = new BenchmarkClass(data.jellyfish);
     var gradient = new ThreeGradient(data.gradient); 

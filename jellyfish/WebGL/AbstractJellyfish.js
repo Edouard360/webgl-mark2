@@ -129,7 +129,7 @@ class AbstractJellyfish extends AbstractTimer{
     this.uniform.uWorld.value = uWorld;
 
     let uWorldViewProj = mat4.create();
-    mat4.perspective(uWorldViewProj, glMatrix.toRadian(30.0), this.viewport.x/this.viewport.y, 20.0,120.0);
+    mat4.perspective(uWorldViewProj, glMatrix.toRadian(CAMERA.ANGLE), this.viewport.x/this.viewport.y, CAMERA.NEAR,CAMERA.FAR);
     mat4.multiply(uWorldViewProj,uWorldViewProj, this.uniform.uWorld.value);
     this.uniform.uWorldViewProj.value = uWorldViewProj;
 
