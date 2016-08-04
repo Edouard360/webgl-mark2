@@ -1,4 +1,15 @@
 'use strict';
+/** @var {object} gui - A global variable for user interface */
+var gui;
+
+/**
+ * @var {object} handle - A global variable to hold handles
+ * @property {int} handle.animation      - for cancelling the requestAnimationFrame
+ * @property {int} handle.jellyfishCount - for changing the jellyfish count display between ≠ instances
+ * @property {int} handle.averageFPS     - for changing the average FPS display between ≠ instances.
+ */
+var handle = {};
+
 /**
  * The main function. It creates an new canvas and prepare listeners for changing benchmarks.
  * The structure of the 'data' parameter is at the end of this script: object_promise.
@@ -6,31 +17,78 @@
  */ 
 var main=function(data) {
   var container = document.getElementById("canvas_container");
+  var canvas = getNewCanvas(canvas_container);
 
-  var scene = new THREE.Scene(); // position initialized at 0,0,0
-  var camera = new THREE.PerspectiveCamera( 30, window.innerWidth / window.innerHeight, 20.0, 120.0); //In degrees not radians
-  var jellyfish = new ThreeInstancedJellyfish(data.jellyfish);
-  var gradient = new ThreeGradient(data.gradient); 
+  var jellyfishCount = 1; // The initial count of jellyfish
 
-  scene.add(jellyfish.mesh);
-  scene.add(gradient.mesh);
-
-  var renderer = new THREE.WebGLRenderer({canvas:document.getElementById("my_canvas")});
-  renderer.setClearColor( 0xFFFFFF );
-  renderer.setPixelRatio( window.devicePixelRatio );
-  renderer.setSize( window.innerWidth, window.innerHeight );
-
-  if ( renderer.extensions.get( 'ANGLE_instanced_arrays' ) === false ) {
-    document.getElementById( "notSupported" ).style.display = "";
-    return;
+  /**
+   * The code bellow simply sets the user interface for changing parameters
+   */
+  function JellyfishText(){
+      this.class = "Single";
   }
+  var text = new JellyfishText();
+  gui = new dat.GUI();
 
-  function animate() {
-    jellyfish.update();
-    renderer.render( scene, camera );
-    requestAnimationFrame( animate );
+  gui
+  .add(text, 'class', ["Single","Instanced"])
+  .name("Class")
+  .onChange((value)=>{
+    canvas = getNewCanvas(canvas_container);
+    cancelAnimationFrame(handle.animation);
+    gui.remove(handle.jellyfishCount);
+    gui.remove(handle.averageFPS);
+    switch(value){
+      case "Single":
+        jellyfishCount = 1;
+        refresh(ThreeSingleJellyfish,jellyfishCount);
+        break;
+      case "Instanced":
+        jellyfishCount = 3;
+        refresh(ThreeInstancedJellyfish,jellyfishCount);
+        break;
+      default:
+       throw 'dont know option ' + value
+    }
+  });
+
+  refresh(ThreeSingleJellyfish,1); // Launch the initial benchmark with a single jellyfish
+
+  /**
+   * The refresh function. It gets a context from the current canvas of the main scope.
+   * @param {class} BenchmarkClass - The class to instantiate and benchmark.
+   * @param {int} jellyfishCount - The number of jellyfish to be displayed. 
+   */
+  function refresh(BenchmarkClass,jellyfishCount) {
+    var scene = new THREE.Scene(); // position initialized at 0,0,0
+    var camera = new THREE.PerspectiveCamera( 30, window.innerWidth / window.innerHeight, 20.0, 120.0); //In degrees not radians
+
+    var benchmark = new BenchmarkClass(data.jellyfish);
+    var gradient = new ThreeGradient(data.gradient); 
+
+    benchmark.geometry.maxInstancedCount = jellyfishCount;
+    handle.jellyfishCount = gui.add(benchmark.geometry, 'maxInstancedCount',1,MAX_NUMBER).name("Number").step(1);
+    handle.averageFPS = gui.add(benchmark, 'averageFPS').name("Average FPS");
+
+    scene.add(benchmark.mesh);
+    scene.add(gradient.mesh);
+
+    var renderer = new THREE.WebGLRenderer({canvas:canvas});
+    renderer.setClearColor( 0xFFFFFF );
+    renderer.setPixelRatio( window.devicePixelRatio );
+    renderer.setSize( window.innerWidth, window.innerHeight );
+
+    if ( renderer.extensions.get( 'ANGLE_instanced_arrays' ) === false ) {
+      alert('ANGLE_instanced_arrays not supported'); 
+    }
+
+    function animate() {
+      benchmark.update();
+      renderer.render( scene, camera );
+      handle.animation = requestAnimationFrame( animate );
+    }
+    animate(0);
   }
-  animate();
 }
 
 var object_promise = {

@@ -1,4 +1,15 @@
 'use strict';
+/** @var {object} gui - A global variable for user interface */
+var gui;
+
+/**
+ * @var {object} handle - A global variable to hold handles
+ * @property {int} handle.animation      - for cancelling the requestAnimationFrame
+ * @property {int} handle.jellyfishCount - for changing the jellyfish count display between ≠ instances
+ * @property {int} handle.averageFPS     - for changing the average FPS display between ≠ instances.
+ */
+var handle = {};
+
 /**
  * The main function. It creates an new canvas and prepare listeners for changing benchmarks.
  * The structure of the 'data' parameter is at the end of this script: object_promise.
@@ -6,40 +17,39 @@
  */
 var main=function(data) {
   var canvas_container = document.getElementById("canvas_container");
-  var input = document.getElementById("input");
-  var select = document.getElementById("select");
   var canvas = getNewCanvas(canvas_container);
 
-  var handle = undefined; // The handle to cancel the requestAnimationFrame
   var jellyfishCount = 1; // The initial count of jellyfish
-  
-  select.addEventListener("change",function(event){
+
+  /**
+   * The code bellow simply sets the user interface for changing parameters
+   */
+  function JellyfishText(){
+      this.class = "Single";
+  }
+  var text = new JellyfishText();
+  gui = new dat.GUI();
+
+  gui
+  .add(text, 'class', ["Single","Instanced"])
+  .name("Class")
+  .onChange((value)=>{
     canvas = getNewCanvas(canvas_container);
-    cancelAnimationFrame(handle);
-    switch(event.target.value){
-      case "single":
-        input.hidden = true;
-        input.value = 1;
+    cancelAnimationFrame(handle.animation);
+    gui.remove(handle.jellyfishCount);
+    gui.remove(handle.averageFPS);
+    switch(value){
+      case "Single":
+        jellyfishCount = 1;
         refresh(SingleJellyfish,jellyfishCount);
         break;
-      case "instanced":
-        input.hidden = false;
+      case "Instanced":
+        jellyfishCount = 3;
         refresh(InstancedJellyfish,jellyfishCount);
         break;
-      case "multiple":
-        input.hidden = false;
-        refresh(MultipleJellyfish,jellyfishCount)
-        break;
       default:
-       throw 'dont know option ' + event.target.value
+       throw 'dont know option ' + value
     }
-  })
-
-  input.addEventListener("input",function(event){
-      jellyfishCount = event.target.value;
-      canvas = getNewCanvas(canvas_container);
-      cancelAnimationFrame(handle);
-      refresh(InstancedJellyfish,jellyfishCount)
   });
 
   refresh(SingleJellyfish,1); // Launch the initial benchmark with a single jellyfish
@@ -62,6 +72,9 @@ var main=function(data) {
     var benchmark = new BenchmarkClass(GL,data.jellyfish);
     benchmark.jellyfishCount = jellyfishCount;
 
+    handle.jellyfishCount = gui.add(benchmark, 'jellyfishCount',1,MAX_NUMBER).name("Number").step(1);
+    handle.averageFPS = gui.add(benchmark, 'averageFPS').name("Average FPS");
+
     var drawing = function(){
       GL.viewport(0, 0, canvas.width, canvas.height);
       gradient.render();
@@ -79,7 +92,7 @@ var main=function(data) {
     var animate=function(){
       GL.clear(GL.COLOR_BUFFER_BIT|GL.DEPTH_BUFFER_BIT);
       drawing();
-      handle = requestAnimationFrame(animate);
+      handle.animation = requestAnimationFrame(animate);
     };
     animate(0);
   }

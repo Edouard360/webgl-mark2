@@ -5,6 +5,7 @@ class AbstractTimer{
     this.rotation = 0;
     this.lastUpdateTime = this.startTime = (new Date()).getTime();
     this.countForFPS = 0;
+    this.averageFPS = "Wait for FPS update"
   };
 
   updateTime(){
@@ -13,11 +14,17 @@ class AbstractTimer{
     this.lastUpdateTime = this.now;
 
     // Display the time only every 200 FPS - otherwise, the influence is not negligible.
-    if (this.countForFPS++ == 200) {
+    // Using gui.dat from Google for the nice interface doesn't impact performance since
+    // We manually refresh the FPS at our desired rate (every 500 frames, for instance)...
+
+    if (this.countForFPS++ == 10) {
       this.endTime = this.now;
       this.countForFPS = 0; 
-      var info = info || undefined; 
-      if(info){info.textContent = "Average FPS : "+ (200 * 1000 / (this.endTime - this.startTime)).toPrecision(4);+"\n";}
+      this.averageFPS = (10 * 1000 / (this.endTime - this.startTime)).toPrecision(4);
+
+      gui.remove(handle.averageFPS);
+      handle.averageFPS = gui.add(this, 'averageFPS').name("Average FPS");
+
       this.startTime = this.endTime;
     }
   };

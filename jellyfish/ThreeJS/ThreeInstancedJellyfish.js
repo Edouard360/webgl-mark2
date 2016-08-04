@@ -6,8 +6,11 @@ class ThreeInstancedJellyfish extends ThreeAbstractJellyfish {
 
   addAttribute(jellyfish){
     super.addAttribute(jellyfish)
-    this.geometry.maxInstancedCount = jellyfish.offset.length;
-    this.geometry.addAttribute( 'offset', new THREE.InstancedBufferAttribute( new Float32Array([].concat.apply([], jellyfish.offset)), 3, 1) );
+    var offset = [];
+    for(let i = 0; i<MAX_NUMBER;i++){
+      offset = offset.concat([2*(Math.random() - 0.5)*WIDTH, 2*(Math.random() - 0.5)*WIDTH, 2*(Math.random() - 0.5)*WIDTH]);
+    }
+    this.geometry.addAttribute( 'offset', new THREE.InstancedBufferAttribute( new Float32Array(offset), 3, 1) );
   }
 
   createMaterial(jellyfish){

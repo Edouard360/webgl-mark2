@@ -13,8 +13,12 @@ class InstancedJellyfish extends AbstractJellyfish{
   constructor(GL,jellyfish) {
     var jellyfish_duplicate = JSON.parse(JSON.stringify(jellyfish));
     jellyfish_duplicate.images = jellyfish.images;
-    jellyfish_duplicate.offset = [].concat.apply([], jellyfish.offset);
-    super(GL,jellyfish_duplicate);   
+    jellyfish_duplicate.offset = [];
+    for(let i = 0; i<MAX_NUMBER;i++){
+      jellyfish_duplicate.offset = jellyfish_duplicate.offset.concat([2*(Math.random() - 0.5)*WIDTH, 2*(Math.random() - 0.5)*WIDTH, 2*(Math.random() - 0.5)*WIDTH]);
+    }
+    super(GL,jellyfish_duplicate);
+
     this.GLext = this.GL.getExtension("ANGLE_instanced_arrays");;
   };
 
@@ -33,7 +37,7 @@ class InstancedJellyfish extends AbstractJellyfish{
    */
   bufferVertexAttributes(){
     super.bufferVertexAttributes();
-    this.GLext.vertexAttribDivisorANGLE(this.attributeLocation.offset, 3);
+    this.GLext.vertexAttribDivisorANGLE(this.attributeLocation.offset, 1);
     // 3 stands for the 3 coordinates of each offset, ie: x,y,z
   };
 
@@ -41,9 +45,8 @@ class InstancedJellyfish extends AbstractJellyfish{
    * Overload the drawElements function using the extension.
    */
   drawElements(){
-    this.GLext.drawElementsInstancedANGLE(this.GL.TRIANGLES, this.indexcount, this.GL.UNSIGNED_INT, 0,3*this.jellyfishCount);
+    this.GLext.drawElementsInstancedANGLE(this.GL.TRIANGLES, this.indexcount, this.GL.UNSIGNED_INT, 0,this.jellyfishCount);
     // Only the last argument differ compared to the regular drawElements
-    // 3*this.jellyfishCount: 3 stands for the 3 coordinates of each offset, ie: x,y,z
   }
 };
 
