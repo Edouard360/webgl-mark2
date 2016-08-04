@@ -17,10 +17,10 @@ class AbstractTimer{
     // Using gui.dat from Google for the nice interface doesn't impact performance since
     // We manually refresh the FPS at our desired rate (every 500 frames, for instance)...
 
-    if (this.countForFPS++ == 10) {
+    if (this.countForFPS++ == UPDATE_FPS_RATE) {
       this.endTime = this.now;
       this.countForFPS = 0; 
-      this.averageFPS = (10 * 1000 / (this.endTime - this.startTime)).toPrecision(4);
+      this.averageFPS = (UPDATE_FPS_RATE * 1000 / (this.endTime - this.startTime)).toPrecision(4);
 
       gui.remove(handle.averageFPS);
       handle.averageFPS = gui.add(this, 'averageFPS').name("Average FPS");
