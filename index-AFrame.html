@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Cylinders</title>
+    <meta name="description" content="Cylinders — A-Frame">
+        <script src="https://cdn.rawgit.com/aframevr/aframe/master/dist/aframe.js"></script>
+        <script type="text/javascript" src="../jellyfish/AbstractTimer.js"></script>
+        <script type="text/javascript" src="../util/getTextAndImages.js"></script>
+        <script type="text/javascript" src="../util/createTexture.js"></script>
+        <script src="./jellyfish/AFrame/AframeAbstractJellyfish.js"></script>
+        <script src="./jellyfish/AFrame/AframeInstancedJellyfish.js"></script>
+        <script src="./jellyfish/AFrame/AframeSingleJellyfish.js"></script>
+        <script src="./jellyfish/AFrame/AframeGradient.js"></script>
+        <script src="../data/const.js"></script>
+  </head>
+  <body>
+    <a-scene antialias=on>
+
+      <!-- Pacman -->
+      <a-cylinder position="-4 3 -1" rotation="65 45 0" radius="1" height="1" theta-start="57" theta-length="286" side="double" color="#FFC65D"></a-cylinder>
+
+      <a-entity instanced-jellyfish>
+        <!-- This will put the camera as it is in Three.js -->
+        <!--<a-entity camera="active:true;fov:100;near:20;far:120"></a-entity>-->
+      </a-entity>
+
+      <a-sky material="shader: skyGradient; colorTop: #1847AD ;colorBottom: #02B6F2"></a-sky>
+
+    </a-scene>
+  </body>
+</html>

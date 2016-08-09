@@ -20,6 +20,11 @@ createTexture = function(images,GL){
     });
 }
 
+/**
+  * The getTexturesJellyfish function
+  * @param {Array} list - An array of strings for the locations of the images.
+  * @return {Array} - The loaded texture.
+  */
 getTexturesJellyfish = function(imagesList){
   var loader = new THREE.TextureLoader();
   return imagesList.map(function(url,i){

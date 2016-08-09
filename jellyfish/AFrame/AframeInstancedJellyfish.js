@@ -1,0 +1,22 @@
+/** The instanced jellyfish object, that "extends" the abstract jellyfish object */
+var instancedJellyfish = {}
+Object.assign(instancedJellyfish,abstractJellyfish);
+
+instancedJellyfish.createGeometry = function(){
+	return new THREE.InstancedBufferGeometry();
+}
+
+instancedJellyfish.addOffsetAttribute = function(geometry){
+  var offset = [];
+  for(let i = 0; i<MAX_NUMBER;i++){
+    offset = offset.concat([2*(Math.random() - 0.5)*WIDTH, 2*(Math.random() - 0.5)*WIDTH, 2*(Math.random() - 0.5)*WIDTH]);
+  }
+  geometry.addAttribute( 'offset', new THREE.InstancedBufferAttribute( new Float32Array(offset), 3, 1) );
+}
+
+instancedJellyfish.modifyMaterial = function(material){
+  material.vertexShader = material.vertexShader.replace(new RegExp("//ONLY FOR INSTANCED JELLYFISH ",'g'),"");
+}
+
+AFRAME.registerComponent("instanced-jellyfish", instancedJellyfish);
+

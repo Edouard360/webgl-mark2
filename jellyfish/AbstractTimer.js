@@ -21,13 +21,15 @@ class AbstractTimer{
       this.endTime = this.now;
       this.countForFPS = 0; 
       this.averageFPS = (UPDATE_FPS_RATE * 1000 / (this.endTime - this.startTime)).toPrecision(4);
-
-      gui.remove(handle.averageFPS);
-      handle.averageFPS = gui.add(this, 'averageFPS').name("Average FPS");
-
+      if(gui){
+        gui.remove(handle.averageFPS);
+        handle.averageFPS = gui.add(this, 'averageFPS').name("Average FPS");
+      }
       this.startTime = this.endTime;
     }
   };
 
 }
+
+
 

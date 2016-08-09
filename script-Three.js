@@ -8,14 +8,14 @@ var gui;
  * @property {int} handle.jellyfishCount - for changing the jellyfish count display between ≠ instances
  * @property {int} handle.averageFPS     - for changing the average FPS display between ≠ instances.
  */
-var handle = {};
+ var handle = {};
 
 /**
  * The main function. It creates an new canvas and prepare listeners for changing benchmarks.
  * The structure of the 'data' parameter is at the end of this script: object_promise.
  * @param {Object} data - The data asynchronously loaded for running the benchmark.
  */ 
-var main=function(data) {
+ var main=function(data) {
   var container = document.getElementById("canvas_container");
   var canvas = getNewCanvas(canvas_container);
 
@@ -24,8 +24,8 @@ var main=function(data) {
   /**
    * The code bellow simply sets the user interface for changing parameters
    */
-  function JellyfishText(){
-      this.class = "Single";
+   function JellyfishText(){
+    this.class = "Single";
   }
   var text = new JellyfishText();
   gui = new dat.GUI();
@@ -40,15 +40,15 @@ var main=function(data) {
     gui.remove(handle.averageFPS);
     switch(value){
       case "Single":
-        jellyfishCount = 1;
-        refresh(ThreeSingleJellyfish,jellyfishCount);
-        break;
+      jellyfishCount = 1;
+      refresh(ThreeSingleJellyfish,jellyfishCount);
+      break;
       case "Instanced":
-        jellyfishCount = 3;
-        refresh(ThreeInstancedJellyfish,jellyfishCount);
-        break;
+      jellyfishCount = 3;
+      refresh(ThreeInstancedJellyfish,jellyfishCount);
+      break;
       default:
-       throw 'dont know option ' + value
+      throw 'dont know option ' + value
     }
   });
 
@@ -59,7 +59,7 @@ var main=function(data) {
    * @param {class} BenchmarkClass - The class to instantiate and benchmark.
    * @param {int} jellyfishCount - The number of jellyfish to be displayed. 
    */
-  function refresh(BenchmarkClass,jellyfishCount) {
+   function refresh(BenchmarkClass,jellyfishCount) {
     var scene = new THREE.Scene(); // position initialized at 0,0,0
     var camera = new THREE.PerspectiveCamera(CAMERA.ANGLE, window.innerWidth / window.innerHeight, CAMERA.NEAR, CAMERA.FAR); //In degrees not radians
 
@@ -72,8 +72,8 @@ var main=function(data) {
 
     scene.add(benchmark.mesh);
     scene.add(gradient.mesh);
-
-    var renderer = new THREE.WebGLRenderer({canvas:canvas});
+    
+    var renderer = new THREE.WebGLRenderer({canvas:canvas,antialias:true});
     renderer.setClearColor( 0xFFFFFF );
     renderer.setPixelRatio( window.devicePixelRatio );
     renderer.setSize( window.innerWidth, window.innerHeight );
@@ -84,6 +84,7 @@ var main=function(data) {
 
     function animate() {
       benchmark.update();
+  
       renderer.render( scene, camera );
       handle.animation = requestAnimationFrame( animate );
     }
@@ -122,5 +123,5 @@ getText('./data/group/offset.json').then(JSON.parse).then(function(value){object
 ]
 
 Promise.all(array_promise).then(function(){
-    main(object_promise);
+  main(object_promise);
 });

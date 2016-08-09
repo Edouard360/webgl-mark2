@@ -64,8 +64,8 @@ var main=function(data) {
     GL.getExtension("OES_element_index_uint");
     GL.disable(GL.DEPTH_TEST);
     GL.disable(GL.CULL_FACE);
-    GL.enable(GL.BLEND);
-    GL.blendFunc(GL.SRC_ALPHA, GL.ONE_MINUS_SRC_ALPHA);
+    //GL.enable(GL.BLEND);
+    //GL.blendFunc(GL.SRC_ALPHA, GL.ONE_MINUS_SRC_ALPHA);
     GL.frontFace(GL.CW);
 
     var gradient = new Gradient(GL,data.gradient);

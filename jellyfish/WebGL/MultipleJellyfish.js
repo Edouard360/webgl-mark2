@@ -1,5 +1,5 @@
 /** Class representing a group of jellyfish. */
-class MultipleJellyfish{
+class MultipleJellyfish extends AbstractTimer{
 
   /**
    * Constructor for the abstract Jellyfish.
@@ -8,6 +8,11 @@ class MultipleJellyfish{
    * @param {Object} jellyfish - An object containing the necessary data for a jellyfish.
    */
   constructor(GL,jellyfish){
+    super();
+    jellyfish.offset = [];
+    for(let i = 0; i<MAX_NUMBER;i++){
+      jellyfish.offset = jellyfish.offset.concat([[2*(Math.random() - 0.5)*WIDTH, 2*(Math.random() - 0.5)*WIDTH, 2*(Math.random() - 0.5)*WIDTH]]);
+    }
     this.jellyfishGroup = jellyfish.offset.map((coord)=>{
       var jellyfish_tmp = newDataJellyfishWithOffset(coord[0],coord[1],coord[2]);
       jellyfish_tmp.images = jellyfish.images;
@@ -38,7 +43,8 @@ class MultipleJellyfish{
    * Render the jellyfish by iterating over the array.
    */  
   render(){
-    this.jellyfishGroup.slice(0,this.jellyfishCount).map((jellyfish)=>{
+    this.updateTime();
+    this.jellyfishGroup.map((jellyfish)=>{
       jellyfish.render();
     })
   };

@@ -4,19 +4,13 @@ class ThreeAbstractJellyfish extends AbstractTimer {
   /**
    * Constructor for a Jellyfish in THREE.JS.
    */
-  constructor(jellyfish) {
+   constructor(jellyfish) {
     super();
-
+    this.x=0;
+    this.y=0;
+    this.z=0;
     this.createGeometry();
-    this.geometry.attributes = {
-      position:{
-        itemSize: 3,
-        array: new Float32Array(jellyfish.position),
-        numItems: jellyfish.position.length
-      }
-    }
     this.addAttribute(jellyfish);
-
     this.geometry.setIndex( new THREE.BufferAttribute( new Uint32Array(jellyfish.index), 1 ) );
     this.textures = getTexturesJellyfish(jellyfish.imagesList);
     this.createMaterial(jellyfish);
@@ -32,6 +26,7 @@ class ThreeAbstractJellyfish extends AbstractTimer {
   };
 
   addAttribute(jellyfish){
+    this.geometry.addAttribute('position', new THREE.BufferAttribute( new Float32Array(jellyfish.position), 3 ) )
     this.geometry.addAttribute( 'normal', new THREE.BufferAttribute( new Float32Array(jellyfish.normal), 3 ) );
     this.geometry.addAttribute( 'texture', new THREE.BufferAttribute( new Float32Array(jellyfish.texture), 3 ) );
     this.geometry.addAttribute( 'color', new THREE.BufferAttribute( new Float32Array(jellyfish.color), 3 ) );
@@ -43,7 +38,7 @@ class ThreeAbstractJellyfish extends AbstractTimer {
       fragmentShader: jellyfish.shaders.FS,
       side: THREE.DoubleSide, // equivalent for GL.disable(GL.CULL_FACE);
       depthTest: false, // equivalent for GL.disable(GL.DEPTH_TEST);
-      blendEquation:THREE.SubtractEquation, // approximate equivalent GL.blendFunc(GL.SRC_ALPHA, GL.ONE_MINUS_SRC_ALPHA);
+      //blendEquation:THREE.SubtractEquation, // approximate equivalent GL.blendFunc(GL.SRC_ALPHA, GL.ONE_MINUS_SRC_ALPHA);
       transparent: true,
       uniforms:{
         uSampler:           {type: "t", value: this.textures[0]},
@@ -66,9 +61,9 @@ class ThreeAbstractJellyfish extends AbstractTimer {
     this.material.uniforms.uSampler1.value = this.textures[Math.floor((this.material.uniforms.uCurrentTime.value * 30) % 32) + 1];
     this.rotation += (2.0 * this.elapsedTime) / 1000.0;
     
-    this.mesh.position.x =0;
-    this.mesh.position.y =0;
-    this.mesh.position.z =0;
+    this.mesh.position.setX(this.x);
+    this.mesh.position.setY(this.y);
+    this.mesh.position.setZ(this.z);
     this.mesh.rotation.x =0;
     this.mesh.rotation.y =0;
     this.mesh.rotation.z =0;

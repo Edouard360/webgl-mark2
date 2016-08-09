@@ -6,19 +6,20 @@ class ThreeGradient{
    */
   constructor(gradient) {
     this.geometry = new THREE.BufferGeometry();
-    this.geometry.attributes = {
-          position:{
-            itemSize: 1,
-            array: new Float32Array([]),
-            numItems: 8
-          }
-    }
-    // Don't understand why this is needed...
 
-    this.geometry.addAttribute( 'position2', new THREE.BufferAttribute(new Float32Array([-1.0,-1.0,-1.0, 1.0,1.0, -1.0, 1.0, 1.0]), 2) );
-    this.geometry.addAttribute( 'uvIn', new THREE.BufferAttribute(new Float32Array([1.0, 1.0, 0.0, 0.0, 1.0, 1.0, 0.0, 0.0]), 2) );
+    var position = new THREE.BufferAttribute(new Float32Array(8),2);
+    position.setXY(0,-1.0,-1.0);
+    position.setXY(1,-1.0,1.0);
+    position.setXY(2,1.0,-1.0);
+    position.setXY(3,1.0,1.0);
+    this.geometry.addAttribute('position',position);
 
-    this.geometry.setIndex( new THREE.BufferAttribute( new Uint32Array([0,1,2,1,3,2]), 1 ) );
+    var uvIn = new THREE.BufferAttribute(new Float32Array(8),2);
+    uvIn.setXY(0,1.0,1.0);
+    uvIn.setXY(1,0,0);
+    uvIn.setXY(2,1.0,1.0);
+    uvIn.setXY(3,0,0);
+    this.geometry.addAttribute( 'uvIn',uvIn );
 
     this.material = new THREE.ShaderMaterial({
       vertexShader:   gradient.shaders.VS,
@@ -31,6 +32,7 @@ class ThreeGradient{
     });
    
     this.mesh = new THREE.Mesh(this.geometry, this.material);
-    //this.mesh.setDrawMode(THREE.TriangleStripDrawMode); doesn't work apparently
+    this.mesh.setDrawMode(THREE.TriangleStripDrawMode);
+
   };
 }
