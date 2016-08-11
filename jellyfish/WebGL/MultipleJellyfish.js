@@ -1,5 +1,5 @@
 /** Class representing a group of jellyfish. */
-class MultipleJellyfish extends AbstractTimer{
+class MultipleJellyfish extends Timer{
 
   /**
    * Constructor for the abstract Jellyfish.

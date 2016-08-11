@@ -1,5 +1,9 @@
+import Timer from '../Timer'
+import {createTexture, createProgramFromShaders, addDefines} from '../../util/util'
+import {CAMERA, USE_FOG} from '../../data/const.js'
+
 /** Abstract class representing a jellyfish. */
-class AbstractJellyfish extends AbstractTimer{
+class AbstractJellyfish extends Timer{
 
   /**
    * Constructor for the abstract Jellyfish.
@@ -18,6 +22,7 @@ class AbstractJellyfish extends AbstractTimer{
   constructor(GL,jellyfish) {
     super();
     this.GL = GL;
+    jellyfish.shaders.FS = addDefines(jellyfish.shaders.FS, {USE_FOG:USE_FOG})
     this.program = this.createProgram(jellyfish.shaders);
     
     this.attributeLocation = {};
@@ -189,3 +194,5 @@ class AbstractJellyfish extends AbstractTimer{
 }
 
 AbstractJellyfish.prototype.attributes = [];
+
+export default AbstractJellyfish;

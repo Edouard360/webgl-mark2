@@ -1,5 +1,5 @@
 /** A jellyfish using ThreeJS. */
-class ThreeMultipleJellyfish extends AbstractTimer {
+class ThreeMultipleJellyfish extends Timer {
 	constructor(data){
 		super();
 		this.jellyfishGroup = [];
@@ -18,3 +18,5 @@ class ThreeMultipleJellyfish extends AbstractTimer {
 		});
 	}
 }
+
+export default ThreeMultipleJellyfish;

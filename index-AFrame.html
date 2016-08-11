@@ -5,28 +5,29 @@
     <title>Cylinders</title>
     <meta name="description" content="Cylinders — A-Frame">
         <script src="https://cdn.rawgit.com/aframevr/aframe/master/dist/aframe.js"></script>
-        <script type="text/javascript" src="../jellyfish/AbstractTimer.js"></script>
-        <script type="text/javascript" src="../util/getTextAndImages.js"></script>
-        <script type="text/javascript" src="../util/createTexture.js"></script>
-        <script src="./jellyfish/AFrame/AframeAbstractJellyfish.js"></script>
-        <script src="./jellyfish/AFrame/AframeInstancedJellyfish.js"></script>
-        <script src="./jellyfish/AFrame/AframeSingleJellyfish.js"></script>
-        <script src="./jellyfish/AFrame/AframeGradient.js"></script>
-        <script src="../data/const.js"></script>
+        <script src="./util/dat.gui.min.js"></script>
+        <script src="./dist/script-AFrameRegister.js"></script>
   </head>
   <body>
-    <a-scene antialias=on>
+    <a-scene id="scene" antialias="on">
+      <!-- fog="type: exponential; color: #02B6F2; density: 0.5; near:15; far:100" -->
+      <!-- WARNING SHADERS HAVE TO BE ADAPTED ACCORDINGLY-->
 
-      <!-- Pacman -->
+      <!-- Pacman : Here for debugging purpose
       <a-cylinder position="-4 3 -1" rotation="65 45 0" radius="1" height="1" theta-start="57" theta-length="286" side="double" color="#FFC65D"></a-cylinder>
+      -->
 
-      <a-entity instanced-jellyfish>
+      <a-entity id="jellyfish" single-jellyfish>
         <!-- This will put the camera as it is in Three.js -->
-        <!--<a-entity camera="active:true;fov:100;near:20;far:120"></a-entity>-->
+         <a-entity camera id="cameraJellyfish"></a-entity>
       </a-entity>
 
-      <a-sky material="shader: skyGradient; colorTop: #1847AD ;colorBottom: #02B6F2"></a-sky>
+      <a-entity gradient />
+      
+      <!--<a-sky material="shader: skyGradient; colorTop: #1847AD ;colorBottom: #02B6F2"></a-sky> BEWARE AS THIS ENTITY USES ITS OWN COPY OF THE GRADIENT SHADER-->
 
     </a-scene>
   </body>
+  <script src="./dist/script-AFrame.js"></script>
+
 </html>

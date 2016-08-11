@@ -1,4 +1,12 @@
 'use strict';
+import Timer from './jellyfish/Timer'
+import AbstractJellyfish from './jellyfish/WebGL/AbstractJellyfish'
+import InstancedJellyfish from './jellyfish/WebGL/InstancedJellyfish'
+import SingleJellyfish from './jellyfish/WebGL/SingleJellyfish'
+import Gradient from './jellyfish/WebGL/Gradient'
+import {getImages, getNewCanvas} from './util/util'
+import {CAMERA, MAX_NUMBER} from './data/const.js'
+
 /** @var {object} gui - A global variable for user interface */
 var gui;
 
@@ -100,34 +108,20 @@ var main=function(data) {
 
 var object_promise = {
   gradient:{
-    shaders:{VS: undefined,FS: undefined}
+    shaders:{VS: require('./shaders/gradient/gradient.vert'),FS: require('./shaders/gradient/gradient.frag')}
   },
   jellyfish:{
-    shaders:{VS: undefined,FS: undefined},
-    position: undefined,
-    normal: undefined,
-    texture: undefined,
-    color: undefined,
-    index: undefined,
-    images: undefined,
-    offset: undefined
+    shaders:{VS: require('./shaders/jellyfish/jellyfish.vert'),FS: require('./shaders/jellyfish/jellyfish.frag')},
+    position: require('./data/attributes/jellyfish_position.json'),
+    normal: require('./data/attributes/jellyfish_normal.json'),
+    texture: require('./data/attributes/jellyfish_texture.json'),
+    color: require('./data/attributes/jellyfish_color.json'),
+    index: require('./data/attributes/jellyfish_index.json'),
+    images: undefined
   }
 }
 
-var array_promise =[
-getText('./shaders/jellyfish/jellyfish.vert').then(function(value){object_promise.jellyfish.shaders.VS = value}),
-getText('./shaders/jellyfish/jellyfish.frag').then(function(value){object_promise.jellyfish.shaders.FS = value}),
-getText('./shaders/gradient/gradient.vert').then(function(value){object_promise.gradient.shaders.VS = value}),
-getText('./shaders/gradient/gradient.frag').then(function(value){object_promise.gradient.shaders.FS = value}),
-getText('./data/attributes/jellyfish_position.json').then(JSON.parse).then(function(value){object_promise.jellyfish.position = value}),
-getText('./data/attributes/jellyfish_normal.json').then(JSON.parse).then(function(value){object_promise.jellyfish.normal = value}),
-getText('./data/attributes/jellyfish_texture.json').then(JSON.parse).then(function(value){object_promise.jellyfish.texture = value}),
-getText('./data/attributes/jellyfish_color.json').then(JSON.parse).then(function(value){object_promise.jellyfish.color = value}),
-getText('./data/attributes/jellyfish_index.json').then(JSON.parse).then(function(value){object_promise.jellyfish.index = value}),
-getText('./data/img/list.json').then(JSON.parse).then(getImages).then(function(value){object_promise.jellyfish.images = value}),
-getText('./data/group/offset.json').then(JSON.parse).then(function(value){object_promise.jellyfish.offset = value;})
-]
-
-Promise.all(array_promise).then(function(){
+getImages(require('./data/img/list.json')).then(function(value){object_promise.jellyfish.images = value})
+.then(function(){
     main(object_promise);
 });

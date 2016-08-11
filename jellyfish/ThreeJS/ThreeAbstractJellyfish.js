@@ -1,5 +1,9 @@
+import Timer from '../Timer'
+import {getTexturesJellyfish} from '../../util/util'
+import {USE_FOG} from '../../data/const.js'
+
 /** A jellyfish using ThreeJS. */
-class ThreeAbstractJellyfish extends AbstractTimer {
+class ThreeAbstractJellyfish extends Timer {
 
   /**
    * Constructor for a Jellyfish in THREE.JS.
@@ -40,6 +44,7 @@ class ThreeAbstractJellyfish extends AbstractTimer {
       depthTest: false, // equivalent for GL.disable(GL.DEPTH_TEST);
       //blendEquation:THREE.SubtractEquation, // approximate equivalent GL.blendFunc(GL.SRC_ALPHA, GL.ONE_MINUS_SRC_ALPHA);
       transparent: true,
+      defines:{USE_FOG:USE_FOG},
       uniforms:{
         uSampler:           {type: "t", value: this.textures[0]},
         uSampler1:          {type: "t", value: this.textures[1]},
@@ -49,9 +54,15 @@ class ThreeAbstractJellyfish extends AbstractTimer {
         uAmbientCol:        {value: new THREE.Vector4(0.3, 0.2, 1.0, 1.0)},
         uFresnelCol:        {value: new THREE.Vector4(0.8, 0.7, 0.6, 1.1)},
         uFresnelPower:      {value: 1.0},
-        uCurrentTime:       {value: 0.0}
+        uCurrentTime:       {value: 0.0},
+
+        fogDensity:  { type: "f", value: 0.2 },
+        fogColor:    { type: "c", value:  new THREE.Color( 0x0077ff ) },
+        fogNear:     { type: "f", value: 20 },
+        fogFar:      { type: "f", value: 120}
       }
     });
+
   }
 
   update(){
@@ -75,3 +86,5 @@ class ThreeAbstractJellyfish extends AbstractTimer {
     this.mesh.translateY(Math.sin(this.rotation / 10.0) * 2.5 * 5); 
   };
 }
+
+export default ThreeAbstractJellyfish;

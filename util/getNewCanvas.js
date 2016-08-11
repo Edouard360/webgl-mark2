@@ -3,7 +3,7 @@
   * @param {object} canvas_container - A container that will append the future canvas.
   * @return {object} canvas - A newly created canvas.
   */
-function getNewCanvas(canvas_container){
+export function getNewCanvas(canvas_container){
 	while(canvas_container.firstChild) {
 	    canvas_container.removeChild(canvas_container.firstChild);
 	}

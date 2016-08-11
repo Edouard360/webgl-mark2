@@ -1,3 +1,5 @@
+import {createProgramFromShaders} from '../../util/util'
+
 // *** Gradient Object *** //
 class Gradient{
     constructor(GL,gradient){
@@ -65,3 +67,5 @@ class Gradient{
         }
     }
 }
+
+export default Gradient;

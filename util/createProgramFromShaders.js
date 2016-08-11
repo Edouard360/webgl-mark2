@@ -5,7 +5,7 @@
   * @param {string} shaders.VS - The vertex shader.
   * @param {string} shaders.FS - The fragment shader.
   */
-createProgramFromShaders = function(GL,shaders){
+export function createProgramFromShaders(GL,shaders){
     var vertexShader = GL.createShader(GL.VERTEX_SHADER);
     GL.shaderSource(vertexShader, shaders.VS);
     GL.compileShader(vertexShader);
@@ -24,7 +24,7 @@ createProgramFromShaders = function(GL,shaders){
         return null;
     }
 
-    shaderProgram = GL.createProgram();
+    var shaderProgram = GL.createProgram();
     GL.attachShader(shaderProgram, vertexShader);
     GL.attachShader(shaderProgram, fragmentShader);
 

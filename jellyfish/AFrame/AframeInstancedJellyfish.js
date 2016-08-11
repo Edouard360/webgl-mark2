@@ -1,3 +1,6 @@
+import abstractJellyfish from './AFrameAbstractJellyfish'
+import {MAX_NUMBER,WIDTH} from '../../data/const.js'
+
 /** The instanced jellyfish object, that "extends" the abstract jellyfish object */
 var instancedJellyfish = {}
 Object.assign(instancedJellyfish,abstractJellyfish);
@@ -15,8 +18,9 @@ instancedJellyfish.addOffsetAttribute = function(geometry){
 }
 
 instancedJellyfish.modifyMaterial = function(material){
-  material.vertexShader = material.vertexShader.replace(new RegExp("//ONLY FOR INSTANCED JELLYFISH ",'g'),"");
+  material.defines.USE_INSTANCED = true;
 }
 
-AFRAME.registerComponent("instanced-jellyfish", instancedJellyfish);
+export default instancedJellyfish;
+
 

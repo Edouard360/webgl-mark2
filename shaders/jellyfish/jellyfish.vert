@@ -2,7 +2,9 @@ attribute vec3 position;
 attribute vec3 normal;
 attribute vec3 color;
 attribute vec3 texture;
-//ONLY FOR INSTANCED JELLYFISH attribute vec3 offset;
+#ifdef USE_INSTANCED
+    attribute vec3 offset;
+#endif
 
 uniform mat4 uWorld;
 uniform mat4 uWorldViewProj;
@@ -20,20 +22,16 @@ varying vec4 vWorld;
 varying vec3 vDiffuse;
 varying vec3 vAmbient;
 varying vec3 vFresnel;
-
-//varying vec3 vColor;
   
 void main(void)
 { 
-/*    
-    vColor = normalize(normal);
-    gl_Position = vec4(position, 1.0);
-*/
-
+    #ifndef USE_INSTANCED
+        vec3 offset = vec3(0.);
+    #endif
     //Vertex Animation
     float speed = uCurrentTime / 15.0;
     float localoffset = smoothstep(0.0, 1.0, max(0.0, -position.y-0.8) / 10.0);
-    vec3 pos = position + //ONLY FOR INSTANCED JELLYFISH offset +
+    vec3 pos = position + offset +
         color / 12.0 *
         sin(speed * 15.0 + position.y / 2.0) * (1.0 - localoffset);
     pos = pos + color / 8.0 *
@@ -56,12 +54,9 @@ void main(void)
     //fresnel
     vec4 worldPos = uWorld * pos4;
     vec3 vWorldEyeVec = normalize(worldPos.xyz/worldPos.w); 
-    float fresnelProduct = pow(1.0 - max(abs(dot(vVertexNormal, -vWorldEyeVec)), 0.0), uFresnelPower);
+    float fresnelProduct = pow(abs(1.0 - max(abs(dot(vVertexNormal, -vWorldEyeVec)), 0.0)), uFresnelPower);
     vFresnel = uFresnelCol.rgb * vec3(uFresnelCol.a * fresnelProduct);
 
     // texcoord
     vTextureCoord = texture.xy;
-
-
-
 }

@@ -1,3 +1,6 @@
+import Timer from '../Timer'
+import {getTexturesJellyfish} from '../../util/util'
+
 /** The abstract jellyfish object. */
 var abstractJellyfish = {
   /**
@@ -5,28 +8,19 @@ var abstractJellyfish = {
    * Load all the attributes, the shaders and images for the jellyfish
    */
   init(){
-    this.timer = new AbstractTimer();
+    this.timer = new Timer();
     var jellyfish = {
-        shaders:{VS: undefined,FS: undefined},
-        position: undefined,
-        normal: undefined,
-        texture: undefined,
-        color: undefined,
-        index: undefined,
-        imagesList: undefined
+      shaders:{VS: require('../../shaders/jellyfish/jellyfish-Three.vert'),FS: require('../../shaders/jellyfish/jellyfish-Three.frag')},
+      position: require('../../data/attributes/jellyfish_position.json'),
+      normal: require('../../data/attributes/jellyfish_normal.json'),
+      texture: require('../../data/attributes/jellyfish_texture.json'),
+      color: require('../../data/attributes/jellyfish_color.json'),
+      index: require('../../data/attributes/jellyfish_index.json'),
     }
-    var array_promise =[
-      getText('./shaders/jellyfish/jellyfish-Three.vert').then(function(value){jellyfish.shaders.VS = value}),
-      getText('./shaders/jellyfish/jellyfish-Three.frag').then(function(value){jellyfish.shaders.FS = value}),
-      getText('./data/attributes/jellyfish_position.json').then(JSON.parse).then(function(value){jellyfish.position = value}),
-      getText('./data/attributes/jellyfish_normal.json').then(JSON.parse).then(function(value){jellyfish.normal = value}),
-      getText('./data/attributes/jellyfish_texture.json').then(JSON.parse).then(function(value){jellyfish.texture = value}),
-      getText('./data/attributes/jellyfish_color.json').then(JSON.parse).then(function(value){jellyfish.color = value}),
-      getText('./data/attributes/jellyfish_index.json').then(JSON.parse).then(function(value){jellyfish.index = value}),
-      getText('./data/img/list.json').then(JSON.parse).then(getTexturesJellyfish).then(function(value){this.textures = value}.bind(this))
-    ];
+    
+    this.textures = getTexturesJellyfish(require('../../data/img/list.json'))
 
-    Promise.all(array_promise).then(function(){this.setMesh(jellyfish)}.bind(this));
+    this.setMesh(jellyfish);
   },
   /**
    * The tick function of the component (as defined in AFRAME docs)
@@ -56,6 +50,15 @@ var abstractJellyfish = {
       mesh.rotateX((Math.PI/180)*(Math.sin(this.timer.rotation / 20.0) * 30.0));
       mesh.translateY(Math.sin(this.timer.rotation / 10.0) * 2.5 *5); 
     }
+  },
+  /**
+   * The remove function of the component (as defined in AFRAME docs)
+   * Reset the mesh of the
+   */  
+  remove(){
+    //this.el.getOrCreateObject3D('mesh',THREE.Mesh) = THREE.Mesh;
+    //this.el.getObject3D("mesh").geometry = new THREE.Geometry(); 
+    //this.el.setObject3D('mesh',mesh);
   },
   /**
    * The setMesh function. Hand-made.
@@ -117,3 +120,5 @@ var abstractJellyfish = {
   modifyMaterial(){
   }
 }
+
+export default abstractJellyfish;

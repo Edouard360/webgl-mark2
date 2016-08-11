@@ -1,5 +1,7 @@
-/** Abstract class representing a jellyfish. */
-class AbstractTimer{
+import {UPDATE_FPS_RATE} from '../data/const.js'
+
+/** Class representing a timer. */
+class Timer{
 
   constructor() {
     this.rotation = 0;
@@ -21,15 +23,17 @@ class AbstractTimer{
       this.endTime = this.now;
       this.countForFPS = 0; 
       this.averageFPS = (UPDATE_FPS_RATE * 1000 / (this.endTime - this.startTime)).toPrecision(4);
-      if(gui){
+      /*if(gui){
         gui.remove(handle.averageFPS);
         handle.averageFPS = gui.add(this, 'averageFPS').name("Average FPS");
-      }
+      }*/
       this.startTime = this.endTime;
     }
   };
 
 }
+
+export default Timer;
 
 
 

@@ -1,3 +1,6 @@
+import ThreeAbstractJellyfish from './ThreeAbstractJellyfish';
+import {MAX_NUMBER,WIDTH} from '../../data/const.js'
+
 /** A jellyfish using ThreeJS. */
 class ThreeInstancedJellyfish extends ThreeAbstractJellyfish {
   createGeometry(){
@@ -15,6 +18,8 @@ class ThreeInstancedJellyfish extends ThreeAbstractJellyfish {
 
   createMaterial(jellyfish){
     super.createMaterial(jellyfish);
-    this.material.vertexShader = jellyfish.shaders.VS.replace(new RegExp("//ONLY FOR INSTANCED JELLYFISH ",'g'),"");
+    this.material.defines.USE_INSTANCED = true;
   }
 }
+
+export default ThreeInstancedJellyfish;

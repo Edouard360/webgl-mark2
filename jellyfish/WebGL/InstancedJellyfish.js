@@ -1,3 +1,7 @@
+import AbstractJellyfish from './AbstractJellyfish';
+import {addDefines,createProgramFromShaders} from '../../util/util'
+import {MAX_NUMBER,WIDTH} from '../../data/const.js'
+
 /** Class representing a group of jellyfish. */
 class InstancedJellyfish extends AbstractJellyfish{
 
@@ -29,7 +33,7 @@ class InstancedJellyfish extends AbstractJellyfish{
    * @param {String} shaders.FS - The fragment shader text.
    */
   createProgram(shaders) {
-    return createProgramFromShaders(this.GL,{VS:shaders.VS.replace(new RegExp("//ONLY FOR INSTANCED JELLYFISH ",'g'),""),FS:shaders.FS})
+    return createProgramFromShaders(this.GL,{VS:addDefines(shaders.VS,{USE_INSTANCED:true}),FS:shaders.FS})
   }
 
   /**
@@ -38,7 +42,8 @@ class InstancedJellyfish extends AbstractJellyfish{
   bufferVertexAttributes(){
     super.bufferVertexAttributes();
     this.GLext.vertexAttribDivisorANGLE(this.attributeLocation.offset, 1);
-    // 3 stands for the 3 coordinates of each offset, ie: x,y,z
+    // We repeat our offset data only once (1) per instance (Each jellyfish has different offset)
+    // If we had set it to (2), then the first two jellyfish would have shared the offset, and so on...
   };
 
   /**
@@ -51,3 +56,5 @@ class InstancedJellyfish extends AbstractJellyfish{
 };
 
 InstancedJellyfish.prototype.attributeList = ["position","normal","color","texture","offset"];
+
+export default InstancedJellyfish;

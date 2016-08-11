@@ -1,3 +1,5 @@
+import AbstractJellyfish from './AbstractJellyfish';
+
 /** Class representing a single jellyfish. */
 class SingleJellyfish extends AbstractJellyfish{
   drawElements(){
@@ -6,3 +8,5 @@ class SingleJellyfish extends AbstractJellyfish{
 };
 
 SingleJellyfish.prototype.attributeList = ["position","normal","color","texture"];
+
+export default SingleJellyfish;

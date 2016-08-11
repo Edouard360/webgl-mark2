@@ -5,9 +5,9 @@
   * @return {Array} - An array of WebGLTexture objects.
   */
 
-createTexture = function(images,GL){
+export function createTexture(images,GL){
 	return images.map(function(img,i){
-      texture = GL.createTexture();
+      let texture = GL.createTexture();
       GL.bindTexture(GL.TEXTURE_2D, texture);
       GL.pixelStorei(GL.UNPACK_FLIP_Y_WEBGL, true);
       GL.texParameteri(GL.TEXTURE_2D,GL.TEXTURE_WRAP_S,(i>0?GL.REPEAT:GL.CLAMP_TO_EDGE));
@@ -25,7 +25,7 @@ createTexture = function(images,GL){
   * @param {Array} list - An array of strings for the locations of the images.
   * @return {Array} - The loaded texture.
   */
-getTexturesJellyfish = function(imagesList){
+export function getTexturesJellyfish(imagesList){
   var loader = new THREE.TextureLoader();
   return imagesList.map(function(url,i){
     return loader.load(url, function(texture){
