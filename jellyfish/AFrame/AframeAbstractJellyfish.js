@@ -11,7 +11,7 @@ var abstractJellyfish = {
   init(){
     this.timer = new Timer();
     var jellyfish = {
-      shaders:{VS: require('../../shaders/jellyfish/jellyfish-Three.vert'),FS: require('../../shaders/jellyfish/jellyfish-Three.frag')},
+      shaders:{VS: require('../../shaders/jellyfish/jellyfish.vert'),FS: require('../../shaders/jellyfish/jellyfish.frag')},
       position: require('../../data/attributes/jellyfish_position.json'),
       normal: require('../../data/attributes/jellyfish_normal.json'),
       texture: require('../../data/attributes/jellyfish_texture.json'),
@@ -85,6 +85,7 @@ var abstractJellyfish = {
       side: THREE.DoubleSide,
       depthTest: false,
       transparent: true,
+      defines:{THREE_JS:true},
       uniforms:{
         uSampler:           {type: "t", value: this.textures[0]},
         uSampler1:          {type: "t", value: this.textures[1]},

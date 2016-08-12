@@ -8,8 +8,18 @@ import ThreeGradient from './jellyfish/ThreeJS/ThreeGradient'
 import Timer from './jellyfish/Timer'
 import {getImages, getNewCanvas} from './util/util'
 import {CAMERA,MAX_NUMBER} from './data/const.js';
+import dat from './node_modules/dat.gui/build/dat.gui'
 
-import {gui,handle} from './data/gui';
+/** @var {object} gui - A global variable for user interface */
+var gui;
+
+/**
+ * @var {object} handle - A global variable to hold handles
+ * @property {int} handle.animation      - for cancelling the requestAnimationFrame
+ * @property {int} handle.jellyfishCount - for changing the jellyfish count display between ≠ instances
+ * @property {int} handle.averageFPS     - for changing the average FPS display between ≠ instances.
+ */
+var handle = {};
 
 /**
  * The main function. It creates an new canvas and prepare listeners for changing benchmarks.
@@ -28,8 +38,10 @@ import {gui,handle} from './data/gui';
 
   function JellyfishText(){
     this.class = "Single";
+    this.averageFPS = "averageFPS";
   }
   var text = new JellyfishText();
+  gui = new dat.GUI();
 
   gui
   .add(text, 'class', ["Single","Instanced"])
@@ -38,7 +50,6 @@ import {gui,handle} from './data/gui';
     canvas = getNewCanvas(canvas_container);
     cancelAnimationFrame(handle.animation);
     gui.remove(handle.jellyfishCount);
-    gui.remove(handle.averageFPS);
     switch(value){
       case "Single":
       jellyfishCount = 1;
@@ -52,6 +63,7 @@ import {gui,handle} from './data/gui';
       throw 'dont know option ' + value
     }
   });
+  gui.add(text, 'averageFPS').name("Average FPS").domElement.id = 'averageFPS';
 
   refresh(ThreeSingleJellyfish,1); // Launch the initial benchmark with a single jellyfish
 
@@ -69,7 +81,6 @@ import {gui,handle} from './data/gui';
 
     benchmark.geometry.maxInstancedCount = jellyfishCount;
     handle.jellyfishCount = gui.add(benchmark.geometry, 'maxInstancedCount',1,MAX_NUMBER).name("Number").step(1);
-    handle.averageFPS = gui.add(benchmark, 'averageFPS').name("Average FPS");
 
     scene.add(benchmark.mesh);
     scene.add(gradient.mesh);
@@ -94,10 +105,10 @@ import {gui,handle} from './data/gui';
 
 var object_promise = {
   gradient:{
-    shaders:{VS: require('./shaders/gradient/gradient-Three.vert'),FS: require('./shaders/gradient/gradient-Three.frag')}
+    shaders:{VS: require('./shaders/gradient/gradient.vert'),FS: require('./shaders/gradient/gradient.frag')}
   },
   jellyfish:{
-    shaders:{VS: require('./shaders/jellyfish/jellyfish-Three.vert'),FS: require('./shaders/jellyfish/jellyfish-Three.frag')},
+    shaders:{VS: require('./shaders/jellyfish/jellyfish.vert'),FS: require('./shaders/jellyfish/jellyfish.frag')},
     position: require('./data/attributes/jellyfish_position.json'),
     normal: require('./data/attributes/jellyfish_normal.json'),
     texture: require('./data/attributes/jellyfish_texture.json'),

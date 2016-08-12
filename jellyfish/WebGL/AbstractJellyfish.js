@@ -32,9 +32,10 @@ class AbstractJellyfish extends Timer{
     this.createAndFillBuffers(jellyfish); // Set this.buffer
     
     this.uniform = {
-      uWorld:             {value: mat4.create(), func: "uniformMatrix4fv"},
-      uWorldViewProj:     {value: mat4.create(), func: "uniformMatrix4fv"},
-      uWorldInvTranspose: {value: mat4.create(), func: "uniformMatrix4fv"},
+      modelMatrix:        {value: mat4.create(), func: "uniformMatrix4fv"},
+      modelViewMatrix:    {value: mat4.create(), func: "uniformMatrix4fv"},
+      projectionMatrix:   {value: mat4.create(), func: "uniformMatrix4fv"},
+      normalMatrix:       {value: mat4.create(), func: "uniformMatrix4fv"},
       uLightPos:          {value: vec3.fromValues(10.0, 40.0, -60.0),func: "uniform3fv" },
       uLightRadius:       {value: 200.0,          func: "uniform1f"},
       uLightCol:          {value: vec4.fromValues(0.8, 1.3, 1.1, 1.0),func: "uniform4fv"},
@@ -125,25 +126,24 @@ class AbstractJellyfish extends Timer{
     this.uniform.uCurrentTime.value = (this.now % 100000000) / 1000.0;
     this.whichCaustic = Math.floor((this.uniform.uCurrentTime.value * 30) % 32) + 1;
 
-    let uWorld = mat4.create();
-    mat4.translate(uWorld,uWorld,   [0.0, 5.0, -75.0]);
-    mat4.rotate(uWorld,uWorld,      glMatrix.toRadian(Math.sin(this.rotation / 10.0) * 30.0),   [0.0, 1.0, 0.0]);
-    mat4.rotate(uWorld,uWorld,      glMatrix.toRadian(Math.sin(this.rotation / 20.0) * 30.0),   [1.0, 0.0, 0.0]);
-    mat4.scale(uWorld,uWorld,       [5.0, 5.0, 5.0]);
+    let modelMatrix = mat4.create();
+    mat4.translate(modelMatrix,modelMatrix,   [0.0, 5.0, -75.0]);
+    mat4.rotate(modelMatrix,modelMatrix,      glMatrix.toRadian(Math.sin(this.rotation / 10.0) * 30.0),   [0.0, 1.0, 0.0]);
+    mat4.rotate(modelMatrix,modelMatrix,      glMatrix.toRadian(Math.sin(this.rotation / 20.0) * 30.0),   [1.0, 0.0, 0.0]);
+    mat4.scale(modelMatrix,modelMatrix,       [5.0, 5.0, 5.0]);
 
-    mat4.translate(uWorld,uWorld,   [0.0, Math.sin(this.rotation / 10.0) * 2.5, 0.0])
-    this.uniform.uWorld.value = uWorld;
+    mat4.translate(modelMatrix,modelMatrix,   [0.0, Math.sin(this.rotation / 10.0) * 2.5, 0.0])
+    this.uniform.modelMatrix.value = modelMatrix;
+    this.uniform.modelViewMatrix.value = modelMatrix;
 
-    let uWorldViewProj = mat4.create();
-    mat4.perspective(uWorldViewProj, glMatrix.toRadian(CAMERA.ANGLE), this.viewport.x/this.viewport.y, CAMERA.NEAR,CAMERA.FAR);
-    mat4.multiply(uWorldViewProj,uWorldViewProj, this.uniform.uWorld.value);
-    this.uniform.uWorldViewProj.value = uWorldViewProj;
+    let projectionMatrix = mat4.create();
+    mat4.perspective(projectionMatrix, glMatrix.toRadian(CAMERA.ANGLE), this.viewport.x/this.viewport.y, CAMERA.NEAR,CAMERA.FAR);
+    this.uniform.projectionMatrix.value = projectionMatrix;
 
-    let uWorldInvTranspose = mat4.create();
-    mat4.invert(uWorldInvTranspose, this.uniform.uWorld.value);
-    mat4.transpose(uWorldInvTranspose, uWorldInvTranspose);
-    this.uniform.uWorldInvTranspose.value = uWorldInvTranspose;
-
+    let normalMatrix = mat4.create();
+    mat4.invert(normalMatrix, this.uniform.modelMatrix.value);
+    mat4.transpose(normalMatrix, normalMatrix);
+    this.uniform.normalMatrix.value = normalMatrix;
   };
 
   /**

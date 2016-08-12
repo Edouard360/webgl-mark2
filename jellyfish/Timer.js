@@ -1,5 +1,4 @@
 import {UPDATE_FPS_RATE} from '../data/const';
-import {gui,handle} from '../data/gui';
 
 /** Class representing a timer. */
 class Timer{
@@ -24,12 +23,14 @@ class Timer{
       this.endTime = this.now;
       this.countForFPS = 0; 
       this.averageFPS = (UPDATE_FPS_RATE * 1000 / (this.endTime - this.startTime)).toPrecision(4);
-      gui.add(this, 'averageFPS').name("Average FPS");
-      // if(gui){
-      //   if(handle.averageFPS){gui.remove(handle.averageFPS);}
-      //   debugger;
-      //   handle.averageFPS = gui.add(this, 'averageFPS').name("Average FPS");
-      // }
+
+      var parent =document.getElementById("averageFPS");
+      parent.removeChild(parent.children[0]);
+      var input = document.createElement("input")
+      input.setAttribute("type", "text")
+      input.setAttribute("value", this.averageFPS);
+      parent.appendChild(input)
+ 
       this.startTime = this.endTime;
     }
   };

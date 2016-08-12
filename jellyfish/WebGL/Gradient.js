@@ -8,7 +8,7 @@ class Gradient{
         this.program = createProgramFromShaders(GL,gradient.shaders);
         this.attributes = {
             position:   {data: [-1.0,-1.0,-1.0, 1.0,1.0, -1.0, 1.0, 1.0]},
-            uvIn:       {data: [1.0, 1.0, 0.0, 0.0, 1.0, 1.0, 0.0, 0.0]}
+            uv:       {data: [1.0, 1.0, 0.0, 0.0, 1.0, 1.0, 0.0, 0.0]}
         }
         this.setAttribLocationAndBuffers();
 

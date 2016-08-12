@@ -1,10 +1,12 @@
-attribute vec2 position;
-attribute vec2 uvIn;
+#ifndef THREE_JS
+	attribute vec2 position;
+	attribute vec2 uv;
+#endif
 
-varying vec2 uv;
+varying vec2 uv2;
 
 void main()
 {
-    uv = uvIn;
-    gl_Position = vec4(position, 1.0, 1.0);
+    uv2 = uv;
+    gl_Position = vec4(position.x, position.y,0.0, 1.0);
 }

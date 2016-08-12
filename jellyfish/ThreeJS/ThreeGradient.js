@@ -19,6 +19,7 @@ class ThreeGradient{
     this.material = new THREE.ShaderMaterial({
       vertexShader:   gradient.shaders.VS,
       fragmentShader: gradient.shaders.FS,
+      defines:{THREE_JS:true},
       uniforms:{
         color1: {value: new THREE.Vector3(0.360784314, 0.584313725, 1.0)},
         color2: {value: new THREE.Vector3(0.074509804, 0.156862745, 0.619607843)}

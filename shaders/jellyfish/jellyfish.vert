@@ -1,14 +1,21 @@
+#ifndef THREE_JS
 attribute vec3 position;
 attribute vec3 normal;
+#endif
+
 attribute vec3 color;
 attribute vec3 texture;
 #ifdef USE_INSTANCED
     attribute vec3 offset;
 #endif
 
-uniform mat4 uWorld;
-uniform mat4 uWorldViewProj;
-uniform mat4 uWorldInvTranspose;
+#ifndef THREE_JS
+uniform mat4 modelMatrix;// uWorld -> modelMatrix
+uniform mat4 modelViewMatrix;// -> projectionMatrix * modelViewMatrix
+uniform mat4 projectionMatrix; // -> projectionMatrix * modelViewMatrix
+uniform mat4 normalMatrix; // -> normalMatrix
+#endif
+
 uniform vec3 uLightPos;
 uniform float uLightRadius;
 uniform vec4 uLightCol;
@@ -37,10 +44,14 @@ void main(void)
     pos = pos + color / 8.0 *
         sin(speed * 30.0 + position.y / 0.5) * (1.0 - localoffset);
     vec4 pos4 = vec4(pos, 1.0);
-    gl_Position = uWorldViewProj * pos4; 
+    gl_Position = projectionMatrix * modelViewMatrix * pos4; 
 
-    vWorld = uWorld * pos4;
-    vec3 vVertexNormal = normalize((uWorldInvTranspose * vec4(normal, 1.0)).xyz);
+    vWorld = modelMatrix * pos4;
+    #ifndef THREE_JS
+    vec3 vVertexNormal = normalize(normalMatrix * vec4(normal.xyz,1.0)).xyz;
+    #else
+    vec3 vVertexNormal = normalize(normalMatrix * normal);
+    #endif
 
     //diffuse
     vec3 lightDir = normalize(uLightPos - vWorld.xyz);
@@ -52,7 +63,7 @@ void main(void)
     vAmbient = uAmbientCol.rgb * vec3(uAmbientCol.a) * vVertexNormal.y;
 
     //fresnel
-    vec4 worldPos = uWorld * pos4;
+    vec4 worldPos = modelMatrix * pos4;
     vec3 vWorldEyeVec = normalize(worldPos.xyz/worldPos.w); 
     float fresnelProduct = pow(abs(1.0 - max(abs(dot(vVertexNormal, -vWorldEyeVec)), 0.0)), uFresnelPower);
     vFresnel = uFresnelCol.rgb * vec3(uFresnelCol.a * fresnelProduct);

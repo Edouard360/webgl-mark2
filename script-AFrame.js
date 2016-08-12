@@ -3,11 +3,10 @@ import dat from './node_modules/dat.gui/build/dat.gui'
 import singleJellyfish from "./jellyfish/AFrame/AFrameSingleJellyfish"
 import instancedJellyfish from "./jellyfish/AFrame/AFrameInstancedJellyfish"
 import {gradient} from "./jellyfish/AFrame/AFrameGradient"
-import {gui} from "./data/gui"
 
 'use strict';
 /** @var {object} gui - A global variable for interface */
-//var gui;
+var gui = new dat.GUI();
 
 /**
  * @var {object} handle - A global variable to hold handles
@@ -15,17 +14,14 @@ import {gui} from "./data/gui"
  */
 var handle = {};
 
-
 /**
  * The code bellow simply sets the user interface for changing parameters
  */
 function JellyfishText(){
   this.class = "Single";
+  this.averageFPS = "averageFPS";
 }
 var text = new JellyfishText();
-
-var customContainer = document.getElementById('my-gui-container');
-customContainer.appendChild(gui.domElement);
 
 gui
 .add(text, 'class', ["Single","Instanced"])
@@ -52,6 +48,7 @@ gui
     throw 'dont know option ' + value
   }
 })
+gui.add(text, 'averageFPS').name("Average FPS").domElement.id = 'averageFPS';
 
 var entitySceneEl = document.querySelector("#scene");
 var entityJellyfishEl = document.querySelector("#jellyfish");

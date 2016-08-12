@@ -35,6 +35,7 @@ var main=function(data) {
    */
   function JellyfishText(){
       this.class = "Single";
+      this.averageFPS = "averageFPS";
   }
   var text = new JellyfishText();
   gui = new dat.GUI();
@@ -46,7 +47,6 @@ var main=function(data) {
     canvas = getNewCanvas(canvas_container);
     cancelAnimationFrame(handle.animation);
     gui.remove(handle.jellyfishCount);
-    gui.remove(handle.averageFPS);
     switch(value){
       case "Single":
         jellyfishCount = 1;
@@ -60,6 +60,7 @@ var main=function(data) {
        throw 'dont know option ' + value
     }
   });
+  gui.add(text, 'averageFPS').name("Average FPS").domElement.id = 'averageFPS';
 
   refresh(SingleJellyfish,1); // Launch the initial benchmark with a single jellyfish
 
@@ -82,7 +83,6 @@ var main=function(data) {
     benchmark.jellyfishCount = jellyfishCount;
 
     handle.jellyfishCount = gui.add(benchmark, 'jellyfishCount',1,MAX_NUMBER).name("Number").step(1);
-    handle.averageFPS = gui.add(benchmark, 'averageFPS').name("Average FPS");
 
     var drawing = function(){
       GL.viewport(0, 0, canvas.width, canvas.height);

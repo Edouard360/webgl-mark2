@@ -45,7 +45,7 @@ class ThreeAbstractJellyfish extends Timer {
       depthTest: false, // equivalent for GL.disable(GL.DEPTH_TEST);
       //blendEquation:THREE.SubtractEquation, // approximate equivalent GL.blendFunc(GL.SRC_ALPHA, GL.ONE_MINUS_SRC_ALPHA);
       transparent: true,
-      defines:{USE_FOG:USE_FOG},
+      defines:{USE_FOG:USE_FOG,THREE_JS:true},
       uniforms:{
         uSampler:           {type: "t", value: this.textures[0]},
         uSampler1:          {type: "t", value: this.textures[1]},
