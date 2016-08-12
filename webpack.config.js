@@ -33,5 +33,8 @@
               loader: 'json'
           }
       ]
-    }
+    },
+    devtool:'eval',
+    debug: true
+    
  };

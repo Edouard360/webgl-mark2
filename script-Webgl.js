@@ -1,5 +1,6 @@
 'use strict';
 import Timer from './jellyfish/Timer'
+import dat from './node_modules/dat.gui/build/dat.gui'
 import AbstractJellyfish from './jellyfish/WebGL/AbstractJellyfish'
 import InstancedJellyfish from './jellyfish/WebGL/InstancedJellyfish'
 import SingleJellyfish from './jellyfish/WebGL/SingleJellyfish'

@@ -1,6 +1,7 @@
 import Timer from '../Timer'
 import {createTexture, createProgramFromShaders, addDefines} from '../../util/util'
 import {CAMERA, USE_FOG} from '../../data/const.js'
+import {mat4,vec4,vec3, glMatrix} from '../../node_modules/gl-matrix/src/gl-matrix.js'
 
 /** Abstract class representing a jellyfish. */
 class AbstractJellyfish extends Timer{

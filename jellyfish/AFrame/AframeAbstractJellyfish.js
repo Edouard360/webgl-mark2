@@ -3,6 +3,7 @@ import {getTexturesJellyfish} from '../../util/util'
 
 /** The abstract jellyfish object. */
 var abstractJellyfish = {
+  schema:{count:{type:'int',default:3}},
   /**
    * The init function of the component (as defined in AFRAME docs)
    * Load all the attributes, the shaders and images for the jellyfish
@@ -21,6 +22,9 @@ var abstractJellyfish = {
     this.textures = getTexturesJellyfish(require('../../data/img/list.json'))
 
     this.setMesh(jellyfish);
+  },
+  update(){
+    this.el.getObject3D('mesh',THREE.Mesh).geometry.maxInstancedCount = this.data.count;
   },
   /**
    * The tick function of the component (as defined in AFRAME docs)
@@ -97,7 +101,6 @@ var abstractJellyfish = {
 
     var mesh = new THREE.Mesh(geometry, material);
     mesh.scale.set(5,5,5);
-
     this.el.setObject3D('mesh',mesh);
   },
   /**

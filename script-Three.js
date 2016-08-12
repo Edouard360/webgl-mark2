@@ -1,22 +1,15 @@
 'use strict';
-import Timer from './jellyfish/Timer'
+import THREE from './node_modules/three/build/three'
 import ThreeAbstractJellyfish from './jellyfish/ThreeJS/ThreeAbstractJellyfish'
 import ThreeInstancedJellyfish from './jellyfish/ThreeJS/ThreeInstancedJellyfish'
 import ThreeSingleJellyfish from './jellyfish/ThreeJS/ThreeSingleJellyfish'
 import ThreeGradient from './jellyfish/ThreeJS/ThreeGradient'
+
+import Timer from './jellyfish/Timer'
 import {getImages, getNewCanvas} from './util/util'
 import {CAMERA,MAX_NUMBER} from './data/const.js';
 
-/** @var {object} gui - A global variable for user interface */
-var gui;
-
-/**
- * @var {object} handle - A global variable to hold handles
- * @property {int} handle.animation      - for cancelling the requestAnimationFrame
- * @property {int} handle.jellyfishCount - for changing the jellyfish count display between ≠ instances
- * @property {int} handle.averageFPS     - for changing the average FPS display between ≠ instances.
- */
- var handle = {};
+import {gui,handle} from './data/gui';
 
 /**
  * The main function. It creates an new canvas and prepare listeners for changing benchmarks.
@@ -32,11 +25,11 @@ var gui;
   /**
    * The code bellow simply sets the user interface for changing parameters
    */
-   function JellyfishText(){
+
+  function JellyfishText(){
     this.class = "Single";
   }
   var text = new JellyfishText();
-  gui = new dat.GUI();
 
   gui
   .add(text, 'class', ["Single","Instanced"])
@@ -92,7 +85,6 @@ var gui;
 
     function animate() {
       benchmark.update();
-  
       renderer.render( scene, camera );
       handle.animation = requestAnimationFrame( animate );
     }

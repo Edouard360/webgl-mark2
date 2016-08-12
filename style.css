@@ -10,6 +10,8 @@
 }
 body {
 	font-family: Futura;
+	margin:0px;
+	background-color: black;
 	}
 .select{
 	position:relative;

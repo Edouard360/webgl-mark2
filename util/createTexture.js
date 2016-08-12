@@ -1,3 +1,5 @@
+import THREE from '../node_modules/three/build/three'
+
 /**
   * The createTexture function
   * @param {Array} images - An array of web loaded images.

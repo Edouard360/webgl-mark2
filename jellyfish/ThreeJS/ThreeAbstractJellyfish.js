@@ -1,6 +1,7 @@
 import Timer from '../Timer'
 import {getTexturesJellyfish} from '../../util/util'
 import {USE_FOG} from '../../data/const.js'
+import THREE from '../../node_modules/three/build/three'
 
 /** A jellyfish using ThreeJS. */
 class ThreeAbstractJellyfish extends Timer {
@@ -81,8 +82,8 @@ class ThreeAbstractJellyfish extends Timer {
 
     this.mesh.translateY(+5.0); 
     this.mesh.translateZ(-75.0);
-    this.mesh.rotateY(glMatrix.toRadian(Math.sin(this.rotation / 10.0) * 30.0));
-    this.mesh.rotateX(glMatrix.toRadian(Math.sin(this.rotation / 20.0) * 30.0));
+    this.mesh.rotateY((Math.PI/180)*Math.sin(this.rotation / 10.0) * 30.0);
+    this.mesh.rotateX((Math.PI/180)*Math.sin(this.rotation / 20.0) * 30.0);
     this.mesh.translateY(Math.sin(this.rotation / 10.0) * 2.5 * 5); 
   };
 }
