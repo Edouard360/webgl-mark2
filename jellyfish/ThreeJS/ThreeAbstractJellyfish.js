@@ -1,6 +1,6 @@
 import Timer from '../Timer'
 import {getTexturesJellyfish} from '../../util/util'
-import {USE_FOG} from '../../data/const.js'
+import {USE_FOG,SCALE} from '../../data/const.js'
 import THREE from '../../node_modules/three/build/three'
 
 /** A jellyfish using ThreeJS. */
@@ -9,7 +9,7 @@ class ThreeAbstractJellyfish extends Timer {
   /**
    * Constructor for a Jellyfish in THREE.JS.
    */
-   constructor(jellyfish) {
+   constructor(jellyfish,scene) {
     super();
     this.x=0;
     this.y=0;
@@ -21,9 +21,9 @@ class ThreeAbstractJellyfish extends Timer {
     this.createMaterial(jellyfish);
 
     this.mesh = new THREE.Mesh(this.geometry, this.material);
-    this.mesh.scale.set(5,5,5); // equivalent to mat4.scale(uWorld,uWorld, [5.0, 5.0, 5.0]);
+    this.mesh.scale.set(SCALE.x,SCALE.y,SCALE.z); // equivalent to mat4.scale(uWorld,uWorld, [5.0, 5.0, 5.0]);
     //But the changes only take effect at rendering time so *5 on translateY
-    this.rotation =0;
+    scene.add(this.mesh);
   };
 
   createGeometry(){
@@ -84,7 +84,7 @@ class ThreeAbstractJellyfish extends Timer {
     this.mesh.translateZ(-75.0);
     this.mesh.rotateY((Math.PI/180)*Math.sin(this.rotation / 10.0) * 30.0);
     this.mesh.rotateX((Math.PI/180)*Math.sin(this.rotation / 20.0) * 30.0);
-    this.mesh.translateY(Math.sin(this.rotation / 10.0) * 2.5 * 5); 
+    this.mesh.translateY(Math.sin(this.rotation / 10.0) * 2.5 * SCALE.y); 
   };
 }
 

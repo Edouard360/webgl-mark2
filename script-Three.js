@@ -3,6 +3,7 @@ import THREE from './node_modules/three/build/three'
 import ThreeAbstractJellyfish from './jellyfish/ThreeJS/ThreeAbstractJellyfish'
 import ThreeInstancedJellyfish from './jellyfish/ThreeJS/ThreeInstancedJellyfish'
 import ThreeSingleJellyfish from './jellyfish/ThreeJS/ThreeSingleJellyfish'
+import ThreeMultipleJellyfish from './jellyfish/ThreeJS/ThreeMultipleJellyfish'
 import ThreeGradient from './jellyfish/ThreeJS/ThreeGradient'
 
 import Timer from './jellyfish/Timer'
@@ -44,7 +45,7 @@ var handle = {};
   gui = new dat.GUI();
 
   gui
-  .add(text, 'class', ["Single","Instanced"])
+  .add(text, 'class', ["Single","Instanced",'Multiple'])
   .name("Class")
   .onChange((value)=>{
     canvas = getNewCanvas(canvas_container);
@@ -58,6 +59,10 @@ var handle = {};
       case "Instanced":
       jellyfishCount = 3;
       refresh(ThreeInstancedJellyfish,jellyfishCount);
+      break;
+      case "Multiple":
+      jellyfishCount = 3;
+      refresh(ThreeMultipleJellyfish,jellyfishCount);
       break;
       default:
       throw 'dont know option ' + value
@@ -76,14 +81,11 @@ var handle = {};
     var scene = new THREE.Scene(); // position initialized at 0,0,0
     var camera = new THREE.PerspectiveCamera(CAMERA.ANGLE, window.innerWidth / window.innerHeight, CAMERA.NEAR, CAMERA.FAR); //In degrees not radians
 
-    var benchmark = new BenchmarkClass(data.jellyfish);
-    var gradient = new ThreeGradient(data.gradient); 
+    var benchmark = new BenchmarkClass(data.jellyfish,scene);
+    var gradient = new ThreeGradient(data.gradient,scene); 
 
     benchmark.geometry.maxInstancedCount = jellyfishCount;
     handle.jellyfishCount = gui.add(benchmark.geometry, 'maxInstancedCount',1,MAX_NUMBER).name("Number").step(1);
-
-    scene.add(benchmark.mesh);
-    scene.add(gradient.mesh);
     
     var renderer = new THREE.WebGLRenderer({canvas:canvas,antialias:true});
     renderer.setClearColor( 0xFFFFFF );

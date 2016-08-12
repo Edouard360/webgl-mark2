@@ -3,6 +3,7 @@ import Timer from './jellyfish/Timer'
 import dat from './node_modules/dat.gui/build/dat.gui'
 import AbstractJellyfish from './jellyfish/WebGL/AbstractJellyfish'
 import InstancedJellyfish from './jellyfish/WebGL/InstancedJellyfish'
+import MultipleJellyfish from './jellyfish/WebGL/MultipleJellyfish'
 import SingleJellyfish from './jellyfish/WebGL/SingleJellyfish'
 import Gradient from './jellyfish/WebGL/Gradient'
 import {getImages, getNewCanvas} from './util/util'
@@ -41,7 +42,7 @@ var main=function(data) {
   gui = new dat.GUI();
 
   gui
-  .add(text, 'class', ["Single","Instanced"])
+  .add(text, 'class', ["Single","Instanced","Multiple"])
   .name("Class")
   .onChange((value)=>{
     canvas = getNewCanvas(canvas_container);
@@ -51,6 +52,10 @@ var main=function(data) {
       case "Single":
         jellyfishCount = 1;
         refresh(SingleJellyfish,jellyfishCount);
+        break;
+      case "Multiple":
+        jellyfishCount = 3;
+        refresh(MultipleJellyfish,jellyfishCount);
         break;
       case "Instanced":
         jellyfishCount = 3;

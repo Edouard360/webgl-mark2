@@ -1,9 +1,13 @@
 import Timer from '../Timer'
 import {getTexturesJellyfish} from '../../util/util'
+import {SCALE} from '../../data/const.js'
 
 /** The abstract jellyfish object. */
 var abstractJellyfish = {
-  schema:{count:{type:'int',default:3}},
+  schema:{
+    count:{type:'int',default:3}, 
+    position:{type:'vec3',default:{x:0,y:0,z:0}}
+  },
   /**
    * The init function of the component (as defined in AFRAME docs)
    * Load all the attributes, the shaders and images for the jellyfish
@@ -41,18 +45,18 @@ var abstractJellyfish = {
     if(mesh.material.uniforms){
       mesh.material.uniforms.uCurrentTime.value = time / 1000.0;
       mesh.material.uniforms.uSampler1.value = this.textures[Math.floor(((time / 1000.0 ) * 30) % 32) + 1];
-      mesh.position.setX(0);
-      mesh.position.setY(0);
-      mesh.position.setZ(0);
-      mesh.rotation.x =0;
-      mesh.rotation.y =0;
-      mesh.rotation.z =0;
+      mesh.position.setX(this.data.position.x);
+      mesh.position.setY(this.data.position.y);
+      mesh.position.setZ(this.data.position.z);
+      mesh.rotation.x = 0;
+      mesh.rotation.y = 0;
+      mesh.rotation.z = 0;
 
       mesh.translateY(+5.0); 
       mesh.translateZ(-75.0);
       mesh.rotateY((Math.PI/180)*(Math.sin(this.timer.rotation / 10.0) * 30.0));
       mesh.rotateX((Math.PI/180)*(Math.sin(this.timer.rotation / 20.0) * 30.0));
-      mesh.translateY(Math.sin(this.timer.rotation / 10.0) * 2.5 *5); 
+      mesh.translateY(Math.sin(this.timer.rotation / 10.0) * 2.5 * SCALE.y); 
     }
   },
   /**
@@ -101,7 +105,7 @@ var abstractJellyfish = {
     this.modifyMaterial(material); // Only effective for instanced jellyfish
 
     var mesh = new THREE.Mesh(geometry, material);
-    mesh.scale.set(5,5,5);
+    mesh.scale.set(SCALE.x,SCALE.y,SCALE.z);
     this.el.setObject3D('mesh',mesh);
   },
   /**

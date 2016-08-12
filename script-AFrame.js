@@ -1,8 +1,6 @@
 import {CAMERA,MAX_NUMBER} from './data/const.js'
 import dat from './node_modules/dat.gui/build/dat.gui'
-import singleJellyfish from "./jellyfish/AFrame/AFrameSingleJellyfish"
-import instancedJellyfish from "./jellyfish/AFrame/AFrameInstancedJellyfish"
-import {gradient} from "./jellyfish/AFrame/AFrameGradient"
+import AFrameMultipleJellyfish from "./jellyfish/AFrame/AFrameMultipleJellyfish";
 
 'use strict';
 /** @var {object} gui - A global variable for interface */
@@ -24,28 +22,41 @@ function JellyfishText(){
 var text = new JellyfishText();
 
 gui
-.add(text, 'class', ["Single","Instanced"])
+.add(text, 'class', ["Single","Instanced","Multiple"])
 .name("Class")
 .onChange((value)=>{
-  switch(value){
-    case "Single":
+    /**
+     * For changing configuration, we remove the entityJellyfishEl as a child from
+     * entitySceneEl, recreate this element and re-append it to entitySceneEl
+     */
     entitySceneEl.removeChild(entityJellyfishEl);
     entityJellyfishEl = document.createElement("a-entity");
-    entityJellyfishEl.setAttribute('single-jellyfish', '')
-    entitySceneEl.appendChild(entityJellyfishEl);
-    handle.jellyfishCount.remove();
-    break;
-    case "Instanced":
-    entitySceneEl.removeChild(entityJellyfishEl);
-    entityJellyfishEl = document.createElement("a-entity") 
-    entityJellyfishEl.setAttribute('instanced-jellyfish', 'count',3);
-    entitySceneEl.appendChild(entityJellyfishEl);
-    handle.jellyfishCount = gui.add(entityJellyfishEl.getAttribute('instanced-jellyfish'),"count",1,MAX_NUMBER)
-    .name("Number").step(1)
-    handle.onChange = handle.jellyfishCount.onChange(function(value){entityJellyfishEl.setAttribute('instanced-jellyfish', 'count',value)})
-    break;
-    default:
-    throw 'dont know option ' + value
+    if(handle.jellyfishCount){handle.jellyfishCount.remove();handle.jellyfishCount = undefined;}
+    switch(value){
+        case "Single":
+        entityJellyfishEl.setAttribute('single-jellyfish', '')
+        entitySceneEl.appendChild(entityJellyfishEl);
+        break;
+        case "Instanced":
+        entityJellyfishEl.setAttribute('instanced-jellyfish', 'count',3);
+        entitySceneEl.appendChild(entityJellyfishEl);
+        handle.jellyfishCount = gui.add(entityJellyfishEl.getAttribute('instanced-jellyfish'),"count",1,MAX_NUMBER)
+        .name("Number").step(1)
+        handle.jellyfishCount.onChange((value)=>{entityJellyfishEl.setAttribute('instanced-jellyfish', 'count',value)}) //Do we need to remove the event listener ?
+        break;
+        case "Multiple":
+        /**
+         * AFrameMultipleJellyfish only creates multiple tags for each jellyfish in the AFrame HTML
+         * by appending all these on entityJellyfishEl.
+         * Whenever a change for the jellyfishCount is triggered, we delete this main tag, and recreate our whole scene.
+         */
+        let multipleJellyfish = new AFrameMultipleJellyfish(3,entitySceneEl,entityJellyfishEl)
+        handle.jellyfishCount = gui.add(multipleJellyfish,"jellyfishCount",1,MAX_NUMBER)
+        .name("Number").step(1)
+        handle.jellyfishCount.onChange((value)=>{multipleJellyfish.resetScene(); multipleJellyfish.updateScene(); entityJellyfishEl = multipleJellyfish.entityJellyfishEl })
+        break;
+        default:
+        throw 'dont know option ' + value
   }
 })
 gui.add(text, 'averageFPS').name("Average FPS").domElement.id = 'averageFPS';

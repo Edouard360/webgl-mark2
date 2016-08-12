@@ -6,7 +6,7 @@ class ThreeGradient{
   /**
    * Constructor for a Gradient in THREE.JS.
    */
-   constructor(gradient) {
+   constructor(gradient,scene) {
     this.geometry = new THREE.PlaneBufferGeometry(2,2,0,0);
 
     var uv = new THREE.BufferAttribute(new Float32Array(8),2);
@@ -27,6 +27,9 @@ class ThreeGradient{
     });
 
     this.mesh = new THREE.Mesh(this.geometry, this.material);
+    this.mesh.name = "gradient";
+
+    scene.add(this.mesh);
   };
 }
 

@@ -1,3 +1,7 @@
+import Timer from '../Timer';
+import SingleJellyfish from './SingleJellyfish';
+import {MAX_NUMBER,WIDTH} from '../../data/const.js'
+
 /** Class representing a group of jellyfish. */
 class MultipleJellyfish extends Timer{
 
@@ -9,23 +13,45 @@ class MultipleJellyfish extends Timer{
    */
   constructor(GL,jellyfish){
     super();
-    jellyfish.offset = [];
-    for(let i = 0; i<MAX_NUMBER;i++){
-      jellyfish.offset = jellyfish.offset.concat([[2*(Math.random() - 0.5)*WIDTH, 2*(Math.random() - 0.5)*WIDTH, 2*(Math.random() - 0.5)*WIDTH]]);
-    }
-    this.jellyfishGroup = jellyfish.offset.map((coord)=>{
-      var jellyfish_tmp = newDataJellyfishWithOffset(coord[0],coord[1],coord[2]);
-      jellyfish_tmp.images = jellyfish.images;
-      return new SingleJellyfish(GL,jellyfish_tmp);
-    });
+    this.GL = GL;
+    this.jellyfish = jellyfish;
+    this.jellyfishCount = 3;
+    this.jellyfishGroup = [];
+    this.viewport = {};
+    this.updateJellyfishGroup();
+  };
 
-    function newDataJellyfishWithOffset(x,y,z){
-      var jellyfish_tmp = JSON.parse(JSON.stringify(jellyfish));
-      jellyfish_tmp.position = jellyfish.position.map((coord,i)=>{
-        return coord + (((i%3)==0)?x:0) + (((i%3)==1)?y:0) +(((i%3)==2)?z:0)
+  /**
+   * The updateJellyfishGroup function checks if jellyfishCount has changed, in which case
+   * it reinitializes the whole jellyfish group
+   */  
+  updateJellyfishGroup(){
+    if(this.jellyfishGroup.length != this.jellyfishCount){
+      var offset = [];
+      for(let i = 0; i<this.jellyfishCount;i++){
+        offset = offset.concat([[2*(Math.random() - 0.5)*WIDTH, 2*(Math.random() - 0.5)*WIDTH, 2*(Math.random() - 0.5)*WIDTH]]);
+      }
+      this.jellyfishGroup = offset.map((coord)=>{
+        var jellyfish = this.newDataJellyfishWithOffset(coord[0],coord[1],coord[2]);
+        return new SingleJellyfish(this.GL,jellyfish);
       });
-      return jellyfish_tmp
+      this.updateJellyfishViewport();
     }
+  };
+
+  /**
+   * Moves the coordinate of the jellyfish
+   * @param {int} x
+   * @param {int} y
+   * @param {int} z
+   */  
+  newDataJellyfishWithOffset(x,y,z){
+    var jellyfish = JSON.parse(JSON.stringify(this.jellyfish));
+    jellyfish.images = this.jellyfish.images;
+    jellyfish.position = this.jellyfish.position.map((coord,i)=>{
+      return coord + (((i%3)==0)?x:0) + (((i%3)==1)?y:0) +(((i%3)==2)?z:0)
+    });
+    return jellyfish
   };
 
   /**
@@ -34,8 +60,16 @@ class MultipleJellyfish extends Timer{
    * @param {int} y - The height of the canvas.
    */
   updateViewport(x,y){
+    this.viewport = {x:x,y:y};
+    this.updateJellyfishViewport();
+  };
+
+  /**
+   * Update the viewport for all the jellyfish in this.jellyfishGroup
+   */
+  updateJellyfishViewport(){
     this.jellyfishGroup.map((jellyfish)=>{
-      jellyfish.updateViewport(x,y);
+      jellyfish.updateViewport(this.viewport.x,this.viewport.y);
     });
   };
 
@@ -43,6 +77,7 @@ class MultipleJellyfish extends Timer{
    * Render the jellyfish by iterating over the array.
    */  
   render(){
+    this.updateJellyfishGroup(); // Check that the number of jellyfish has not changed
     this.updateTime();
     this.jellyfishGroup.map((jellyfish)=>{
       jellyfish.render();
@@ -50,4 +85,4 @@ class MultipleJellyfish extends Timer{
   };
 }
 
- 
+export default MultipleJellyfish
