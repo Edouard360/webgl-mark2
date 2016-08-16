@@ -1,12 +1,12 @@
 'use strict';
 import THREE from './node_modules/three/build/three'
-import ThreeAbstractJellyfish from './jellyfish/ThreeJS/ThreeAbstractJellyfish'
-import ThreeInstancedJellyfish from './jellyfish/ThreeJS/ThreeInstancedJellyfish'
-import ThreeSingleJellyfish from './jellyfish/ThreeJS/ThreeSingleJellyfish'
-import ThreeMultipleJellyfish from './jellyfish/ThreeJS/ThreeMultipleJellyfish'
-import ThreeGradient from './jellyfish/ThreeJS/ThreeGradient'
+import ThreeAbstractJellyfish from './jellyfish/threejs/three-abstract-jellyfish'
+import ThreeInstancedJellyfish from './jellyfish/threejs/three-instanced-jellyfish'
+import ThreeSingleJellyfish from './jellyfish/threejs/three-single-jellyfish'
+import ThreeMultipleJellyfish from './jellyfish/threejs/three-multiple-jellyfish'
+import ThreeGradient from './jellyfish/threejs/three-gradient'
 
-import Timer from './jellyfish/Timer'
+import Timer from './jellyfish/timer'
 import {getImages, getNewCanvas} from './util/util'
 import {CAMERA,MAX_NUMBER} from './data/const.js';
 import dat from './node_modules/dat.gui/build/dat.gui'

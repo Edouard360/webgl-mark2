@@ -4,16 +4,16 @@
   "description": "Port of glmark2 in Webgl",
   "main": "script.js",
   "dependencies": {
-    "dat.gui": "^0.6.1",
+    "aframe": "aframevr/aframe#master",
+    "three": "^0.79.0",
     "gl-matrix": "^2.3.2",
-    "simple-server": "^1.0.1",
-    "three": "^0.79.0"
+    "dat.gui": "^0.6.1",
+    "simple-server": "^1.0.1"
   },
   "devDependencies": {
     "babel-core": "^6.13.2",
     "babel-loader": "^6.2.4",
     "babel-preset-es2015": "^6.13.2",
-    "dat.gui": "^0.6.1",
     "file-loader": "^0.9.0",
     "json-loader": "^0.5.4",
     "webpack": "^1.13.1",
@@ -23,7 +23,8 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node ./bin/server-start.js",
-    "build": "webpack --watch"
+    "dev": "npm run build && node ./bin/server-start.js",
+    "build": "./node_modules/.bin/webpack --watch&"
   },
   "repository": {
     "type": "git",

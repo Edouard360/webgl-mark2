@@ -1,4 +1,4 @@
-import AbstractJellyfish from './AbstractJellyfish';
+import AbstractJellyfish from './abstract-jellyfish';
 import {addDefines,createProgramFromShaders} from '../../util/util'
 import {MAX_NUMBER,WIDTH} from '../../data/const.js'
 

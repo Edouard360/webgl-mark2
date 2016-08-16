@@ -1,4 +1,4 @@
-import ThreeAbstractJellyfish from './ThreeAbstractJellyfish';
+import ThreeAbstractJellyfish from './three-abstract-jellyfish';
 import THREE from '../../node_modules/three/build/three'
 import {MAX_NUMBER,WIDTH} from '../../data/const.js'
 

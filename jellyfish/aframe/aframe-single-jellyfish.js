@@ -1,4 +1,4 @@
-import abstractJellyfish from './AFrameAbstractJellyfish'
+import abstractJellyfish from './aframe-abstract-jellyfish'
 
 /** The single jellyfish object, that "extends" the abstract jellyfish object */
 var singleJellyfish = {}

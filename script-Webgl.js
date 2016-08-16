@@ -1,11 +1,11 @@
 'use strict';
-import Timer from './jellyfish/Timer'
+import Timer from './jellyfish/timer'
 import dat from './node_modules/dat.gui/build/dat.gui'
-import AbstractJellyfish from './jellyfish/WebGL/AbstractJellyfish'
-import InstancedJellyfish from './jellyfish/WebGL/InstancedJellyfish'
-import MultipleJellyfish from './jellyfish/WebGL/MultipleJellyfish'
-import SingleJellyfish from './jellyfish/WebGL/SingleJellyfish'
-import Gradient from './jellyfish/WebGL/Gradient'
+import AbstractJellyfish from './jellyfish/webgl/abstract-jellyfish'
+import InstancedJellyfish from './jellyfish/webgl/instanced-jellyfish'
+import MultipleJellyfish from './jellyfish/webgl/multiple-jellyfish'
+import SingleJellyfish from './jellyfish/webgl/single-jellyfish'
+import Gradient from './jellyfish/webgl/gradient'
 import {getImages, getNewCanvas} from './util/util'
 import {CAMERA, MAX_NUMBER} from './data/const.js'
 

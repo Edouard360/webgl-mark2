@@ -1,4 +1,4 @@
-import abstractJellyfish from './AFrameAbstractJellyfish'
+import abstractJellyfish from './aframe-abstract-jellyfish'
 import {MAX_NUMBER,WIDTH} from '../../data/const.js'
 
 /** The instanced jellyfish object, that "extends" the abstract jellyfish object */

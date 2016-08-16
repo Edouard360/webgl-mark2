@@ -1,4 +1,4 @@
-import Timer from '../Timer'
+import Timer from '../timer'
 import {createTexture, createProgramFromShaders, addDefines} from '../../util/util'
 import {CAMERA, USE_FOG,SCALE} from '../../data/const.js'
 import {mat4,vec4,vec3, glMatrix} from '../../node_modules/gl-matrix/src/gl-matrix.js'

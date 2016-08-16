@@ -1,9 +1,9 @@
  module.exports = {
     entry: {
-      WebGL:'./script-WebGL.js',
-      Three:'./script-Three.js',
-      AFrame:'./script-AFrame.js',
-      AFrameRegister:'./jellyfish/AFrame/AFrameRegister.js'
+      webgl:'./script-webgl.js',
+      three:'./script-three.js',
+      aframe:'./script-aframe.js',
+      register:'./jellyfish/aframe/aframe-register.js'
     },
     output: {
       path: './dist',

@@ -1,5 +1,5 @@
-import Timer from '../Timer';
-import SingleJellyfish from './SingleJellyfish';
+import Timer from '../timer';
+import SingleJellyfish from './single-jellyfish';
 import {MAX_NUMBER,WIDTH} from '../../data/const.js'
 
 /** Class representing a group of jellyfish. */

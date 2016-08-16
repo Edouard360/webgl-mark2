@@ -1,4 +1,4 @@
-import Timer from '../Timer'
+import Timer from '../timer'
 import {getTexturesJellyfish} from '../../util/util'
 import {SCALE} from '../../data/const.js'
 

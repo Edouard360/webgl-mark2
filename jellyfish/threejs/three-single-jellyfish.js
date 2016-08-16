@@ -1,4 +1,4 @@
-import ThreeAbstractJellyfish from './ThreeAbstractJellyfish';
+import ThreeAbstractJellyfish from './three-abstract-jellyfish';
 
 /** A jellyfish using ThreeJS. */
 class ThreeSingleJellyfish extends ThreeAbstractJellyfish {

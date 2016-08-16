@@ -1,4 +1,4 @@
-import AbstractJellyfish from './AbstractJellyfish';
+import AbstractJellyfish from './abstract-jellyfish';
 
 /** Class representing a single jellyfish. */
 class SingleJellyfish extends AbstractJellyfish{
