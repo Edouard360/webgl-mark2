@@ -39,11 +39,13 @@ var handle = {};
 
   function JellyfishText(){
     this.class = "Single";
-    this.averageFPS = "averageFPS";
+    this.averageFPS = "Wait for FPS evaluation";
+    this.back = function() {window.location.replace("http://localhost:3000/public/index.html");};
   }
   var text = new JellyfishText();
   gui = new dat.GUI();
 
+  gui.add(text, 'back').name("Back")
   gui
   .add(text, 'class', ["Single","Instanced",'Multiple'])
   .name("Class")

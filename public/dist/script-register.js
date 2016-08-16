@@ -50,7 +50,7 @@
 /* 1 */
 /***/ function(module, exports) {
 
-	eval("\"use strict\";\n\nObject.defineProperty(exports, \"__esModule\", {\n  value: true\n});\nvar MAX_NUMBER = exports.MAX_NUMBER = 1000;\nvar WIDTH = exports.WIDTH = 5;\nvar CAMERA = exports.CAMERA = { ANGLE: 100, NEAR: 0.1, FAR: 120 }; // NEAR < 1.4 (<sqrt2) if we want to see the gradient\nvar USE_FOG = exports.USE_FOG = false; // If set to true and Webgl, don't forget to bind the uniforms\nvar UPDATE_FPS_RATE = exports.UPDATE_FPS_RATE = 5000;\nvar SCALE = exports.SCALE = { x: 5, y: 5, z: 5 };\n\n/*****************\n ** WEBPACK FOOTER\n ** ./src/data/const.js\n ** module id = 1\n ** module chunks = 0 1 2 3\n **/\n//# sourceURL=webpack:///./src/data/const.js?");
+	eval("\"use strict\";\n\nObject.defineProperty(exports, \"__esModule\", {\n  value: true\n});\nvar MAX_NUMBER = exports.MAX_NUMBER = 1000;\nvar WIDTH = exports.WIDTH = 5;\nvar CAMERA = exports.CAMERA = { ANGLE: 100, NEAR: 0.1, FAR: 120 }; // NEAR < 1.4 (<sqrt2) if we want to see the gradient\nvar USE_FOG = exports.USE_FOG = false; // If set to true and Webgl, don't forget to bind the uniforms\nvar UPDATE_FPS_RATE = exports.UPDATE_FPS_RATE = 100;\nvar SCALE = exports.SCALE = { x: 5, y: 5, z: 5 };\n\n/*****************\n ** WEBPACK FOOTER\n ** ./src/data/const.js\n ** module id = 1\n ** module chunks = 0 1 2 3\n **/\n//# sourceURL=webpack:///./src/data/const.js?");
 
 /***/ },
 /* 2 */,
