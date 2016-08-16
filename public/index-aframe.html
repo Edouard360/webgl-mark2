@@ -1,21 +1,18 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <meta charset="utf-8">
-    <title>Jellyfish — AFrame</title>
-      <script src="./dist/script-register.js"></script>
-  </head>
-  <body>
-    <a-scene id="scene" antialias="on">
-      <a-entity id="jellyfish" single-jellyfish="count:1;">
-        <!-- This will put the camera as it is in Three.js -->
-         <a-entity camera id="cameraJellyfish"></a-entity>
-      </a-entity>
-      <a-entity gradient />
+    <head>
+      <title>Jellyfish — AFrame</title>
+        <script src="./dist/script-register.js"></script>
+    </head>
+    <body>
+      <a-scene id="scene" antialias="on">
+        <a-entity id="jellyfish" single-jellyfish="count:1;">
+          <!-- This will put the camera as it is in Three.js -->
+           <a-entity camera id="cameraJellyfish"></a-entity>
+        </a-entity>
+        <a-entity gradient />
 
-    </a-scene>
-  </body>
-
-  <script src="./dist/script-aframe.js"></script>
-
+      </a-scene>
+    </body>
+    <script src="./dist/script-aframe.js"></script>
 </html>

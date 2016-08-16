@@ -27,8 +27,8 @@ This project should work with Firefox 49+ or Chrome 51+.
 
 WIP
 
-
-![Awesome group of jellyfish](https://github.com/Edouard360/webgl-mark2/blob/master/data/img/Trim.gif)
+![Jellyfish interface](https://github.com/Edouard360/webgl-mark2/blob/master/public/data/assets/jellyfish.gif)
+![Awesome group of jellyfish](https://github.com/Edouard360/webgl-mark2/blob/master/public/data/img/Trim.gif)
 
 ## License
 

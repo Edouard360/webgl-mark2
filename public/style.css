@@ -1,26 +1,8 @@
-#info {
-	position: absolute;
-	top: 0px; width: 100%;
-	padding: 0px;
-	padding-top: 2%;
-	padding-left: 2%;
-	margin: 0px;
-	text-align: left;
-	color: white;
-}
 body {
 	font-family: Futura;
 	margin:0px;
 	background-color: black;
 	}
-.select{
-	position:relative;
-	background-color: #4F7CE0;
-	color: orange;
-	height:30px;
-	top:70px;
-	left:50px;
-}
 
 #canvas_webgl {
 	position: absolute;
