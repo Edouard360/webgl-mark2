@@ -1,6 +1,6 @@
 'use strict';
 import Timer from './jellyfish/timer'
-import dat from '../node_modules/dat.gui/build/dat.gui'
+import {gui, text} from './data/gui.js'
 import AbstractJellyfish from './jellyfish/webgl/abstract-jellyfish'
 import InstancedJellyfish from './jellyfish/webgl/instanced-jellyfish'
 import MultipleJellyfish from './jellyfish/webgl/multiple-jellyfish'
@@ -8,9 +8,6 @@ import SingleJellyfish from './jellyfish/webgl/single-jellyfish'
 import Gradient from './jellyfish/webgl/gradient'
 import {getImages, getNewCanvas} from './util/util'
 import {CAMERA, MAX_NUMBER} from './data/const.js'
-
-/** @var {object} gui - A global variable for user interface */
-var gui;
 
 /**
  * @var {object} handle - A global variable to hold handles
@@ -34,15 +31,6 @@ var main=function(data) {
   /**
    * The code bellow simply sets the user interface for changing parameters
    */
-  function JellyfishText(){
-      this.class = "Single";
-      this.averageFPS = "Wait for FPS evaluation";
-      this.back = function() {window.location.replace("http://localhost:3000/public/index.html");};
-  }
-  var text = new JellyfishText();
-  gui = new dat.GUI();
-
-  gui.add(text, 'back').name("Back")
   gui
   .add(text, 'class', ["Single","Instanced","Multiple"])
   .name("Class")
@@ -50,6 +38,7 @@ var main=function(data) {
     canvas = getNewCanvas(canvas_container);
     cancelAnimationFrame(handle.animation);
     gui.remove(handle.jellyfishCount);
+    gui.remove(handle.averageFPS);
     switch(value){
       case "Single":
         jellyfishCount = 1;
@@ -67,7 +56,6 @@ var main=function(data) {
        throw 'dont know option ' + value
     }
   });
-  gui.add(text, 'averageFPS').name("Average FPS").domElement.id = 'averageFPS';
 
   refresh(SingleJellyfish,1); // Launch the initial benchmark with a single jellyfish
 
@@ -90,6 +78,8 @@ var main=function(data) {
     benchmark.jellyfishCount = jellyfishCount;
 
     handle.jellyfishCount = gui.add(benchmark, 'jellyfishCount',1,MAX_NUMBER).name("Number").step(1);
+    handle.averageFPS = gui.add(text, 'averageFPS').name("Average FPS")
+    handle.averageFPS.domElement.id = 'averageFPS';
 
     var drawing = function(){
       GL.viewport(0, 0, canvas.width, canvas.height);

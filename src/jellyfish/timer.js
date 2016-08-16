@@ -28,9 +28,9 @@ class Timer{
       parent.removeChild(parent.children[0]);
       var input = document.createElement("input")
       input.setAttribute("type", "text")
+      input.setAttribute("readonly","")
       input.setAttribute("value", this.averageFPS);
       parent.appendChild(input)
- 
       this.startTime = this.endTime;
     }
   };

@@ -25,10 +25,19 @@ This project should work with Firefox 49+ or Chrome 51+.
 
 ## Results
 
-WIP
+Configuration for reaching these numbers: GTX1080, i3, full screen resolution, on Firefox. In Firefox about:config, set the layout.frame_rate variable to 0, if you want to overcome the default 60 FPS limit of all browsers.
+
+| Jellyfish Count      | 32            | 256   |
+| -------------------- |:-------------:| -----:|
+| FPS in WebGL         | 1236          | 408   |
+| FPS in ThreeJS       | 1181          | 396   |
+| FPS in AFrame        | 1056          | 390   |
+
+We average the measures over 10 samples for each case.
+
+For the original results, the google sheet can be found [here](https://docs.google.com/spreadsheets/d/1GqJlZ6SVADBbqpSV1Vjf81xyznYCBkYlWrbz_AfCdsU/edit#gid=83899543).
 
 ![Jellyfish interface](https://github.com/Edouard360/webgl-mark2/blob/master/public/data/assets/jellyfish.gif)
-![Awesome group of jellyfish](https://github.com/Edouard360/webgl-mark2/blob/master/public/data/img/Trim.gif)
 
 ## License
 

@@ -9,10 +9,7 @@ import ThreeGradient from './jellyfish/threejs/three-gradient'
 import Timer from './jellyfish/timer'
 import {getImages, getNewCanvas} from './util/util'
 import {CAMERA,MAX_NUMBER} from './data/const.js';
-import dat from '../node_modules/dat.gui/build/dat.gui'
-
-/** @var {object} gui - A global variable for user interface */
-var gui;
+import {gui, text} from './data/gui.js'
 
 /**
  * @var {object} handle - A global variable to hold handles
@@ -36,16 +33,6 @@ var handle = {};
   /**
    * The code bellow simply sets the user interface for changing parameters
    */
-
-  function JellyfishText(){
-    this.class = "Single";
-    this.averageFPS = "Wait for FPS evaluation";
-    this.back = function() {window.location.replace("http://localhost:3000/public/index.html");};
-  }
-  var text = new JellyfishText();
-  gui = new dat.GUI();
-
-  gui.add(text, 'back').name("Back")
   gui
   .add(text, 'class', ["Single","Instanced",'Multiple'])
   .name("Class")
@@ -53,6 +40,7 @@ var handle = {};
     canvas = getNewCanvas(canvas_container);
     cancelAnimationFrame(handle.animation);
     gui.remove(handle.jellyfishCount);
+    gui.remove(handle.averageFPS);
     switch(value){
       case "Single":
       jellyfishCount = 1;
@@ -70,7 +58,6 @@ var handle = {};
       throw 'dont know option ' + value
     }
   });
-  gui.add(text, 'averageFPS').name("Average FPS").domElement.id = 'averageFPS';
 
   refresh(ThreeSingleJellyfish,1); // Launch the initial benchmark with a single jellyfish
 
@@ -88,6 +75,8 @@ var handle = {};
 
     benchmark.geometry.maxInstancedCount = jellyfishCount;
     handle.jellyfishCount = gui.add(benchmark.geometry, 'maxInstancedCount',1,MAX_NUMBER).name("Number").step(1);
+    handle.averageFPS = gui.add(text, 'averageFPS').name("Average FPS")
+    handle.averageFPS.domElement.id = 'averageFPS';
     
     var renderer = new THREE.WebGLRenderer({canvas:canvas,antialias:true});
     renderer.setClearColor( 0xFFFFFF );
