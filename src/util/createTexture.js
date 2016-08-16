@@ -1,4 +1,4 @@
-import THREE from '../node_modules/three/build/three'
+import THREE from '../../node_modules/three/build/three'
 
 /**
   * The createTexture function

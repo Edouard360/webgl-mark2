@@ -1,5 +1,4 @@
 import Timer from '../timer'
-//import THREE from '../../node_modules/three/build/three'
 import ThreeSingleJellyfish from './three-single-jellyfish';
 import {MAX_NUMBER,WIDTH,SCALE} from '../../data/const.js'
 

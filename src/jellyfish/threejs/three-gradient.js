@@ -1,4 +1,4 @@
-import THREE from '../../node_modules/three/build/three'
+import THREE from '../../../node_modules/three/build/three'
 
 /** A gradient using ThreeJS. */
 class ThreeGradient{

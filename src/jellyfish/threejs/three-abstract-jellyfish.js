@@ -1,7 +1,7 @@
 import Timer from '../timer'
 import {getTexturesJellyfish} from '../../util/util'
 import {USE_FOG,SCALE} from '../../data/const.js'
-import THREE from '../../node_modules/three/build/three'
+import THREE from '../../../node_modules/three/build/three'
 
 /** A jellyfish using ThreeJS. */
 class ThreeAbstractJellyfish extends Timer {

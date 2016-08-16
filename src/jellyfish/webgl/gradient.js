@@ -1,5 +1,5 @@
 import {createProgramFromShaders} from '../../util/util'
-import {vec3} from '../../node_modules/gl-matrix/src/gl-matrix.js'
+import {vec3} from '../../../node_modules/gl-matrix/src/gl-matrix.js'
 
 // *** Gradient Object *** //
 class Gradient{

@@ -1,5 +1,5 @@
 'use strict';
-import THREE from './node_modules/three/build/three'
+import THREE from '../node_modules/three/build/three'
 import ThreeAbstractJellyfish from './jellyfish/threejs/three-abstract-jellyfish'
 import ThreeInstancedJellyfish from './jellyfish/threejs/three-instanced-jellyfish'
 import ThreeSingleJellyfish from './jellyfish/threejs/three-single-jellyfish'
@@ -9,7 +9,7 @@ import ThreeGradient from './jellyfish/threejs/three-gradient'
 import Timer from './jellyfish/timer'
 import {getImages, getNewCanvas} from './util/util'
 import {CAMERA,MAX_NUMBER} from './data/const.js';
-import dat from './node_modules/dat.gui/build/dat.gui'
+import dat from '../node_modules/dat.gui/build/dat.gui'
 
 /** @var {object} gui - A global variable for user interface */
 var gui;

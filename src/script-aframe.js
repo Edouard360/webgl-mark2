@@ -1,5 +1,5 @@
 import {CAMERA,MAX_NUMBER} from './data/const.js'
-import dat from './node_modules/dat.gui/build/dat.gui'
+import dat from '../node_modules/dat.gui/build/dat.gui'
 import AFrameMultipleJellyfish from "./jellyfish/aframe/aframe-multiple-jellyfish";
 
 'use strict';

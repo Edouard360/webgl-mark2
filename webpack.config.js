@@ -1,12 +1,12 @@
  module.exports = {
     entry: {
-      webgl:'./script-webgl.js',
-      three:'./script-three.js',
-      aframe:'./script-aframe.js',
-      register:'./jellyfish/aframe/aframe-register.js'
+      webgl:'./src/script-webgl.js',
+      three:'./src/script-three.js',
+      aframe:'./src/script-aframe.js',
+      register:'./src/jellyfish/aframe/aframe-register.js'
     },
     output: {
-      path: './dist',
+      path: './public/dist',
       filename: 'script-[name].js',
     },
     module: {
@@ -36,5 +36,4 @@
     },
     devtool:'eval',
     debug: true
-    
  };
