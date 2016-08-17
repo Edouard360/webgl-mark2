@@ -1,8 +1,13 @@
+var JS_LOADERS = [
+  'babel?cacheDirectory&presets[]=react,presets[]=es2015,presets[]=stage-0'
+];
+
  module.exports = {
     entry: {
       webgl:'./src/script-webgl.js',
       three:'./src/script-three.js',
       aframe:'./src/script-aframe.js',
+      react:'./src/script-aframe-react.js',
       register:'./src/jellyfish/aframe/aframe-register.js'
     },
     output: {
@@ -24,9 +29,9 @@
               loader: 'webpack-glsl'
           },
           {
-             test: /\.js$/,
-             exclude: /node_modules/,
-             loader: 'babel-loader',
+              test: /\.js$/,
+              exclude: /node_modules/,
+              loaders: JS_LOADERS//'babel-loader',
           },
           {
               test: /\.json$/,

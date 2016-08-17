@@ -9,7 +9,7 @@ var gui = new dat.GUI()
 
 /** This function is only for the user interface */
 function JellyfishText(){
-  this.back = function() {window.location.replace("http://localhost:3000/public/index.html");};
+  this.back = function() {window.location.replace("http://localhost:3000/index.html");};
   this.class = "Single";
   this.count = 1;
   this.averageFPS = "Wait for FPS evaluation";
