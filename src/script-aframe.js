@@ -52,6 +52,11 @@ gui
   handle.averageFPS = gui.add(text, 'averageFPS').name("Average FPS")
   handle.averageFPS.domElement.id = 'averageFPS';
 })
+
+gui
+.add(text, 'loadingTime', ["Single","Instanced","Multiple"])
+.name("Loading Time").domElement.id = 'loadingTime';
+
 handle.jellyfishCount = gui.add(text, 'count',1,1).name("Number")
 handle.averageFPS = gui.add(text, 'averageFPS').name("Average FPS")
 handle.averageFPS.domElement.id = 'averageFPS';

@@ -13,7 +13,6 @@ var abstractJellyfish = {
    * Load all the attributes, the shaders and images for the jellyfish
    */
   init(){
-    this.timer = new Timer();
     var jellyfish = {
       shaders:{VS: require('../../shaders/jellyfish/jellyfish.vert'),FS: require('../../shaders/jellyfish/jellyfish.frag')},
       position: require('../../data/attributes/jellyfish_position.json'),
@@ -28,6 +27,7 @@ var abstractJellyfish = {
     this.setMesh(jellyfish);
   },
   update(){
+    this.timer = new Timer();
     this.el.getObject3D('mesh',THREE.Mesh).geometry.maxInstancedCount = this.data.count;
   },
   /**
@@ -58,15 +58,13 @@ var abstractJellyfish = {
       mesh.rotateX((Math.PI/180)*(Math.sin(this.timer.rotation / 20.0) * 30.0));
       mesh.translateY(Math.sin(this.timer.rotation / 10.0) * 2.5 * SCALE.y); 
     }
+
   },
   /**
    * The remove function of the component (as defined in AFRAME docs)
    * Reset the mesh of the
    */  
   remove(){
-    //this.el.getOrCreateObject3D('mesh',THREE.Mesh) = THREE.Mesh;
-    //this.el.getObject3D("mesh").geometry = new THREE.Geometry(); 
-    //this.el.setObject3D('mesh',mesh);
   },
   /**
    * The setMesh function. Hand-made.

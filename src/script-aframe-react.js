@@ -13,7 +13,8 @@ class JellyfishScene extends React.Component {
     this.state = {
       class: 'Single',
       count: 1,
-      averageFPS: 'Wait for FPS evaluation'
+      averageFPS: 'Wait for FPS evaluation',
+      loadingTime: 'Loading time'
     }
     this.setUserInterface();
   };
@@ -26,6 +27,11 @@ class JellyfishScene extends React.Component {
     .add(this.state, 'class', ["Single","Instanced","Multiple"])
     .name("Class")
     .onChange((value)=>{this.setState({class:value})})
+
+    gui
+    .add(this.state, 'loadingTime')
+    .name("Loading Time")
+    .domElement.id = 'loadingTime';
 
     gui
     .add(this.state, 'count',1,MAX_NUMBER)

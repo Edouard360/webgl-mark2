@@ -56,6 +56,9 @@ var main=function(data) {
        throw 'dont know option ' + value
     }
   });
+  gui
+  .add(text, 'loadingTime', ["Single","Instanced","Multiple"])
+  .name("Loading Time").domElement.id = 'loadingTime';
 
   refresh(SingleJellyfish,1); // Launch the initial benchmark with a single jellyfish
 
@@ -78,6 +81,7 @@ var main=function(data) {
     benchmark.jellyfishCount = jellyfishCount;
 
     handle.jellyfishCount = gui.add(benchmark, 'jellyfishCount',1,MAX_NUMBER).name("Number").step(1);
+    handle.jellyfishCount.onChange(()=>{benchmark.resetTimer()})
     handle.averageFPS = gui.add(text, 'averageFPS').name("Average FPS")
     handle.averageFPS.domElement.id = 'averageFPS';
 

@@ -11,6 +11,7 @@ var gui = new dat.GUI()
 function JellyfishText(){
   this.back = function() {window.location.replace("http://localhost:3000/index.html");};
   this.class = "Single";
+  this.loadingTime = "Loading Time"
   this.count = 1;
   this.averageFPS = "Wait for FPS evaluation";
 }
