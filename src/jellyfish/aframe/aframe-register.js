@@ -7,3 +7,5 @@ import {gradient} from "./aframe-gradient"
 AFRAME.registerComponent("single-jellyfish", singleJellyfish);
 AFRAME.registerComponent("instanced-jellyfish", instancedJellyfish);
 AFRAME.registerComponent("gradient", gradient);
+
+

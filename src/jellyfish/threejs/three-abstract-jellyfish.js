@@ -1,5 +1,4 @@
 import Timer from '../timer'
-import {getTexturesJellyfish} from '../../util/util'
 import {USE_FOG,SCALE} from '../../data/const.js'
 import THREE from '../../../node_modules/three/build/three'
 
@@ -17,7 +16,7 @@ class ThreeAbstractJellyfish extends Timer {
     this.createGeometry();
     this.addAttribute(jellyfish);
     this.geometry.setIndex( new THREE.BufferAttribute( new Uint32Array(jellyfish.index), 1 ) );
-    this.textures = getTexturesJellyfish(jellyfish.imagesList);
+    this.textures = jellyfish.images;
     this.createMaterial(jellyfish);
 
     this.mesh = new THREE.Mesh(this.geometry, this.material);

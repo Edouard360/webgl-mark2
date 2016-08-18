@@ -7,7 +7,7 @@ import ThreeMultipleJellyfish from './jellyfish/threejs/three-multiple-jellyfish
 import ThreeGradient from './jellyfish/threejs/three-gradient'
 
 import Timer from './jellyfish/timer'
-import {getImages, getNewCanvas} from './util/util'
+import {getImages, getNewCanvas,getThreeTextures} from './util/util'
 import {CAMERA,MAX_NUMBER} from './data/const.js';
 import {gui, text} from './data/gui.js'
 
@@ -111,9 +111,12 @@ var object_promise = {
     texture: require('./data/attributes/jellyfish_texture.json'),
     color: require('./data/attributes/jellyfish_color.json'),
     index: require('./data/attributes/jellyfish_index.json'),
-    imagesList: require('./data/img/list.json')
+    images: undefined
   }
 }
 
-main(object_promise);
+getThreeTextures(require('./data/img/list.json')).then(function(value){object_promise.jellyfish.images = value})
+.then(function(){
+    main(object_promise);
+});
 

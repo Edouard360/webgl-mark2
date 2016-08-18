@@ -1,12 +1,12 @@
 import Timer from '../timer'
-import {getTexturesJellyfish} from '../../util/util'
 import {SCALE} from '../../data/const.js'
 
 /** The abstract jellyfish object. */
 var abstractJellyfish = {
   schema:{
     count:{type:'int',default:3}, 
-    position:{type:'vec3',default:{x:0,y:0,z:0}}
+    position:{type:'vec3',default:{x:0,y:0,z:0}},
+    textures:{default:[]}
   },
   /**
    * The init function of the component (as defined in AFRAME docs)
@@ -21,8 +21,8 @@ var abstractJellyfish = {
       color: require('../../data/attributes/jellyfish_color.json'),
       index: require('../../data/attributes/jellyfish_index.json'),
     }
-    
-    this.textures = getTexturesJellyfish(require('../../data/img/list.json'))
+
+    this.textures = this.data.textures;
 
     this.setMesh(jellyfish);
   },
