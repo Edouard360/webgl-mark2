@@ -1,11 +1,12 @@
+'use strict';
 import {Entity, Scene} from 'aframe-react';
 import React from 'react';
 import ReactDOM from 'react-dom';
-import {MAX_NUMBER} from './data/const.js'
-import {gui} from './data/gui.js'
 import Camera from './jellyfish/aframe-react/aframe-camera'
 import MultipleJellyfish from './jellyfish/aframe-react/aframe-react-multiple-jellyfish'
 import {getThreeTextures} from './util/util'
+import {MAX_NUMBER} from './data/const.js'
+import {gui} from './data/gui.js'
 
 /** The react component representing our scene  */
 class JellyfishScene extends React.Component {
@@ -18,17 +19,6 @@ class JellyfishScene extends React.Component {
       loadingTime: 'Loading time'
     }
     this.setUserInterface();
-  };
-  componentDidMount(){
-    this.componentDidUpdate();
-  };
-  componentDidUpdate(){
-    var entityJellyfishEl = document.querySelector("#jellyfish");
-    if(this.state.class=='Single'){
-      entityJellyfishEl.setAttribute('single-jellyfish',{textures:this.props.textures,count:1})
-    }else{
-      entityJellyfishEl.setAttribute('instanced-jellyfish',{textures:this.props.textures,count:this.state.count})
-    }
   };
 
   /**
@@ -63,17 +53,17 @@ class JellyfishScene extends React.Component {
     let jellyfish; 
     switch(this.state.class){
       case 'Single':
-      jellyfish = <Entity id='jellyfish'>
+      jellyfish = <Entity id='jellyfish' single-jellyfish={{assets:'#texture', count:1}} >
                     <Camera />
                   </Entity>
       break;
       case 'Instanced':
-      jellyfish = <Entity id='jellyfish'>
+      jellyfish = <Entity id='jellyfish' instanced-jellyfish={{assets:'#texture', count:this.state.count}}>
                     <Camera />
                   </Entity>
       break;
       case 'Multiple':
-      jellyfish = <MultipleJellyfish count={this.state.count} textures={this.props.textures}>
+      jellyfish = <MultipleJellyfish count={this.state.count} assets="#texture" >
                     <Camera />
                   </MultipleJellyfish>
       break;
@@ -81,6 +71,9 @@ class JellyfishScene extends React.Component {
     }
     return (
       <Scene id="scene" antialias="on">
+        <a-assets>
+          {this.props.assets.map((url,i)=>{return(<img key={i} id="texture" src={url} />)})}
+        </a-assets>
         {jellyfish}
         <Entity gradient />
       </Scene>
@@ -88,6 +81,8 @@ class JellyfishScene extends React.Component {
   }
 }
 
-getThreeTextures(require('./data/img/list.json')).then(function(textures){
-  ReactDOM.render(<JellyfishScene textures={textures} />, document.querySelector('.scene-container'))
-})
+ReactDOM.render(<JellyfishScene assets={require('./data/img/list.json')} />, document.querySelector('.scene-container'))
+
+
+
+

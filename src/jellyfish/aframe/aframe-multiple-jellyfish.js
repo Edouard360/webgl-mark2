@@ -11,6 +11,7 @@ class AFrameMultipleJellyfish{
 		for(var i=0;i<this.jellyfishCount;i++){
             let entityJellyfishElTmp = document.createElement("a-entity");
             entityJellyfishElTmp.setAttribute('single-jellyfish', 'position',{x:2*(Math.random() - 0.5)*WIDTH*SCALE.x,y:2*(Math.random() - 0.5)*WIDTH*SCALE.y,z:2*(Math.random() - 0.5)*WIDTH*SCALE.z})
+            entityJellyfishElTmp.setAttribute('single-jellyfish', 'assets','texture')
             this.entityJellyfishEl.appendChild(entityJellyfishElTmp);
         }
         this.entitySceneEl.appendChild(this.entityJellyfishEl)

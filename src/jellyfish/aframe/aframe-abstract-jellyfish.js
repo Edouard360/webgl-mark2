@@ -1,12 +1,13 @@
 import Timer from '../timer'
 import {SCALE} from '../../data/const.js'
+import 'aframe'
 
 /** The abstract jellyfish object. */
 var abstractJellyfish = {
   schema:{
     count:{type:'int',default:3}, 
     position:{type:'vec3',default:{x:0,y:0,z:0}},
-    textures:{default:[]}
+    assets:{type:'selectorAll', default:null}
   },
   /**
    * The init function of the component (as defined in AFRAME docs)
@@ -22,7 +23,13 @@ var abstractJellyfish = {
       index: require('../../data/attributes/jellyfish_index.json'),
     }
 
-    this.textures = this.data.textures;
+    this.textures = this.data.assets.map((texture,i)=>{
+      var asset = new THREE.Texture(texture); 
+      asset.wrapS = (i>0?THREE.RepeatWrapping:THREE.ClampToEdgeWrapping);
+      asset.wrapT = (i>0?THREE.RepeatWrapping:THREE.ClampToEdgeWrapping);
+      asset.needsUpdate = true; 
+      return asset 
+    })
 
     this.setMesh(jellyfish);
   },

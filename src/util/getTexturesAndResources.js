@@ -1,4 +1,4 @@
-import THREE from '../../node_modules/three/build/three'
+import THREE from 'three'
 
 /**
   * The createTexture function
@@ -6,7 +6,6 @@ import THREE from '../../node_modules/three/build/three'
   * @param {WebGLRenderingContext} GL - The webgl rendering context.
   * @return {Array} - An array of WebGLTexture objects.
   */
-
 export function createTexture(images,GL){
 	return images.map(function(img,i){
       let texture = GL.createTexture();
@@ -21,26 +20,6 @@ export function createTexture(images,GL){
       return texture;
     });
 }
-
-/**
-  * The getText function
-  * @param {string} url - The url of the text to load.
-  * @return {Promise} - A promise of the loaded text.
-  */
-export function getText(url){
-    return new Promise(function(resolve,reject){
-    	var request = new XMLHttpRequest();
-		request.open('GET', url , true);
-		request.onload = function () {
-			if (request.status < 200 || request.status > 299) {
-				reject('Error: HTTP Status ' + request.status + ' on resource ' + url);
-			} else {
-				resolve(request.responseText);
-			}
-		};
-		request.send();
-  })
-};
 
 /**
   * The getImages function
@@ -78,24 +57,3 @@ export function getThreeTextures(list){
     	})
   	}
 }
-
-/**
-  * The getTexturesJellyfish function !! This is actually an asynchronous load...
-  * Use rather the getThreeTextures function
-  * @param {Array} list - An array of strings for the locations of the images.
-  * @return {Array} - The loaded texture.
-  */
-export function getTexturesJellyfish(imagesList){
-  var loader = new THREE.TextureLoader();
-  return imagesList.map(function(url,i){
-    return loader.load(url, function(texture){
-      texture.minFilter = THREE.LinearFilter;
-      texture.magFilter = THREE.LinearFilter;
-      texture.wrapS = (i>0?THREE.RepeatWrapping:THREE.ClampToEdgeWrapping);
-      texture.wrapT = (i>0?THREE.RepeatWrapping:THREE.ClampToEdgeWrapping);
-      return texture;
-    });
-  })
-}
-
-

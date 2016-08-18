@@ -1,13 +1,12 @@
 'use strict';
-import Timer from './jellyfish/timer'
-import {gui, text} from './data/gui.js'
 import AbstractJellyfish from './jellyfish/webgl/abstract-jellyfish'
+import SingleJellyfish from './jellyfish/webgl/single-jellyfish'
 import InstancedJellyfish from './jellyfish/webgl/instanced-jellyfish'
 import MultipleJellyfish from './jellyfish/webgl/multiple-jellyfish'
-import SingleJellyfish from './jellyfish/webgl/single-jellyfish'
 import Gradient from './jellyfish/webgl/gradient'
 import {getImages, getNewCanvas} from './util/util'
 import {CAMERA, MAX_NUMBER} from './data/const.js'
+import {gui, text} from './data/gui.js'
 
 /**
  * @var {object} handle - A global variable to hold handles
