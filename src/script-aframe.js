@@ -80,7 +80,9 @@ require('./data/img/list.json').map((url,i)=>{
 var entitySceneEl = document.querySelector("#scene");
 var entityJellyfishEl = document.querySelector("#jellyfish");
 var entityCameraEl = document.querySelector("#cameraJellyfish");
+
 entityJellyfishEl.setAttribute('single-jellyfish', {count:1,assets:"#texture"})
 entityCameraEl.setAttribute("camera",{active:true,fov : CAMERA.ANGLE, near : CAMERA.NEAR, far : CAMERA.FAR});
 entityCameraEl.setAttribute("look-controls","");
 
+var skyEl = document.querySelector("#sky");

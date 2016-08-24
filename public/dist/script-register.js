@@ -45,14 +45,14 @@
 /***/ 0:
 /***/ function(module, exports, __webpack_require__) {
 
-	eval("'use strict';\n\n__webpack_require__(174);\n\nvar _aframeSingleJellyfish = __webpack_require__(176);\n\nvar _aframeSingleJellyfish2 = _interopRequireDefault(_aframeSingleJellyfish);\n\nvar _aframeInstancedJellyfish = __webpack_require__(186);\n\nvar _aframeInstancedJellyfish2 = _interopRequireDefault(_aframeInstancedJellyfish);\n\nvar _aframeGradient = __webpack_require__(187);\n\nfunction _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }\n\nAFRAME.registerComponent(\"single-jellyfish\", _aframeSingleJellyfish2.default);\nAFRAME.registerComponent(\"instanced-jellyfish\", _aframeInstancedJellyfish2.default);\nAFRAME.registerComponent(\"gradient\", _aframeGradient.gradient);\n\n/*****************\n ** WEBPACK FOOTER\n ** ./src/jellyfish/aframe/aframe-register.js\n ** module id = 0\n ** module chunks = 2\n **/\n//# sourceURL=webpack:///./src/jellyfish/aframe/aframe-register.js?");
+	eval("'use strict';\n\n__webpack_require__(174);\n\nvar _aframeSingleJellyfish = __webpack_require__(176);\n\nvar _aframeSingleJellyfish2 = _interopRequireDefault(_aframeSingleJellyfish);\n\nvar _aframeInstancedJellyfish = __webpack_require__(186);\n\nvar _aframeInstancedJellyfish2 = _interopRequireDefault(_aframeInstancedJellyfish);\n\nvar _aframeGradient = __webpack_require__(187);\n\nvar _aframeSky = __webpack_require__(211);\n\nfunction _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }\n\nAFRAME.registerComponent(\"single-jellyfish\", _aframeSingleJellyfish2.default);\nAFRAME.registerComponent(\"instanced-jellyfish\", _aframeInstancedJellyfish2.default);\nAFRAME.registerComponent(\"gradient\", _aframeGradient.gradient);\nAFRAME.registerShader(\"sky\", _aframeSky.sky);\n\n/*****************\n ** WEBPACK FOOTER\n ** ./src/jellyfish/aframe/aframe-register.js\n ** module id = 0\n ** module chunks = 2\n **/\n//# sourceURL=webpack:///./src/jellyfish/aframe/aframe-register.js?");
 
 /***/ },
 
 /***/ 2:
 /***/ function(module, exports) {
 
-	eval("\"use strict\";\n\nObject.defineProperty(exports, \"__esModule\", {\n  value: true\n});\nvar MAX_NUMBER = exports.MAX_NUMBER = 4096;\nvar WIDTH = exports.WIDTH = 10;\nvar CAMERA = exports.CAMERA = { ANGLE: 100, NEAR: 0.1, FAR: 400 }; // NEAR < 1.4 (<sqrt2) if we want to see the gradient\nvar USE_FOG = exports.USE_FOG = false; // If set to true and Webgl, don't forget to bind the uniforms\nvar UPDATE_FPS_RATE = exports.UPDATE_FPS_RATE = 100;\nvar SCALE = exports.SCALE = { x: 5, y: 5, z: 5 };\nvar CENTER = exports.CENTER = { x: 0.0, y: +5.0, z: -25.0 };\nvar ROTATE = exports.ROTATE = { x: 0.1, y: 0.1 };\nvar RADIUS = exports.RADIUS = { min: 30, max: 40, anglePHI: 0.2 };\n\nvar DISPLAY = exports.DISPLAY = \"circle\";\n\n/*****************\n ** WEBPACK FOOTER\n ** ./src/data/const.js\n ** module id = 2\n ** module chunks = 0 1 2 3 4\n **/\n//# sourceURL=webpack:///./src/data/const.js?");
+	eval("\"use strict\";\n\nObject.defineProperty(exports, \"__esModule\", {\n  value: true\n});\nvar MAX_NUMBER = exports.MAX_NUMBER = 4096;\nvar WIDTH = exports.WIDTH = 10;\nvar CAMERA = exports.CAMERA = { ANGLE: 100, NEAR: 0.1, FAR: 10000 }; // NEAR < 1.4 (<sqrt2) if we want to see the gradient\nvar USE_FOG = exports.USE_FOG = false; // If set to true and Webgl, don't forget to bind the uniforms\nvar UPDATE_FPS_RATE = exports.UPDATE_FPS_RATE = 100;\nvar SCALE = exports.SCALE = { x: 5, y: 5, z: 5 };\nvar CENTER = exports.CENTER = { x: 0.0, y: +5.0, z: -25.0 };\nvar ROTATE = exports.ROTATE = { x: 0.1, y: 0.1 };\nvar RADIUS = exports.RADIUS = { min: 30, max: 40, anglePHI: 0.2 };\n\nvar DISPLAY = exports.DISPLAY = \"circle\";\n\n/*****************\n ** WEBPACK FOOTER\n ** ./src/data/const.js\n ** module id = 2\n ** module chunks = 0 1 2 3 4\n **/\n//# sourceURL=webpack:///./src/data/const.js?");
 
 /***/ },
 
@@ -221,6 +221,27 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	eval("\"use strict\";\n\nObject.defineProperty(exports, \"__esModule\", {\n\tvalue: true\n});\nexports.generateOffset = generateOffset;\n\nvar _const = __webpack_require__(2);\n\n/**\n  * The generateOffset function\n  * @param {string} type - Either a bloc or a circle\n  * @return {array} offset - The array containing all the offset.\n  */\nfunction generateOffset(type) {\n\tvar offset = [];\n\tswitch (type) {\n\t\tcase \"circle\":\n\t\t\tfor (var i = 0; i < _const.MAX_NUMBER; i++) {\n\t\t\t\tvar radius = _const.RADIUS.min + Math.random() * (_const.RADIUS.max - _const.RADIUS.min);\n\t\t\t\tvar PHI = Math.PI / 2 + (Math.random() - 0.5) * Math.PI * _const.RADIUS.anglePHI;\n\t\t\t\tvar THETA = Math.random() * 2 * Math.PI;\n\n\t\t\t\tvar y = radius * Math.cos(PHI);\n\t\t\t\tvar z = radius * Math.sin(PHI) * Math.cos(THETA);\n\t\t\t\tvar x = radius * Math.sin(PHI) * Math.sin(THETA);\n\n\t\t\t\toffset = offset.concat([[x, y, z]]);\n\t\t\t}\n\t\t\tbreak;\n\t\tcase \"bloc\":\n\t\t\tfor (var _i = 0; _i < _const.MAX_NUMBER; _i++) {\n\t\t\t\tvar _x = 2 * (Math.random() - 0.5) * _const.WIDTH;\n\t\t\t\tvar _y = 2 * (Math.random() - 0.5) * _const.WIDTH;\n\t\t\t\tvar _z = 2 * (Math.random() - 0.5) * _const.WIDTH;\n\t\t\t\toffset = offset.concat([[_x, _y, _z]]);\n\t\t\t}\n\t\t\tbreak;\n\t\tdefault:\n\t\t\tthrow 'dont know type ' + type + 'for generating offset';\n\t}\n\n\treturn offset;\n}\n\n/*****************\n ** WEBPACK FOOTER\n ** ./src/util/generateOffset.js\n ** module id = 210\n ** module chunks = 0 1 2 3 4\n **/\n//# sourceURL=webpack:///./src/util/generateOffset.js?");
+
+/***/ },
+
+/***/ 211:
+/***/ function(module, exports, __webpack_require__) {
+
+	eval("'use strict';\n\nObject.defineProperty(exports, \"__esModule\", {\n\tvalue: true\n});\nvar sky = {\n\tschema: {\n\t\tcolorTop: { type: 'color', default: '#5C95FF', is: 'uniform' },\n\t\tcolorBottom: { type: 'color', default: '#182FA4', is: 'uniform' }\n\t},\n\tvertexShader: __webpack_require__(212),\n\tfragmentShader: __webpack_require__(213)\n};\n\nexports.sky = sky;\n\n/*****************\n ** WEBPACK FOOTER\n ** ./src/jellyfish/aframe/aframe-sky.js\n ** module id = 211\n ** module chunks = 2\n **/\n//# sourceURL=webpack:///./src/jellyfish/aframe/aframe-sky.js?");
+
+/***/ },
+
+/***/ 212:
+/***/ function(module, exports) {
+
+	eval("module.exports = \"varying vec3 vWorldPosition;\\n\\nvoid main() {\\n\\n  vec4 worldPosition = modelMatrix * vec4( position, 1.0 );\\n  vWorldPosition = worldPosition.xyz;\\n\\n  gl_Position = projectionMatrix * modelViewMatrix * vec4( position, 1.0 );\\n\\n}\"\n\n/*****************\n ** WEBPACK FOOTER\n ** ./src/shaders/gradient/sky.vert\n ** module id = 212\n ** module chunks = 2\n **/\n//# sourceURL=webpack:///./src/shaders/gradient/sky.vert?");
+
+/***/ },
+
+/***/ 213:
+/***/ function(module, exports) {
+
+	eval("module.exports = \"precision mediump float;\\n\\nuniform vec3 colorTop;\\nuniform vec3 colorBottom;\\n\\nvarying vec3 vWorldPosition;\\n\\nvoid main(){\\n  vec3 pointOnSphere = normalize(vWorldPosition.xyz);\\n  float f = sin(pointOnSphere.y);\\n  gl_FragColor = vec4(mix(colorBottom,colorTop, f ), 1.0);\\n\\n}\"\n\n/*****************\n ** WEBPACK FOOTER\n ** ./src/shaders/gradient/sky.frag\n ** module id = 213\n ** module chunks = 2\n **/\n//# sourceURL=webpack:///./src/shaders/gradient/sky.frag?");
 
 /***/ }
 
