@@ -1,5 +1,5 @@
 import Timer from '../timer'
-import {SCALE} from '../../data/const.js'
+import {SCALE,CENTER,ROTATE,USE_FOG} from '../../data/const.js'
 import 'aframe'
 
 /** The abstract jellyfish object. */
@@ -59,10 +59,10 @@ var abstractJellyfish = {
       mesh.rotation.y = 0;
       mesh.rotation.z = 0;
 
-      mesh.translateY(+5.0); 
-      mesh.translateZ(-75.0);
-      mesh.rotateY((Math.PI/180)*(Math.sin(this.timer.rotation / 10.0) * 30.0));
-      mesh.rotateX((Math.PI/180)*(Math.sin(this.timer.rotation / 20.0) * 30.0));
+      mesh.translateY(CENTER.y); 
+      mesh.translateZ(CENTER.z);
+      mesh.rotateY((Math.PI/180)* Math.sin(this.timer.rotation / 10.0) * 30.0 * ROTATE.y);
+      mesh.rotateX((Math.PI/180)* Math.sin(this.timer.rotation / 20.0) * 30.0 * ROTATE.x);
       mesh.translateY(Math.sin(this.timer.rotation / 10.0) * 2.5 * SCALE.y); 
     }
 
@@ -92,9 +92,9 @@ var abstractJellyfish = {
       vertexShader:   jellyfish.shaders.VS,
       fragmentShader: jellyfish.shaders.FS,
       side: THREE.DoubleSide,
-      depthTest: false,
+      depthTest: true,
       transparent: true,
-      defines:{THREE_JS:true},
+      defines:{THREE_JS:true,USE_FOG:USE_FOG},
       uniforms:{
         uSampler:           {type: "t", value: this.textures[0]},
         uSampler1:          {type: "t", value: this.textures[1]},

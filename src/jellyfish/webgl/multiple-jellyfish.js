@@ -1,6 +1,7 @@
 import Timer from '../timer';
 import SingleJellyfish from './single-jellyfish';
-import {MAX_NUMBER,WIDTH} from '../../data/const.js'
+import {generateOffset} from '../../util/util.js'
+import {DISPLAY} from '../../data/const.js'
 
 /** Class representing a group of jellyfish. */
 class MultipleJellyfish extends Timer{
@@ -27,12 +28,9 @@ class MultipleJellyfish extends Timer{
    */  
   updateJellyfishGroup(){
     if(this.jellyfishGroup.length != this.jellyfishCount){
-      var offset = [];
-      for(let i = 0; i<this.jellyfishCount;i++){
-        offset = offset.concat([[2*(Math.random() - 0.5)*WIDTH, 2*(Math.random() - 0.5)*WIDTH, 2*(Math.random() - 0.5)*WIDTH]]);
-      }
-      this.jellyfishGroup = offset.map((coord)=>{
-        var jellyfish = this.newDataJellyfishWithOffset(coord[0],coord[1],coord[2]);
+      var offset = generateOffset(DISPLAY);
+      this.jellyfishGroup = offset.slice(0,this.jellyfishCount).map((array)=>{
+        var jellyfish = this.newDataJellyfishWithOffset(array[0],array[1],array[2]);
         return new SingleJellyfish(this.GL,jellyfish);
       });
       this.updateJellyfishViewport();

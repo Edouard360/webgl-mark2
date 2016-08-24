@@ -1,5 +1,5 @@
 import Timer from '../timer'
-import {USE_FOG,SCALE} from '../../data/const.js'
+import {USE_FOG,SCALE,CENTER,ROTATE} from '../../data/const.js'
 import THREE from '../../../node_modules/three/build/three'
 
 /** A jellyfish using ThreeJS. */
@@ -41,7 +41,7 @@ class ThreeAbstractJellyfish extends Timer {
       vertexShader:   jellyfish.shaders.VS,
       fragmentShader: jellyfish.shaders.FS,
       side: THREE.DoubleSide, // equivalent for GL.disable(GL.CULL_FACE);
-      depthTest: false, // equivalent for GL.disable(GL.DEPTH_TEST);
+      depthTest: true, // equivalent for GL.disable(GL.DEPTH_TEST);
       //blendEquation:THREE.SubtractEquation, // approximate equivalent GL.blendFunc(GL.SRC_ALPHA, GL.ONE_MINUS_SRC_ALPHA);
       transparent: true,
       defines:{USE_FOG:USE_FOG,THREE_JS:true},
@@ -79,10 +79,10 @@ class ThreeAbstractJellyfish extends Timer {
     this.mesh.rotation.y =0;
     this.mesh.rotation.z =0;
 
-    this.mesh.translateY(+5.0); 
-    this.mesh.translateZ(-75.0);
-    this.mesh.rotateY((Math.PI/180)*Math.sin(this.rotation / 10.0) * 30.0);
-    this.mesh.rotateX((Math.PI/180)*Math.sin(this.rotation / 20.0) * 30.0);
+    this.mesh.translateY(CENTER.y); 
+    this.mesh.translateZ(CENTER.z);
+    this.mesh.rotateY((Math.PI/180)*Math.sin(this.rotation / 10.0) * 30.0 * ROTATE.y);
+    this.mesh.rotateX((Math.PI/180)*Math.sin(this.rotation / 20.0) * 30.0 * ROTATE.x);
     this.mesh.translateY(Math.sin(this.rotation / 10.0) * 2.5 * SCALE.y); 
   };
 }

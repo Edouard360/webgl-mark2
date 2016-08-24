@@ -1,6 +1,6 @@
 import Timer from '../timer'
 import {createTexture, createProgramFromShaders, addDefines} from '../../util/util'
-import {CAMERA, USE_FOG,SCALE} from '../../data/const.js'
+import {CAMERA, USE_FOG,SCALE,CENTER, ROTATE} from '../../data/const.js'
 import {mat4,vec4,vec3, glMatrix} from '../../../node_modules/gl-matrix/src/gl-matrix.js'
 
 /** Abstract class representing a jellyfish. */
@@ -127,9 +127,9 @@ class AbstractJellyfish extends Timer{
     this.whichCaustic = Math.floor((this.uniform.uCurrentTime.value * 30) % 32) + 1;
 
     let modelMatrix = mat4.create();
-    mat4.translate(modelMatrix,modelMatrix,   [0.0, 5.0, -75.0]);
-    mat4.rotate(modelMatrix,modelMatrix,      glMatrix.toRadian(Math.sin(this.rotation / 10.0) * 30.0),   [0.0, 1.0, 0.0]);
-    mat4.rotate(modelMatrix,modelMatrix,      glMatrix.toRadian(Math.sin(this.rotation / 20.0) * 30.0),   [1.0, 0.0, 0.0]);
+    mat4.translate(modelMatrix,modelMatrix,   [0.0, CENTER.y, CENTER.z]);
+    mat4.rotate(modelMatrix,modelMatrix,      glMatrix.toRadian(Math.sin(this.rotation / 10.0) * 30.0 * ROTATE.y),   [0.0, 1.0, 0.0]);
+    mat4.rotate(modelMatrix,modelMatrix,      glMatrix.toRadian(Math.sin(this.rotation / 20.0) * 30.0 * ROTATE.x),   [1.0, 0.0, 0.0]);
     mat4.scale(modelMatrix,modelMatrix,       [SCALE.x, SCALE.y, SCALE.z]);
 
     mat4.translate(modelMatrix,modelMatrix,   [0.0, Math.sin(this.rotation / 10.0) * 2.5, 0.0])

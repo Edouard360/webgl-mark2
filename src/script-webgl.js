@@ -69,7 +69,10 @@ var main=function(data) {
   function refresh(BenchmarkClass,jellyfishCount) {
     var GL = canvas.getContext("webgl", {antialias: true,alpha:false});
     GL.getExtension("OES_element_index_uint");
-    GL.disable(GL.DEPTH_TEST);
+    //GL.disable(GL.DEPTH_TEST);
+    GL.enable(GL.DEPTH_TEST);
+    GL.depthFunc(GL.LEQUAL);
+
     GL.disable(GL.CULL_FACE);
     //GL.enable(GL.BLEND);
     //GL.blendFunc(GL.SRC_ALPHA, GL.ONE_MINUS_SRC_ALPHA);

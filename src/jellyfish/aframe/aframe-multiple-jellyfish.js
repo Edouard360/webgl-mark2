@@ -1,4 +1,5 @@
-import {WIDTH,SCALE} from '../../data/const'
+import {SCALE,DISPLAY} from '../../data/const'
+import {generateOffset} from '../../util/util.js'
 
 class AFrameMultipleJellyfish{
 	constructor(jellyfishCount,entitySceneEl,entityJellyfishEl){
@@ -8,12 +9,15 @@ class AFrameMultipleJellyfish{
 		this.updateScene();
 	}
 	updateScene(){
-		for(var i=0;i<this.jellyfishCount;i++){
-            let entityJellyfishElTmp = document.createElement("a-entity");
-            entityJellyfishElTmp.setAttribute('single-jellyfish', 'position',{x:2*(Math.random() - 0.5)*WIDTH*SCALE.x,y:2*(Math.random() - 0.5)*WIDTH*SCALE.y,z:2*(Math.random() - 0.5)*WIDTH*SCALE.z})
+		var offset = [];	
+		offset = generateOffset(DISPLAY);
+		offset.slice(0,this.jellyfishCount).map((array)=>{
+			let entityJellyfishElTmp = document.createElement("a-entity");
+            entityJellyfishElTmp.setAttribute('single-jellyfish', 'position',{x:array[0]*SCALE.x,y:array[1]*SCALE.y,z:array[2]*SCALE.z})
             entityJellyfishElTmp.setAttribute('single-jellyfish', 'assets','texture')
             this.entityJellyfishEl.appendChild(entityJellyfishElTmp);
-        }
+		})
+
         this.entitySceneEl.appendChild(this.entityJellyfishEl)
 	}
 	resetScene(){

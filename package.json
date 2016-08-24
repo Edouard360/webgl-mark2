@@ -28,8 +28,8 @@
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "npm run build && npm start",
     "start": "cd public && node ../bin/server-start.js",
-    "dev": "npm run build && node ./bin/server-start.js",
     "build": "./node_modules/.bin/webpack --watch&"
   },
   "repository": {

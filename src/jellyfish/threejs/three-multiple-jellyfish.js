@@ -1,6 +1,7 @@
 import Timer from '../timer'
 import ThreeSingleJellyfish from './three-single-jellyfish';
-import {MAX_NUMBER,WIDTH,SCALE} from '../../data/const.js'
+import {generateOffset} from '../../util/util.js'
+import {SCALE,DISPLAY} from '../../data/const.js'
 
 /** A jellyfish using ThreeJS. */
 class ThreeMultipleJellyfish extends Timer {
@@ -22,12 +23,12 @@ class ThreeMultipleJellyfish extends Timer {
 				}
 			}
 			this.jellyfishGroup = [];
-			for(let i = 0; i <this.geometry.maxInstancedCount;i++){
-				this.jellyfishGroup[i]=new ThreeSingleJellyfish(this.data,this.scene);
-				this.jellyfishGroup[i].x = 2*(Math.random() - 0.5)*WIDTH*SCALE.x;
-				this.jellyfishGroup[i].y = 2*(Math.random() - 0.5)*WIDTH*SCALE.y;
-				this.jellyfishGroup[i].z = 2*(Math.random() - 0.5)*WIDTH*SCALE.z;
-			}
+			generateOffset(DISPLAY).slice(0,this.geometry.maxInstancedCount).map((array,i)=>{
+				this.jellyfishGroup[i] = new ThreeSingleJellyfish(this.data,this.scene);
+				this.jellyfishGroup[i].x = array[0]*SCALE.x;
+				this.jellyfishGroup[i].y = array[1]*SCALE.y;
+				this.jellyfishGroup[i].z = array[2]*SCALE.z;
+			})
 		}
 	}
 

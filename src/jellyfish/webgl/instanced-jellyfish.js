@@ -1,6 +1,6 @@
 import AbstractJellyfish from './abstract-jellyfish';
-import {addDefines,createProgramFromShaders} from '../../util/util'
-import {MAX_NUMBER,WIDTH} from '../../data/const.js'
+import {addDefines,createProgramFromShaders,generateOffset} from '../../util/util'
+import {DISPLAY} from '../../data/const.js'
 
 /** Class representing a group of jellyfish. */
 class InstancedJellyfish extends AbstractJellyfish{
@@ -18,9 +18,9 @@ class InstancedJellyfish extends AbstractJellyfish{
     var jellyfish_duplicate = JSON.parse(JSON.stringify(jellyfish));
     jellyfish_duplicate.images = jellyfish.images;
     jellyfish_duplicate.offset = [];
-    for(let i = 0; i<MAX_NUMBER;i++){
-      jellyfish_duplicate.offset = jellyfish_duplicate.offset.concat([2*(Math.random() - 0.5)*WIDTH, 2*(Math.random() - 0.5)*WIDTH, 2*(Math.random() - 0.5)*WIDTH]);
-    }
+
+    jellyfish_duplicate.offset = [].concat.apply([],generateOffset(DISPLAY));
+
     super(GL,jellyfish_duplicate);
 
     this.GLext = this.GL.getExtension("ANGLE_instanced_arrays");;

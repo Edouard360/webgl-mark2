@@ -50,6 +50,11 @@ gui
         default:
         throw 'dont know option ' + value
   }
+  
+  entityCameraEl = document.createElement("a-camera");
+  entityCameraEl.setAttribute("camera",{active:true,fov : CAMERA.ANGLE, near : CAMERA.NEAR, far : CAMERA.FAR});
+  entityCameraEl.setAttribute("look-controls","");
+  entityJellyfishEl.appendChild(entityCameraEl);
   handle.averageFPS = gui.add(text, 'averageFPS').name("Average FPS")
   handle.averageFPS.domElement.id = 'averageFPS';
 })
@@ -76,5 +81,6 @@ var entitySceneEl = document.querySelector("#scene");
 var entityJellyfishEl = document.querySelector("#jellyfish");
 var entityCameraEl = document.querySelector("#cameraJellyfish");
 entityJellyfishEl.setAttribute('single-jellyfish', {count:1,assets:"#texture"})
-entityCameraEl.setAttribute("camera",{fov : CAMERA.ANGLE, near : CAMERA.NEAR, far : CAMERA.FAR});
+entityCameraEl.setAttribute("camera",{active:true,fov : CAMERA.ANGLE, near : CAMERA.NEAR, far : CAMERA.FAR});
+entityCameraEl.setAttribute("look-controls","");
 
