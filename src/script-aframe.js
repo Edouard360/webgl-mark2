@@ -27,12 +27,12 @@ gui
     handle.averageFPS.remove();
     switch(value){
         case "Single":
-        entityJellyfishEl.setAttribute('single-jellyfish', {count:1, assets:"#textures"})
+        entityJellyfishEl.setAttribute('single-jellyfish', {count:1, assets:"#texture"})
         entitySceneEl.appendChild(entityJellyfishEl);
         handle.jellyfishCount = gui.add(text, 'count',1,1).name("Number")
         break;
         case "Instanced":
-        entityJellyfishEl.setAttribute('instanced-jellyfish', {count:3, assets:"#textures"});
+        entityJellyfishEl.setAttribute('instanced-jellyfish', {count:3, assets:"#texture"});
         entitySceneEl.appendChild(entityJellyfishEl);
         handle.jellyfishCount = gui.add(entityJellyfishEl.getAttribute('instanced-jellyfish'),"count",1,MAX_NUMBER).name("Number").step(1)
         handle.jellyfishCount.onChange((value)=>{entityJellyfishEl.setAttribute('instanced-jellyfish', {count:value})}) //Do we need to remove the event listener ?
@@ -72,7 +72,6 @@ require('./data/img/list.json').map((url,i)=>{
   let img = document.createElement('img');
   img.setAttribute('src',url)
   img.setAttribute('id',"texture")
-  console.log(img);
   assetsEl.appendChild(img); 
 })
 
@@ -85,4 +84,3 @@ entityJellyfishEl.setAttribute('single-jellyfish', {count:1,assets:"#texture"})
 entityCameraEl.setAttribute("camera",{active:true,fov : CAMERA.ANGLE, near : CAMERA.NEAR, far : CAMERA.FAR});
 entityCameraEl.setAttribute("look-controls","");
 
-var skyEl = document.querySelector("#sky");

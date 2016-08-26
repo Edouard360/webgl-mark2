@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+    <head>
+      <title>AFrame</title>
+        <script src="./dist/script-register.js"></script>
+    </head>
+    <body>
+      <a-scene id="scene" antialias="on" >
+        <a-assets id="assets">
+          <a-mixin id="particle" particle-system="
+            preset:snow; 
+            size : 3;
+            color: #0000FF,#8080FF,#000099; 
+            particleCount:1000;
+            accelerationValue:0.01 -0.7 0.01;
+            accelerationSpread:0.01 -0.6 0.01;
+            velocityValue:0.01 -0.8 0.01;
+            velocitySpread:0.01 0.3 0.01;
+            ">
+            </a-mixin>
+          <a-mixin id="bubble" particle-system="opacity:1;texture:./data/img/bubble.png; particleCount: 5000"></a-mixin>
+          <a-mixin id="smoke" particle-system="opacity:0.1;texture:./data/img/smokeparticle.png; particleCount: 500"></a-mixin>
+          <img id="gradient" src="./data/img/gradient.png" > 
+        </a-assets>
+
+        <a-circle radius="2000" position="0 300 0" rotation="90 0 0"
+        surface="assets:#texture;transparency:#gradient" ></a-circle>
+
+        <a-entity position="0 0 -10" mixin="particle bubble" ></a-entity>
+        <a-entity position="0 0 -10" mixin="particle smoke" ></a-entity>
+
+
+        <a-entity id="jellyfish">
+          <!-- This will put the camera as it is in Three.js -->
+           <a-entity camera id="cameraJellyfish"></a-entity>
+        </a-entity>
+
+        <a-sky id="sky" shader="sky"></a-sky>
+
+
+
+      </a-scene>
+    </body>
+    <script src="./dist/script-aframe.js"></script>
+</html>
