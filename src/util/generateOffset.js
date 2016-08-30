@@ -36,3 +36,11 @@ export function generateOffset(type){
 
 	return offset;
 }
+
+export function generateShade(){
+	var shadeArray = [];
+	for(let i = 0; i<MAX_NUMBER;i++){
+		shadeArray = shadeArray.concat([[Math.random(),Math.random(),Math.random()]]);
+	}
+	return shadeArray;
+}

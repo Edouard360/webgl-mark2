@@ -10,6 +10,11 @@ varying vec3 vDiffuse;
 varying vec3 vAmbient;
 varying vec3 vFresnel;
 
+#ifdef USE_SHADE
+	uniform float shadeFactor;
+    varying vec3 vShade;
+#endif
+
 #ifdef USE_FOG
 	uniform vec3 fogColor;
 	#ifdef FOG_EXP2
@@ -39,5 +44,9 @@ void main(void)
 			float fogFactor = smoothstep( fogNear, fogFar, depth );
 		#endif
 		gl_FragColor.rgb = mix( gl_FragColor.rgb, fogColor, fogFactor );
+	#endif
+
+	#ifdef USE_SHADE
+		gl_FragColor.rgb = mix( gl_FragColor.rgb, vShade, shadeFactor );
 	#endif
 }

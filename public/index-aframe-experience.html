@@ -5,7 +5,7 @@
         <script src="./dist/script-register.js"></script>
     </head>
     <body>
-      <a-scene id="scene" antialias="on" >
+      <a-scene id="scene" antialias="on" render>
         <a-assets id="assets">
           <a-mixin id="particle" particle-system="
             preset:snow; 
@@ -23,11 +23,11 @@
           <img id="gradient" src="./data/img/gradient.png" > 
         </a-assets>
 
-        <a-circle radius="2000" position="0 300 0" rotation="90 0 0"
-        surface="assets:#texture;transparency:#gradient" ></a-circle>
-
+        <a-plane width="8000" height="8000" position="0 600 0" rotation="90 0 0"
+        surface="assets:#texture;transparency:#gradient"></a-plane>
+<!-- 
         <a-entity position="0 0 -10" mixin="particle bubble" ></a-entity>
-        <a-entity position="0 0 -10" mixin="particle smoke" ></a-entity>
+        <a-entity position="0 0 -10" mixin="particle smoke" ></a-entity> -->
 
 
         <a-entity id="jellyfish">

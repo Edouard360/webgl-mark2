@@ -1,6 +1,5 @@
 import Timer from '../timer'
 import {SCALE,CENTER,ROTATE,USE_FOG} from '../../data/const.js'
-import 'aframe'
 
 /** The abstract jellyfish object. */
 var abstractJellyfish = {
@@ -14,6 +13,7 @@ var abstractJellyfish = {
    * Load all the attributes, the shaders and images for the jellyfish
    */
   init(){
+
     var jellyfish = {
       shaders:{VS: require('../../shaders/jellyfish/jellyfish.vert'),FS: require('../../shaders/jellyfish/jellyfish.frag')},
       position: require('../../data/attributes/jellyfish_position.json'),
@@ -44,6 +44,7 @@ var abstractJellyfish = {
    * @param {double} delta
    */  
   tick(time, delta) {
+
     this.timer.updateTime();
     this.timer.rotation += (2.0 * delta) / 1000.0;
 
@@ -65,7 +66,6 @@ var abstractJellyfish = {
       mesh.rotateX((Math.PI/180)* Math.sin(this.timer.rotation / 20.0) * 30.0 * ROTATE.x);
       mesh.translateY(Math.sin(this.timer.rotation / 10.0) * 2.5 * SCALE.y); 
     }
-
   },
   /**
    * The remove function of the component (as defined in AFRAME docs)
@@ -104,12 +104,16 @@ var abstractJellyfish = {
         uAmbientCol:        {value: new THREE.Vector4(0.3, 0.2, 1.0, 1.0)},
         uFresnelCol:        {value: new THREE.Vector4(0.8, 0.7, 0.6, 1.1)},
         uFresnelPower:      {value: 1.0},
-        uCurrentTime:       {value: 0.0}
+        uCurrentTime:       {value: 0.0},
+        fogColor:           {value: new THREE.Vector3(27.0/255.0, 27.0/255.0, 162.0/255.0)},
+        fogNear:            {value: 10.0},
+        fogFar:             {value: 400.0}
       }
     });
     this.modifyMaterial(material); // Only effective for instanced jellyfish
 
     var mesh = new THREE.Mesh(geometry, material);
+    mesh.name = "jellyfish";
     mesh.scale.set(SCALE.x,SCALE.y,SCALE.z);
     this.el.setObject3D('mesh',mesh);
   },

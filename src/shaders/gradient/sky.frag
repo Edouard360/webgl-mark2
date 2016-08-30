@@ -1,3 +1,5 @@
+// #extension GL_EXT_frag_depth : enable
+
 precision mediump float;
 
 uniform vec3 vSunPosition;

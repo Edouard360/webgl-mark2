@@ -9,6 +9,11 @@ attribute vec3 texture;
     attribute vec3 offset;
 #endif
 
+#ifdef USE_SHADE
+    attribute vec3 shade;
+    varying vec3 vShade;
+#endif
+
 #ifndef THREE_JS
 uniform mat4 modelMatrix;// uWorld -> modelMatrix
 uniform mat4 modelViewMatrix;// -> projectionMatrix * modelViewMatrix
@@ -35,6 +40,10 @@ void main(void)
     #ifndef USE_INSTANCED
         vec3 offset = vec3(0.);
     #endif
+    #ifdef USE_SHADE
+        vShade = shade;
+    #endif
+
     //Vertex Animation
     float speed = uCurrentTime / 15.0;
     float localoffset = smoothstep(0.0, 1.0, max(0.0, -position.y-0.8) / 10.0);

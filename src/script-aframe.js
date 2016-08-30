@@ -68,7 +68,7 @@ handle.averageFPS.domElement.id = 'averageFPS';
 
 /** Add all the assets to the scene */
 var assetsEl = document.querySelector("#assets");
-require('./data/img/list.json').map((url,i)=>{
+require('./data/img/listpng.json').map((url,i)=>{
   let img = document.createElement('img');
   img.setAttribute('src',url)
   img.setAttribute('id',"texture")
@@ -83,4 +83,5 @@ var entityCameraEl = document.querySelector("#cameraJellyfish");
 entityJellyfishEl.setAttribute('single-jellyfish', {count:1,assets:"#texture"})
 entityCameraEl.setAttribute("camera",{active:true,fov : CAMERA.ANGLE, near : CAMERA.NEAR, far : CAMERA.FAR});
 entityCameraEl.setAttribute("look-controls","");
+entityCameraEl.setAttribute("wasd-controls","");
 
