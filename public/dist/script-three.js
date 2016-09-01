@@ -59,7 +59,7 @@
 /***/ 3:
 /***/ function(module, exports, __webpack_require__) {
 
-	eval("'use strict';\n\nObject.defineProperty(exports, \"__esModule\", {\n  value: true\n});\n\nvar _getNewCanvas = __webpack_require__(4);\n\nObject.defineProperty(exports, 'getNewCanvas', {\n  enumerable: true,\n  get: function get() {\n    return _getNewCanvas.getNewCanvas;\n  }\n});\n\nvar _createProgramFromShaders = __webpack_require__(5);\n\nObject.defineProperty(exports, 'createProgramFromShaders', {\n  enumerable: true,\n  get: function get() {\n    return _createProgramFromShaders.createProgramFromShaders;\n  }\n});\n\nvar _addDefines = __webpack_require__(6);\n\nObject.defineProperty(exports, 'addDefines', {\n  enumerable: true,\n  get: function get() {\n    return _addDefines.addDefines;\n  }\n});\n\nvar _getTexturesAndResources = __webpack_require__(7);\n\nObject.defineProperty(exports, 'getImages', {\n  enumerable: true,\n  get: function get() {\n    return _getTexturesAndResources.getImages;\n  }\n});\nObject.defineProperty(exports, 'getThreeTextures', {\n  enumerable: true,\n  get: function get() {\n    return _getTexturesAndResources.getThreeTextures;\n  }\n});\nObject.defineProperty(exports, 'createTexture', {\n  enumerable: true,\n  get: function get() {\n    return _getTexturesAndResources.createTexture;\n  }\n});\n\nvar _generateOffset = __webpack_require__(9);\n\nObject.defineProperty(exports, 'generateOffset', {\n  enumerable: true,\n  get: function get() {\n    return _generateOffset.generateOffset;\n  }\n});\nObject.defineProperty(exports, 'generateShade', {\n  enumerable: true,\n  get: function get() {\n    return _generateOffset.generateShade;\n  }\n});\n\nvar _mixerProgram = __webpack_require__(10);\n\nObject.defineProperty(exports, 'MixerProgram', {\n  enumerable: true,\n  get: function get() {\n    return _mixerProgram.MixerProgram;\n  }\n});\n\nvar _godraysProgram = __webpack_require__(13);\n\nObject.defineProperty(exports, 'GodraysProgram', {\n  enumerable: true,\n  get: function get() {\n    return _godraysProgram.GodraysProgram;\n  }\n});\n\n/*****************\n ** WEBPACK FOOTER\n ** ./src/util/util.js\n ** module id = 3\n ** module chunks = 0 1 2 3 4\n **/\n//# sourceURL=webpack:///./src/util/util.js?");
+	eval("'use strict';\n\nObject.defineProperty(exports, \"__esModule\", {\n  value: true\n});\n\nvar _getNewCanvas = __webpack_require__(4);\n\nObject.defineProperty(exports, 'getNewCanvas', {\n  enumerable: true,\n  get: function get() {\n    return _getNewCanvas.getNewCanvas;\n  }\n});\n\nvar _createProgramFromShaders = __webpack_require__(5);\n\nObject.defineProperty(exports, 'createProgramFromShaders', {\n  enumerable: true,\n  get: function get() {\n    return _createProgramFromShaders.createProgramFromShaders;\n  }\n});\n\nvar _addDefines = __webpack_require__(6);\n\nObject.defineProperty(exports, 'addDefines', {\n  enumerable: true,\n  get: function get() {\n    return _addDefines.addDefines;\n  }\n});\n\nvar _getTexturesAndResources = __webpack_require__(7);\n\nObject.defineProperty(exports, 'getImages', {\n  enumerable: true,\n  get: function get() {\n    return _getTexturesAndResources.getImages;\n  }\n});\nObject.defineProperty(exports, 'getThreeTextures', {\n  enumerable: true,\n  get: function get() {\n    return _getTexturesAndResources.getThreeTextures;\n  }\n});\nObject.defineProperty(exports, 'createTexture', {\n  enumerable: true,\n  get: function get() {\n    return _getTexturesAndResources.createTexture;\n  }\n});\n\nvar _generateOffset = __webpack_require__(9);\n\nObject.defineProperty(exports, 'generateOffset', {\n  enumerable: true,\n  get: function get() {\n    return _generateOffset.generateOffset;\n  }\n});\nObject.defineProperty(exports, 'generateShade', {\n  enumerable: true,\n  get: function get() {\n    return _generateOffset.generateShade;\n  }\n});\n\nvar _mixerProgram = __webpack_require__(234);\n\nObject.defineProperty(exports, 'MixerProgram', {\n  enumerable: true,\n  get: function get() {\n    return _mixerProgram.MixerProgram;\n  }\n});\n\nvar _godraysProgram = __webpack_require__(237);\n\nObject.defineProperty(exports, 'GodraysProgram', {\n  enumerable: true,\n  get: function get() {\n    return _godraysProgram.GodraysProgram;\n  }\n});\n\nvar _glowProgram = __webpack_require__(240);\n\nObject.defineProperty(exports, 'GlowProgram', {\n  enumerable: true,\n  get: function get() {\n    return _glowProgram.GlowProgram;\n  }\n});\n\nvar _depthMapProgram = __webpack_require__(231);\n\nObject.defineProperty(exports, 'DepthMapProgram', {\n  enumerable: true,\n  get: function get() {\n    return _depthMapProgram.DepthMapProgram;\n  }\n});\n\n/*****************\n ** WEBPACK FOOTER\n ** ./src/util/util.js\n ** module id = 3\n ** module chunks = 0 1 2 3 4\n **/\n//# sourceURL=webpack:///./src/util/util.js?");
 
 /***/ },
 
@@ -102,48 +102,6 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	eval("\"use strict\";\n\nObject.defineProperty(exports, \"__esModule\", {\n\tvalue: true\n});\nexports.generateOffset = generateOffset;\nexports.generateShade = generateShade;\n\nvar _const = __webpack_require__(2);\n\n/**\n  * The generateOffset function\n  * @param {string} type - Either a bloc or a circle\n  * @return {array} offset - The array containing all the offset.\n  */\nfunction generateOffset(type) {\n\tvar offset = [];\n\tswitch (type) {\n\t\tcase \"circle\":\n\t\t\tfor (var i = 0; i < _const.MAX_NUMBER; i++) {\n\t\t\t\tvar radius = _const.RADIUS.min + Math.random() * (_const.RADIUS.max - _const.RADIUS.min);\n\t\t\t\tvar PHI = Math.PI / 2 + (Math.random() - 0.5) * Math.PI * _const.RADIUS.anglePHI;\n\t\t\t\tvar THETA = Math.random() * 2 * Math.PI;\n\n\t\t\t\tvar y = radius * Math.cos(PHI);\n\t\t\t\tvar z = radius * Math.sin(PHI) * Math.cos(THETA);\n\t\t\t\tvar x = radius * Math.sin(PHI) * Math.sin(THETA);\n\n\t\t\t\toffset = offset.concat([[x, y, z]]);\n\t\t\t}\n\t\t\tbreak;\n\t\tcase \"bloc\":\n\t\t\tfor (var _i = 0; _i < _const.MAX_NUMBER; _i++) {\n\t\t\t\tvar _x = 2 * (Math.random() - 0.5) * _const.WIDTH;\n\t\t\t\tvar _y = 2 * (Math.random() - 0.5) * _const.WIDTH;\n\t\t\t\tvar _z = 2 * (Math.random() - 0.5) * _const.WIDTH;\n\t\t\t\toffset = offset.concat([[_x, _y, _z]]);\n\t\t\t}\n\t\t\tbreak;\n\t\tdefault:\n\t\t\tthrow 'dont know type ' + type + 'for generating offset';\n\t}\n\n\treturn offset;\n}\n\nfunction generateShade() {\n\tvar shadeArray = [];\n\tfor (var i = 0; i < _const.MAX_NUMBER; i++) {\n\t\tshadeArray = shadeArray.concat([[Math.random(), Math.random(), Math.random()]]);\n\t}\n\treturn shadeArray;\n}\n\n/*****************\n ** WEBPACK FOOTER\n ** ./src/util/generateOffset.js\n ** module id = 9\n ** module chunks = 0 1 2 3 4\n **/\n//# sourceURL=webpack:///./src/util/generateOffset.js?");
-
-/***/ },
-
-/***/ 10:
-/***/ function(module, exports, __webpack_require__) {
-
-	eval("\"use strict\";\n\nObject.defineProperty(exports, \"__esModule\", {\n\tvalue: true\n});\n\nfunction _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError(\"Cannot call a class as a function\"); } }\n\n/**\n * The mixerProgram data - uniforms, vertexShader, fragmentShader\n */\n\nvar mixerProgram = {\n\n\t/**\n  * Additively applies god rays from texture tEffect to a background (tColors).\n  * fIntensity attenuates the god rays.\n  */\n\n\tuniforms: {\n\n\t\ttColors: {\n\t\t\tvalue: null\n\t\t},\n\n\t\ttEffect: {\n\t\t\tvalue: null\n\t\t},\n\n\t\tfIntensity: {\n\t\t\tvalue: 0.69\n\t\t},\n\n\t\tfAmbient: {\n\t\t\tvalue: 0.8\n\t\t}\n\n\t},\n\n\tvertexShader: __webpack_require__(11),\n\tfragmentShader: __webpack_require__(12)\n\n};\n\nvar MixerProgram = function MixerProgram() {\n\t_classCallCheck(this, MixerProgram);\n\n\tthis.mixerProgramUniforms = THREE.UniformsUtils.clone(mixerProgram.uniforms);\n\tthis.mixerProgramMaterial = new THREE.ShaderMaterial({\n\t\tuniforms: this.mixerProgramUniforms,\n\t\tvertexShader: mixerProgram.vertexShader,\n\t\tfragmentShader: mixerProgram.fragmentShader\n\t});\n};\n\nexports.MixerProgram = MixerProgram;\n\n/*****************\n ** WEBPACK FOOTER\n ** ./src/util/mixer-program/mixer-program.js\n ** module id = 10\n ** module chunks = 0 1 2 3 4\n **/\n//# sourceURL=webpack:///./src/util/mixer-program/mixer-program.js?");
-
-/***/ },
-
-/***/ 11:
-/***/ function(module, exports) {
-
-	eval("module.exports = \"varying vec2 vUv;\\n\\nvoid main() {\\n\\n\\tvUv = uv;\\n\\tgl_Position = projectionMatrix * modelViewMatrix * vec4( position, 1.0 );\\n\\n}\"\n\n/*****************\n ** WEBPACK FOOTER\n ** ./src/util/mixer-program/mixerShader.vert\n ** module id = 11\n ** module chunks = 0 1 2 3 4\n **/\n//# sourceURL=webpack:///./src/util/mixer-program/mixerShader.vert?");
-
-/***/ },
-
-/***/ 12:
-/***/ function(module, exports) {
-
-	eval("module.exports = \"varying vec2 vUv;\\n\\nuniform sampler2D tColors;\\nuniform sampler2D tEffect;\\n\\nuniform float fIntensity;\\nuniform float fAmbient;\\n\\nvoid main() {\\n\\tgl_FragColor = texture2D( tColors, vUv ) + fIntensity * (vec4(texture2D( tEffect, vUv ).r )- vec4(vec3(fAmbient), 0.0));\\n\\tgl_FragColor.a = 1.0;\\n\\n}\"\n\n/*****************\n ** WEBPACK FOOTER\n ** ./src/util/mixer-program/mixerShader.frag\n ** module id = 12\n ** module chunks = 0 1 2 3 4\n **/\n//# sourceURL=webpack:///./src/util/mixer-program/mixerShader.frag?");
-
-/***/ },
-
-/***/ 13:
-/***/ function(module, exports, __webpack_require__) {
-
-	eval("\"use strict\";\n\nObject.defineProperty(exports, \"__esModule\", {\n\tvalue: true\n});\n\nfunction _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError(\"Cannot call a class as a function\"); } }\n\n/**\n * The godraysProgram data - uniforms, vertexShader, fragmentShader\n */\n\nvar godraysProgram = {\n\n\tuniforms: {\n\n\t\ttInput: {\n\t\t\tvalue: null\n\t\t},\n\t\tfStepSize: {\n\t\t\tvalue: 1.0\n\t\t},\n\t\tvSunPositionScreenSpace: {\n\t\t\tvalue: new THREE.Vector2(0.5, 0.5)\n\t\t},\n\t\tfirstPass: {\n\t\t\tvalue: true\n\t\t}\n\n\t},\n\tvertexShader: __webpack_require__(14),\n\tfragmentShader: __webpack_require__(15)\n\n};\n\nvar GodraysProgram = function GodraysProgram() {\n\t_classCallCheck(this, GodraysProgram);\n\n\tthis.godraysProgramUniforms = THREE.UniformsUtils.clone(godraysProgram.uniforms);\n\tthis.godraysProgramMaterial = new THREE.ShaderMaterial({\n\t\tuniforms: this.godraysProgramUniforms,\n\t\tvertexShader: godraysProgram.vertexShader,\n\t\tfragmentShader: godraysProgram.fragmentShader\n\t});\n};\n\nexports.GodraysProgram = GodraysProgram;\n\n/*****************\n ** WEBPACK FOOTER\n ** ./src/util/godrays-program/godrays-program.js\n ** module id = 13\n ** module chunks = 0 1 2 3 4\n **/\n//# sourceURL=webpack:///./src/util/godrays-program/godrays-program.js?");
-
-/***/ },
-
-/***/ 14:
-/***/ function(module, exports) {
-
-	eval("module.exports = \"varying vec2 vUv;\\n\\nvoid main() {\\n\\n\\tvUv = uv;\\n\\tgl_Position = projectionMatrix * modelViewMatrix * vec4( position, 1.0 );\\n\\n}\"\n\n/*****************\n ** WEBPACK FOOTER\n ** ./src/util/godrays-program/godraysShader.vert\n ** module id = 14\n ** module chunks = 0 1 2 3 4\n **/\n//# sourceURL=webpack:///./src/util/godrays-program/godraysShader.vert?");
-
-/***/ },
-
-/***/ 15:
-/***/ function(module, exports) {
-
-	eval("module.exports = \"#include <packing>\\n\\nvarying vec2 vUv;\\n\\nuniform sampler2D tInput;\\n\\nuniform vec2 vSunPositionScreenSpace;\\nuniform float fStepSize; // filter step size\\nuniform bool firstPass;\\n\\nvec3 godrays(\\n    float density,\\n    float weight,\\n    float decay,\\n    float exposure,\\n    int numSamples,\\n    sampler2D occlusionTexture,\\n    vec2 screenSpaceLightPos,\\n    vec2 uv\\n    ) {\\n\\n    vec3 fragColor = vec3(0.0,0.0,0.0);\\n\\n\\tvec2 deltaTextCoord = vec2( uv - screenSpaceLightPos.xy );\\n\\n\\tvec2 textCoo = uv.xy ;\\n\\tdeltaTextCoord *= (1.0 /  float(numSamples)) * density;\\n\\tfloat illuminationDecay = 1.0;\\n\\n\\n\\tfor(int i=0; i < 100 ; i++){\\n\\n\\n        /*\\n        This makes sure that the loop only runs `numSamples` many times.\\n        We have to do it this way in WebGL, since you can't have a for loop\\n        that runs a variable number times in WebGL.\\n        This little hack gets around that.\\n\\n        But the drawback of this is that we have to specify an upper bound to the\\n        number of iterations(but 100 is good enough for almost all cases.)\\n        */\\n\\t    if(numSamples < i) {\\n            break;\\n\\t    }\\n\\n\\t\\ttextCoo -= deltaTextCoord;\\n\\n\\t\\t//vec3 samp = texture2D(occlusionTexture, textCoo   ).xyz;\\n\\t\\tfloat fragCoordZ = texture2D(occlusionTexture, textCoo).x;\\n\\t\\tfloat viewZ = perspectiveDepthToViewZ( fragCoordZ, 0.1, 50.0 );\\n\\t\\tfloat change = viewZToOrthographicDepth( viewZ, 0.1, 50.0 );\\n\\n\\t\\tvec3 samp = vec3(change);\\n\\n\\n\\t\\tsamp *= illuminationDecay * weight;\\n\\t\\tfragColor += samp;\\n\\t\\tilluminationDecay *= decay;\\n\\t}\\n\\n\\tfragColor *= exposure;\\n\\n    return fragColor;\\n}\\n\\nvoid main() {\\n\\t/*\\n\\tdensity.val = 1.0;\\n    weight.val = 0.01;\\n    decay.val = 1.0 ;\\n    exposure.val = 1.0;\\n    numSamples.val = 100 ;\\n    */\\n\\n\\tgl_FragColor.rgb = godrays(1.0,0.01,1.0,1.0,100, tInput, vSunPositionScreenSpace,vUv);\\n\\tgl_FragColor.a = 1.0;\\n\\n}\"\n\n/*****************\n ** WEBPACK FOOTER\n ** ./src/util/godrays-program/godraysShader2.frag\n ** module id = 15\n ** module chunks = 0 1 2 3 4\n **/\n//# sourceURL=webpack:///./src/util/godrays-program/godraysShader2.frag?");
 
 /***/ },
 
@@ -270,6 +228,90 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	eval("'use strict';\n\nObject.defineProperty(exports, \"__esModule\", {\n  value: true\n});\n\nvar _three = __webpack_require__(8);\n\nvar _three2 = _interopRequireDefault(_three);\n\nfunction _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }\n\nfunction _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError(\"Cannot call a class as a function\"); } }\n\n/** A gradient using ThreeJS. */\nvar ThreeGradient =\n\n/**\r\n * Constructor for a Gradient in THREE.JS.\r\n */\nfunction ThreeGradient(gradient, scene) {\n  _classCallCheck(this, ThreeGradient);\n\n  this.geometry = new _three2.default.PlaneBufferGeometry(2, 2, 0, 0);\n\n  var uv = new _three2.default.BufferAttribute(new Float32Array(8), 2);\n  uv.setXY(0, 0, 0);\n  uv.setXY(1, 0, 0);\n  uv.setXY(2, 1, 1);\n  uv.setXY(3, 1, 1);\n  this.geometry.addAttribute('uv', uv);\n\n  this.material = new _three2.default.ShaderMaterial({\n    vertexShader: gradient.shaders.VS,\n    fragmentShader: gradient.shaders.FS,\n    defines: { THREE_JS: true },\n    uniforms: {\n      color1: { value: new _three2.default.Vector3(0.360784314, 0.584313725, 1.0) },\n      color2: { value: new _three2.default.Vector3(0.074509804, 0.156862745, 0.619607843) }\n    }\n  });\n\n  this.mesh = new _three2.default.Mesh(this.geometry, this.material);\n  this.mesh.name = \"gradient\";\n\n  scene.add(this.mesh);\n};\n\nexports.default = ThreeGradient;\n\n/*****************\n ** WEBPACK FOOTER\n ** ./src/jellyfish/threejs/three-gradient.js\n ** module id = 211\n ** module chunks = 3\n **/\n//# sourceURL=webpack:///./src/jellyfish/threejs/three-gradient.js?");
+
+/***/ },
+
+/***/ 231:
+/***/ function(module, exports, __webpack_require__) {
+
+	eval("\"use strict\";\n\nObject.defineProperty(exports, \"__esModule\", {\n\tvalue: true\n});\n\nfunction _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError(\"Cannot call a class as a function\"); } }\n\n/**\n * The depthMapProgram data - uniforms, vertexShader, fragmentShader\n */\n\nvar depthMapProgram = {\n\n\t/**\n  * Additively applies god rays from texture tEffect to a background (tColors).\n  * fIntensity attenuates the god rays.\n  */\n\n\tuniforms: {\n\n\t\ttInput: {\n\t\t\tvalue: null\n\t\t}\n\n\t},\n\n\tvertexShader: __webpack_require__(232),\n\tfragmentShader: __webpack_require__(233)\n\n};\n\nvar DepthMapProgram = function DepthMapProgram() {\n\t_classCallCheck(this, DepthMapProgram);\n\n\tthis.depthMapProgramUniforms = THREE.UniformsUtils.clone(depthMapProgram.uniforms);\n\tthis.depthMapProgramMaterial = new THREE.ShaderMaterial({\n\t\tuniforms: this.depthMapProgramUniforms,\n\t\tvertexShader: depthMapProgram.vertexShader,\n\t\tfragmentShader: depthMapProgram.fragmentShader\n\t});\n};\n\nexports.DepthMapProgram = DepthMapProgram;\n\n/*****************\n ** WEBPACK FOOTER\n ** ./src/util/depthMapProgram/depthMapProgram.js\n ** module id = 231\n ** module chunks = 0 1 2 3 4\n **/\n//# sourceURL=webpack:///./src/util/depthMapProgram/depthMapProgram.js?");
+
+/***/ },
+
+/***/ 232:
+/***/ function(module, exports) {
+
+	eval("module.exports = \"varying vec2 vUv;\\n\\nvoid main() {\\n\\n\\tvUv = uv;\\n\\tgl_Position = projectionMatrix * modelViewMatrix * vec4( position, 1.0 );\\n\\n}\"\n\n/*****************\n ** WEBPACK FOOTER\n ** ./src/util/depthMapProgram/depthMapShader.vert\n ** module id = 232\n ** module chunks = 0 1 2 3 4\n **/\n//# sourceURL=webpack:///./src/util/depthMapProgram/depthMapShader.vert?");
+
+/***/ },
+
+/***/ 233:
+/***/ function(module, exports) {
+
+	eval("module.exports = \"#include <packing>\\n\\nvarying vec2 vUv;\\nuniform sampler2D tInput;\\n\\nfloat fromDepthMap(in sampler2D tInput,in vec2 vUv) {\\n    float fragCoordZ, viewZ;\\n    fragCoordZ = texture2D(tInput, vUv).x;\\n    viewZ = perspectiveDepthToViewZ( fragCoordZ, 0.1, 50.0 );\\n    return viewZToOrthographicDepth( viewZ, 0.1, 50.0 );\\n}\\n\\nvoid main() {\\n\\tgl_FragColor = vec4(fromDepthMap(tInput,vUv));\\n\\tgl_FragColor.a = 1.0;\\n}\"\n\n/*****************\n ** WEBPACK FOOTER\n ** ./src/util/depthMapProgram/depthMapShader.frag\n ** module id = 233\n ** module chunks = 0 1 2 3 4\n **/\n//# sourceURL=webpack:///./src/util/depthMapProgram/depthMapShader.frag?");
+
+/***/ },
+
+/***/ 234:
+/***/ function(module, exports, __webpack_require__) {
+
+	eval("\"use strict\";\n\nObject.defineProperty(exports, \"__esModule\", {\n\tvalue: true\n});\n\nfunction _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError(\"Cannot call a class as a function\"); } }\n\n/**\n * The mixerProgram data - uniforms, vertexShader, fragmentShader\n */\n\nvar mixerProgram = {\n\n\t/**\n  * Additively applies god rays from texture tEffect to a background (tColors).\n  * fIntensity attenuates the god rays.\n  */\n\n\tuniforms: {\n\n\t\ttColors: {\n\t\t\tvalue: null\n\t\t},\n\n\t\ttGodrays: {\n\t\t\tvalue: null\n\t\t},\n\n\t\ttGlow: {\n\t\t\tvalue: null\n\t\t},\n\n\t\tfGodraysIntensity: {\n\t\t\tvalue: 0.69\n\t\t},\n\n\t\tfGodraysAmbient: {\n\t\t\tvalue: 0.8\n\t\t},\n\n\t\tfGlowIntensity: {\n\t\t\tvalue: 0.5\n\t\t}\n\n\t},\n\n\tvertexShader: __webpack_require__(235),\n\tfragmentShader: __webpack_require__(236)\n\n};\n\nvar MixerProgram = function MixerProgram() {\n\t_classCallCheck(this, MixerProgram);\n\n\tthis.mixerProgramUniforms = THREE.UniformsUtils.clone(mixerProgram.uniforms);\n\tthis.mixerProgramMaterial = new THREE.ShaderMaterial({\n\t\tuniforms: this.mixerProgramUniforms,\n\t\tvertexShader: mixerProgram.vertexShader,\n\t\tfragmentShader: mixerProgram.fragmentShader\n\t});\n};\n\nexports.MixerProgram = MixerProgram;\n\n/*****************\n ** WEBPACK FOOTER\n ** ./src/util/mixerProgram/mixerProgram.js\n ** module id = 234\n ** module chunks = 0 1 2 3 4\n **/\n//# sourceURL=webpack:///./src/util/mixerProgram/mixerProgram.js?");
+
+/***/ },
+
+/***/ 235:
+/***/ function(module, exports) {
+
+	eval("module.exports = \"varying vec2 vUv;\\n\\nvoid main() {\\n\\n\\tvUv = uv;\\n\\tgl_Position = projectionMatrix * modelViewMatrix * vec4( position, 1.0 );\\n\\n}\"\n\n/*****************\n ** WEBPACK FOOTER\n ** ./src/util/mixerProgram/mixerShader.vert\n ** module id = 235\n ** module chunks = 0 1 2 3 4\n **/\n//# sourceURL=webpack:///./src/util/mixerProgram/mixerShader.vert?");
+
+/***/ },
+
+/***/ 236:
+/***/ function(module, exports) {
+
+	eval("module.exports = \"varying vec2 vUv;\\n\\nuniform sampler2D tColors;\\nuniform sampler2D tGodrays;\\nuniform sampler2D tGlow;\\n\\nuniform float fGodraysIntensity;\\nuniform float fGodraysAmbient;\\nuniform float fGlowIntensity;\\n\\nvoid main() {\\n\\tgl_FragColor = texture2D( tColors, vUv ) + fGodraysIntensity * (vec4(texture2D( tGodrays, vUv ).r )- vec4(vec3(fGodraysAmbient), 0.0));\\n\\n\\tgl_FragColor *= (vec4(1.0) - fGlowIntensity * texture2D(tGlow, vUv));\\n\\n\\tgl_FragColor.a = 1.0;\\n\\n}\"\n\n/*****************\n ** WEBPACK FOOTER\n ** ./src/util/mixerProgram/mixerShader.frag\n ** module id = 236\n ** module chunks = 0 1 2 3 4\n **/\n//# sourceURL=webpack:///./src/util/mixerProgram/mixerShader.frag?");
+
+/***/ },
+
+/***/ 237:
+/***/ function(module, exports, __webpack_require__) {
+
+	eval("\"use strict\";\n\nObject.defineProperty(exports, \"__esModule\", {\n\tvalue: true\n});\n\nfunction _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError(\"Cannot call a class as a function\"); } }\n\n/**\n * The godraysProgram data - uniforms, vertexShader, fragmentShader\n */\n\nvar godraysProgram = {\n\n\tuniforms: {\n\n\t\ttInput: {\n\t\t\tvalue: null\n\t\t},\n\t\tfStepSize: {\n\t\t\tvalue: 1.0\n\t\t},\n\t\tvSunPositionScreenSpace: {\n\t\t\tvalue: new THREE.Vector2(0.5, 0.5)\n\t\t},\n\t\tfirstPass: {\n\t\t\tvalue: true\n\t\t}\n\n\t},\n\tvertexShader: __webpack_require__(238),\n\tfragmentShader: __webpack_require__(239)\n\n};\n\nvar GodraysProgram = function GodraysProgram() {\n\t_classCallCheck(this, GodraysProgram);\n\n\tthis.godraysProgramUniforms = THREE.UniformsUtils.clone(godraysProgram.uniforms);\n\tthis.godraysProgramMaterial = new THREE.ShaderMaterial({\n\t\tuniforms: this.godraysProgramUniforms,\n\t\tvertexShader: godraysProgram.vertexShader,\n\t\tfragmentShader: godraysProgram.fragmentShader\n\t});\n};\n\nexports.GodraysProgram = GodraysProgram;\n\n/*****************\n ** WEBPACK FOOTER\n ** ./src/util/godraysProgram/godraysProgram.js\n ** module id = 237\n ** module chunks = 0 1 2 3 4\n **/\n//# sourceURL=webpack:///./src/util/godraysProgram/godraysProgram.js?");
+
+/***/ },
+
+/***/ 238:
+/***/ function(module, exports) {
+
+	eval("module.exports = \"varying vec2 vUv;\\n\\nvoid main() {\\n\\n\\tvUv = uv;\\n\\tgl_Position = projectionMatrix * modelViewMatrix * vec4( position, 1.0 );\\n\\n}\"\n\n/*****************\n ** WEBPACK FOOTER\n ** ./src/util/godraysProgram/godraysShader.vert\n ** module id = 238\n ** module chunks = 0 1 2 3 4\n **/\n//# sourceURL=webpack:///./src/util/godraysProgram/godraysShader.vert?");
+
+/***/ },
+
+/***/ 239:
+/***/ function(module, exports) {
+
+	eval("module.exports = \"#include <packing>\\n\\nvarying vec2 vUv;\\n\\nuniform sampler2D tInput;\\n\\nuniform vec2 vSunPositionScreenSpace;\\nuniform float fStepSize; // filter step size\\nuniform bool firstPass;\\n\\nvec3 godrays(\\n    float density,\\n    float weight,\\n    float decay,\\n    float exposure,\\n    int numSamples,\\n    sampler2D occlusionTexture,\\n    vec2 screenSpaceLightPos,\\n    vec2 uv\\n    ) {\\n\\n    vec3 fragColor = vec3(0.0,0.0,0.0);\\n\\n\\tvec2 deltaTextCoord = vec2( uv - screenSpaceLightPos.xy );\\n\\n\\tvec2 textCoo = uv.xy ;\\n\\tdeltaTextCoord *= (1.0 /  float(numSamples)) * density;\\n\\tfloat illuminationDecay = 1.0;\\n\\n\\n\\tfor(int i=0; i < 100 ; i++){\\n\\n\\n        /*\\n        This makes sure that the loop only runs `numSamples` many times.\\n        We have to do it this way in WebGL, since you can't have a for loop\\n        that runs a variable number times in WebGL.\\n        This little hack gets around that.\\n\\n        But the drawback of this is that we have to specify an upper bound to the\\n        number of iterations(but 100 is good enough for almost all cases.)\\n        */\\n\\t    if(numSamples < i) {\\n            break;\\n\\t    }\\n\\n\\t\\ttextCoo -= deltaTextCoord;\\n\\n\\t\\t//vec3 samp = texture2D(occlusionTexture, textCoo   ).xyz;\\n\\t\\tfloat fragCoordZ = texture2D(occlusionTexture, textCoo).x;\\n\\t\\tfloat viewZ = perspectiveDepthToViewZ( fragCoordZ, 0.1, 50.0 );\\n\\t\\tfloat change = viewZToOrthographicDepth( viewZ, 0.1, 50.0 );\\n\\n\\t\\tvec3 samp = vec3(change);\\n\\n\\n\\t\\tsamp *= illuminationDecay * weight;\\n\\t\\tfragColor += samp;\\n\\t\\tilluminationDecay *= decay;\\n\\t}\\n\\n\\tfragColor *= exposure;\\n\\n    return fragColor;\\n}\\n\\nvoid main() {\\n\\t/*\\n\\tdensity.val = 1.0;\\n    weight.val = 0.01;\\n    decay.val = 1.0 ;\\n    exposure.val = 1.0;\\n    numSamples.val = 100 ;\\n    */\\n\\n\\tgl_FragColor.rgb = godrays(1.0,0.01,1.0,1.0,100, tInput, vSunPositionScreenSpace,vUv);\\n\\tgl_FragColor.a = 1.0;\\n\\n}\"\n\n/*****************\n ** WEBPACK FOOTER\n ** ./src/util/godraysProgram/godraysShader2.frag\n ** module id = 239\n ** module chunks = 0 1 2 3 4\n **/\n//# sourceURL=webpack:///./src/util/godraysProgram/godraysShader2.frag?");
+
+/***/ },
+
+/***/ 240:
+/***/ function(module, exports, __webpack_require__) {
+
+	eval("\"use strict\";\n\nObject.defineProperty(exports, \"__esModule\", {\n\tvalue: true\n});\n\nfunction _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError(\"Cannot call a class as a function\"); } }\n\n/**\n * The glowProgram data - uniforms, vertexShader, fragmentShader\n */\n\nvar glowProgram = {\n\n\tuniforms: {\n\n\t\ttInput: {\n\t\t\tvalue: null\n\t\t},\n\t\tfStepSize: {\n\t\t\tvalue: 1.0\n\t\t},\n\t\tiResolution: {\n\t\t\tvalue: new THREE.Vector2(window.innerwidth, window.innerheight)\n\t\t},\n\t\tdirection: {\n\t\t\tvalue: new THREE.Vector2(8.0, 0.0)\n\t\t}\n\n\t},\n\tvertexShader: __webpack_require__(241),\n\tfragmentShader: __webpack_require__(242)\n\n};\n\nvar GlowProgram = function GlowProgram() {\n\t_classCallCheck(this, GlowProgram);\n\n\tthis.glowProgramUniforms = THREE.UniformsUtils.clone(glowProgram.uniforms);\n\tthis.glowProgramMaterial = new THREE.ShaderMaterial({\n\t\tuniforms: this.glowProgramUniforms,\n\t\tvertexShader: glowProgram.vertexShader,\n\t\tfragmentShader: glowProgram.fragmentShader\n\t});\n};\n\nexports.GlowProgram = GlowProgram;\n\n/*****************\n ** WEBPACK FOOTER\n ** ./src/util/glowProgram/glowProgram.js\n ** module id = 240\n ** module chunks = 0 1 2 3 4\n **/\n//# sourceURL=webpack:///./src/util/glowProgram/glowProgram.js?");
+
+/***/ },
+
+/***/ 241:
+/***/ function(module, exports) {
+
+	eval("module.exports = \"varying vec2 vUv;\\n\\nvoid main() {\\n\\n\\tvUv = uv;\\n\\tgl_Position = projectionMatrix * modelViewMatrix * vec4( position, 1.0 );\\n\\n}\"\n\n/*****************\n ** WEBPACK FOOTER\n ** ./src/util/glowProgram/glowShader.vert\n ** module id = 241\n ** module chunks = 0 1 2 3 4\n **/\n//# sourceURL=webpack:///./src/util/glowProgram/glowShader.vert?");
+
+/***/ },
+
+/***/ 242:
+/***/ function(module, exports) {
+
+	eval("module.exports = \"#include <packing>\\n\\nuniform sampler2D tInput;\\nuniform vec2 iResolution;\\nuniform vec2 direction;\\nvarying vec2 vUv;\\n\\n/*float blur9S(sampler2D image, vec2 uv, vec2 resolution, vec2 direction) {\\n  float color = 0.0;\\n  vec2 off1 = vec2(1.3846153846) * direction;\\n  vec2 off2 = vec2(3.2307692308) * direction;\\n  color += fromDepthMap(image, uv) * 0.2270270270;\\n  color += fromDepthMap(image, uv + (off1 / resolution)) * 0.2162162162;\\n  color += fromDepthMap(image, uv - (off1 / resolution)) * 0.2162162162;\\n  color += fromDepthMap(image, uv + (off2 / resolution)) * 0.0502702703;\\n  color += fromDepthMap(image, uv - (off2 / resolution)) * 0.0502702703;\\n\\n  color += fromDepthMap(image, uv + 2.0*(off1 / resolution)) * 0.05;\\n  color += fromDepthMap(image, uv - 2.0*(off1 / resolution)) * 0.05;\\n  color += fromDepthMap(image, uv + 2.0*(off2 / resolution)) * 0.05;\\n  color += fromDepthMap(image, uv - 2.0*(off2 / resolution)) * 0.05;\\n\\n  color += fromDepthMap(image, uv + 3.0*(off1 / resolution)) * 0.01;\\n  color += fromDepthMap(image, uv - 3.0*(off1 / resolution)) * 0.01;\\n  color += fromDepthMap(image, uv + 3.0*(off2 / resolution)) * 0.01;\\n  color += fromDepthMap(image, uv - 3.0*(off2 / resolution)) * 0.01;\\n  return color;\\n}*/\\n\\nvec4 blur9(sampler2D image, vec2 uv, vec2 resolution, vec2 direction) {\\n  vec4 color = vec4(0.0);\\n  vec2 off1 = vec2(1.3846153846) * direction;\\n  vec2 off2 = vec2(3.2307692308) * direction;\\n  color += texture2D(image, uv) * 0.2270270270;\\n  color += texture2D(image, uv + (off1 / resolution)) * 0.3162162162;\\n  color += texture2D(image, uv - (off1 / resolution)) * 0.3162162162;\\n  color += texture2D(image, uv + (off2 / resolution)) * 0.0702702703;\\n  color += texture2D(image, uv - (off2 / resolution)) * 0.0702702703;\\n  return color;\\n}\\n\\nvoid main()\\n{ \\n  // vec2 iResolution = vec2(2880.0,1800.0);\\n  vec2 uv = vec2(gl_FragCoord.xy / iResolution.xy);\\n  gl_FragColor = blur9(tInput,vUv,iResolution,direction);\\n}\\n\\n\"\n\n/*****************\n ** WEBPACK FOOTER\n ** ./src/util/glowProgram/glowShader.frag\n ** module id = 242\n ** module chunks = 0 1 2 3 4\n **/\n//# sourceURL=webpack:///./src/util/glowProgram/glowShader.frag?");
 
 /***/ }
 

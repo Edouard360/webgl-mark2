@@ -5,7 +5,9 @@ export {addDefines} from './addDefines';
 export {getImages,getThreeTextures,createTexture} from './getTexturesAndResources';
 export {generateOffset,generateShade} from './generateOffset';
 
-export {MixerProgram} from './mixer-program/mixer-program';
-export {GodraysProgram} from './godrays-program/godrays-program';
+export {MixerProgram} from './mixerProgram/mixerProgram';
+export {GodraysProgram} from './godraysProgram/godraysProgram';
+export {GlowProgram} from './glowProgram/glowProgram';
+export {DepthMapProgram} from './depthMapProgram/depthMapProgram';
 
 
