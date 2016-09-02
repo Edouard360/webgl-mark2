@@ -36,7 +36,6 @@ var methods = {
 		this.rtLeft.texture.generateMipmaps = false;
         this.rtLeft.stencilBuffer = false;
         this.rtLeft.depthBuffer = true;
-			/*
 		this.rtLeft.depthTexture = new THREE.DepthTexture();
 		this.rtLeft.depthTexture.type = THREE.UnsignedShortType;
 
@@ -56,20 +55,20 @@ var methods = {
 		this.rtRight.rtGodrays = new THREE.WebGLRenderTarget( 1, 1, parameters );
 		this.rtRight.rtGlow = new THREE.WebGLRenderTarget( 1, 1, parameters );
 		this.rtRight.rtBlend = new THREE.WebGLRenderTarget( 1, 1, parameters );
-		*/
 	},
 	/** The setTargetsSize function
 	 */
 	setTargetsSize(){
-		let dpr = this.dpr;
+		let renderer = this.el.renderer;
+		let dpr = this.dpr = renderer.getPixelRatio();
+		renderer.setClearColor("#ffffff")
+		
 		let wL = this.renderRect.left.width*dpr
 		let hL = this.renderRect.left.height*dpr
 		let wR = this.renderRect.left.width*dpr
 		let hR = this.renderRect.left.height*dpr
-		let renderer = this.el.renderer;
 
 		this.rtLeft.setSize(wL,hL);
-		/*
 		this.rtLeft.rtDepthMap.setSize(wL,hL);
 		this.rtLeft.rtGodrays.setSize(wL,hL);
 		this.rtLeft.rtGlow.setSize(wL,hL);
@@ -83,8 +82,6 @@ var methods = {
 
 		renderer.setViewport(0,0,wL,hL);
 		renderer.setScissorTest( false );
-		this.dpr = renderer.getPixelRatio();
-		*/
 	},
 	/** The renderMerge function - 
 	 * @param {WebGLRenderTarget} renderTargetL - Size renderRectL.width * renderRectL.height
@@ -95,7 +92,7 @@ var methods = {
 	renderMerge:function(renderTargetL, renderRectL, renderTargetR, renderRectR){
 		let renderer = this.el.renderer;
 
-		if(this.sceneMerge == undefined ){this.initializeSceneMerge();}
+		if(this.sceneMerge == undefined){this.initializeSceneMerge();}
 		renderer.setScissorTest( true );
 
 		// Left Render
@@ -147,11 +144,7 @@ var methods = {
 	renderLeft:function(scene, camera, renderTargetL, forceClear){
 		let renderer = this.el.renderer;
 		let vrDisplay = this.el.effect.getVRDisplay();
-		if(vrDisplay==undefined){
-			debugger;
-			renderer.render( scene, camera, renderTargetL, true );
-			return;
-		}
+		if(vrDisplay==undefined){renderer.render( scene, camera, renderTargetL, true );return;}
 		let eyeParamsL = vrDisplay.getEyeParameters( 'left' );
 		let eyeTranslationL = this.eyeTranslationL
 
@@ -176,7 +169,7 @@ var methods = {
 	},
 	renderToTargets(scene,camera){
 		this.renderLeft(scene,camera,this.rtLeft, true);
-		//this.renderRight(scene,camera,this.rtRight, true);
+		this.renderRight(scene,camera,this.rtRight, true);
 	}
 }
 

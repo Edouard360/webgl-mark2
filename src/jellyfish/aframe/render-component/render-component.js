@@ -7,7 +7,7 @@ import {methods} from './render-methods'
 var render = {
 	init:function(){
 
-		var ext = this.el.renderer.extensions.get('WEBGL_depth_texture')
+		//var ext = this.el.renderer.extensions.get('WEBGL_depth_texture')
 
 		this.initializeTargets();
 		this.initializeSceneMerge();
@@ -30,15 +30,15 @@ var render = {
 			if (this.el.isPlaying) { this.el.tick(time, timeDelta); }
 
 			this.updateSize();
-			this.setTargetsSize();
+			this.setTargetsSize();this.rtLeft.setSize(window.innerWidth,window.innerHeight)
 			this.renderToTargets(scene,camera,this.renderRect.left,this.renderRect.right)
-			
+	
 			this.computeDepthMap();
 			this.computeGodRays();
 			//this.computeGlow();
 			this.computeBlend();
 
-			this.renderMerge(this.rtLeft.rtBlend,this.renderRect.left,this.rtRight.rtBlend,this.renderRect.right);
+			this.renderMerge(this.rtLeft.rtGodrays,this.renderRect.left,this.rtRight.rtGodrays,this.renderRect.right);
 			this.el.effect.submitFrame();
 
 			/*
@@ -124,14 +124,20 @@ var render = {
 	computeGodRays(){
 		let renderer = this.el.renderer;	
 		this.scene.overrideMaterial = this.godraysProgram.godraysProgramMaterial;
-
-		this.positionSun(this.cameraL);
-		this.godraysProgram.godraysProgramUniforms[ "tInput" ].value = this.rtLeft.rtDepthMap;
-		renderer.render( this.scene, this.camera, this.rtLeft.rtGodrays );	
-
-		this.positionSun(this.cameraR);
-		this.godraysProgram.godraysProgramUniforms[ "tInput" ].value = this.rtRight.rtDepthMap;
-		renderer.render( this.scene, this.camera, this.rtRight.rtGodrays ); 
+		
+		if(this.positionSun(this.cameraL)){ //this.el.camera : Otherwise not updated !
+			this.godraysProgram.godraysProgramUniforms[ "tInput" ].value = this.rtLeft.rtDepthMap;
+			renderer.render( this.scene, this.camera, this.rtLeft.rtGodrays );
+		}else{
+			renderer.clearTarget( this.rtLeft.rtGodrays, true,true,true );
+		}
+	
+		if(this.positionSun(this.cameraR)){
+			this.godraysProgram.godraysProgramUniforms[ "tInput" ].value = this.rtRight.rtDepthMap;
+			renderer.render( this.scene, this.camera, this.rtRight.rtGodrays ); 
+		}else{
+			renderer.clearTarget( this.rtRight.rtGodrays, true,true,true );
+		}
 	},
 	computeGlow(){
 		this.scene.overrideMaterial = this.glowProgram.glowProgramMaterial;
@@ -189,7 +195,8 @@ var render = {
 
 		this.godraysProgram.godraysProgramUniforms[ "vSunPositionScreenSpace" ].value.x = screenSpacePosition.x;
 		this.godraysProgram.godraysProgramUniforms[ "vSunPositionScreenSpace" ].value.y = screenSpacePosition.y;
-		
+		return screenSpacePosition.x > 0 && screenSpacePosition.y > 0
+
 	},
 	updateSize(){
 		let leftBounds = [ 0.0, 0.0, 0.5, 1.0 ]; 
