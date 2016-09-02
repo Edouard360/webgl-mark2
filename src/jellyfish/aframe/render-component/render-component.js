@@ -1,8 +1,12 @@
 'use strict';
 import {MixerProgram,GodraysProgram,GlowProgram,DepthMapProgram,fovToProjection} from '../../../util/util.js'
-import {BLEND,SKY,DEPTH_MAP,GODRAYS, GLOW} from '../../../data/const.js'
+import {BLEND} from '../../../data/const.js'
 import dat from '../../../../node_modules/dat.gui/build/dat.gui'
 import {methods} from './render-methods'
+import {computeGodRays} from './render-godrays'
+import {computeDepthMap} from './render-depth'
+import {computeGlow} from './render-glow'
+import {computeBlend} from './render-blend'
 
 var render = {
 	init:function(){
@@ -94,125 +98,13 @@ var render = {
 		quadTest.position.z = -9900;
 		this.scene.add( quad );
 		this.sceneTest.add( quadTest );
-	},
-	computeDepthMap(){
-		let renderer = this.el.renderer;
-		this.scene.overrideMaterial = this.depthMapProgram.depthMapProgramMaterial;
-
-		this.depthMapProgram.depthMapProgramUniforms["smoothstepHigh"].value = DEPTH_MAP.smoothstepHigh
-		this.depthMapProgram.depthMapProgramUniforms["smoothstepLow"].value = DEPTH_MAP.smoothstepLow
-		this.depthMapProgram.depthMapProgramUniforms["near"].value = DEPTH_MAP.near
-		this.depthMapProgram.depthMapProgramUniforms["far"].value = DEPTH_MAP.far
-
-		this.depthMapProgram.depthMapProgramUniforms["tInput"].value = this.rtLeft.depthTexture;
-		renderer.render( this.scene, this.camera, this.rtLeft.rtDepthMap,true );
-
-		this.depthMapProgram.depthMapProgramUniforms["tInput"].value = this.rtRight.depthTexture;
-		renderer.render( this.scene, this.camera, this.rtRight.rtDepthMap,true ); 
-	},
-	computeGodRays(){
-		let renderer = this.el.renderer;	
-		this.scene.overrideMaterial = this.godraysProgram.godraysProgramMaterial;
-		this.godraysProgram.godraysProgramUniforms["smoothstepHigh"].value = GODRAYS.smoothstepHigh
-		this.godraysProgram.godraysProgramUniforms["smoothstepLow"].value = GODRAYS.smoothstepLow
-		this.godraysProgram.godraysProgramUniforms["density"].value = GODRAYS.density
-		this.godraysProgram.godraysProgramUniforms["weight"].value = GODRAYS.weight
-		this.godraysProgram.godraysProgramUniforms["decay"].value = GODRAYS.decay
-		this.godraysProgram.godraysProgramUniforms["exposure"].value = GODRAYS.exposure
-		this.godraysProgram.godraysProgramUniforms["numSamples"].value = GODRAYS.numSamples
-		
-		if(this.positionSun(this.cameraL)){ //this.el.camera : Otherwise not updated !
-			this.godraysProgram.godraysProgramUniforms[ "tInput" ].value = this.rtLeft.rtDepthMap;
-			renderer.render( this.scene, this.camera, this.rtLeft.rtGodrays );
-		}else{
-			renderer.clearTarget( this.rtLeft.rtGodrays, true,true,true );
-		}
-	
-		if(this.positionSun(this.cameraR)){
-			this.godraysProgram.godraysProgramUniforms[ "tInput" ].value = this.rtRight.rtDepthMap;
-			renderer.render( this.scene, this.camera, this.rtRight.rtGodrays ); 
-		}else{
-			renderer.clearTarget( this.rtRight.rtGodrays, true,true,true );
-		}
-	},
-	computeGlow(){
-		this.scene.overrideMaterial = this.glowProgram.glowProgramMaterial;
-		this.computeGlowSide(this.rtLeft);
-		this.computeGlowSide(this.rtRight);
-	},
-	computeGlowSide(target){
-		let renderer = this.el.renderer;
-		this.glowProgram.glowProgramUniforms[ "tInput" ].value = target.rtDepthMap.texture;
-		this.glowProgram.glowProgramUniforms["iResolution"].value = new THREE.Vector2(window.innerWidth,window.innerHeight);
-		this.glowProgram.glowProgramUniforms["direction"].value = new THREE.Vector2(8.0, 0.0)
-
-		renderer.render( this.scene, this.camera, target.rtGlow  );
-
-		this.computeGlowWithUniforms(target, new THREE.Vector2(4.0, 0.0), 2)
-		this.computeGlowWithUniforms(target, new THREE.Vector2(0.0, 2.0), 3)
-		this.computeGlowWithUniforms(target, new THREE.Vector2(0.0, 8.0), 4)
-		this.computeGlowWithUniforms(target, new THREE.Vector2(0.0, 4.0), 5)
-	},
-	computeGlowWithUniforms(target, direction, passNumber){
-		let renderer = this.el.renderer;
-		let txt = (passNumber%2==0)? target.rtGlow.texture : target.rtGlowTmp.texture;
-		let rt = (passNumber%2==0)? target.rtGlowTmp : target.rtGlow;
-		this.glowProgram.glowProgramUniforms[ "tInput" ].value = txt;
-		this.glowProgram.glowProgramUniforms["direction"].value = direction;
-		renderer.render( this.scene, this.camera, rt);
-	},
-	computeBlend(){
-		this.scene.overrideMaterial = this.mixerProgram.mixerProgramMaterial;
-		this.computeBlendSide(this.rtLeft)
-		this.computeBlendSide(this.rtRight)
-	},
-	computeBlendSide(side){
-		let renderer = this.el.renderer;
-		this.mixerProgram.mixerProgramUniforms["tColors"].value = side.texture;
-		this.mixerProgram.mixerProgramUniforms["tGodrays"].value = side.rtGodrays.texture;
-		this.mixerProgram.mixerProgramUniforms["tGlow"].value = side.rtGlow.texture;
-		renderer.render( this.scene, this.camera, side.rtBlend );
-	},
-	positionSun(camera){
-		let sunPosition = new THREE.Vector3(
-				SKY.distance * Math.cos( SKY.phi ),
-				SKY.distance * Math.sin( SKY.phi ) * Math.sin( SKY.theta ),
-				SKY.distance * Math.sin( SKY.phi ) * Math.cos( SKY.theta )
-			)
-		let screenSpacePosition = new THREE.Vector3();
-		
-		screenSpacePosition.copy(sunPosition).project(camera);
-
-		screenSpacePosition.x = ( screenSpacePosition.x + 1 ) / 2;
-		screenSpacePosition.y = ( screenSpacePosition.y + 1 ) / 2;
-
-		this.godraysProgram.godraysProgramUniforms[ "vSunPositionScreenSpace" ].value.x = screenSpacePosition.x;
-		this.godraysProgram.godraysProgramUniforms[ "vSunPositionScreenSpace" ].value.y = screenSpacePosition.y;
-		return screenSpacePosition.x > 0 && screenSpacePosition.y > 0
-
-	},
-	updateSize(){
-		let leftBounds = [ 0.0, 0.0, 0.5, 1.0 ]; 
-		let rightBounds = [ 0.5, 0.0, 0.5, 1.0 ];
-		var size = this.el.renderer.getSize();
-
-		this.renderRect = {
-			left:{
-				x: Math.round( size.width * leftBounds[ 0 ] ),
-				y: Math.round( size.height * leftBounds[ 1 ] ),
-				width: Math.round( size.width * leftBounds[ 2 ] ),
-				height:  Math.round(size.height * leftBounds[ 3 ] )
-			},
-			right:{
-				x: Math.round( size.width * rightBounds[ 0 ] ),
-				y: Math.round( size.height * rightBounds[ 1 ] ),
-				width: Math.round( size.width * rightBounds[ 2 ] ),
-				height:  Math.round(size.height * rightBounds[ 3 ] )
-			}
-		}
 	}
 }
 
 Object.assign(render,methods);
+Object.assign(render,computeGodRays);
+Object.assign(render,computeDepthMap);
+Object.assign(render,computeGlow);
+Object.assign(render,computeBlend);
 
 export {render};

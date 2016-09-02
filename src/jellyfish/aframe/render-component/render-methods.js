@@ -174,6 +174,26 @@ var methods = {
 	renderToTargets(scene,camera){
 		this.renderLeft(scene,camera,this.rtLeft, true);
 		this.renderRight(scene,camera,this.rtRight, true);
+	},
+	updateSize(){
+		let leftBounds = [ 0.0, 0.0, 0.5, 1.0 ]; 
+		let rightBounds = [ 0.5, 0.0, 0.5, 1.0 ];
+		var size = this.el.renderer.getSize();
+
+		this.renderRect = {
+			left:{
+				x: Math.round( size.width * leftBounds[ 0 ] ),
+				y: Math.round( size.height * leftBounds[ 1 ] ),
+				width: Math.round( size.width * leftBounds[ 2 ] ),
+				height:  Math.round(size.height * leftBounds[ 3 ] )
+			},
+			right:{
+				x: Math.round( size.width * rightBounds[ 0 ] ),
+				y: Math.round( size.height * rightBounds[ 1 ] ),
+				width: Math.round( size.width * rightBounds[ 2 ] ),
+				height:  Math.round(size.height * rightBounds[ 3 ] )
+			}
+		}
 	}
 }
 

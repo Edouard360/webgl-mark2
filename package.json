@@ -25,6 +25,7 @@
     "babel-preset-stage-0": "^6.3.13",
     "babel-runtime": "^6.3.13",
     "glsl-blend": "^1.0.3",
+    "glsl-fast-gaussian-blur": "^1.0.2",
     "json-loader": "^0.5.4",
     "webpack": "^1.13.1",
     "webpack-dev-server": "^1.14.0",
