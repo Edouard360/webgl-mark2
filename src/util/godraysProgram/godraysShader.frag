@@ -7,6 +7,13 @@ uniform sampler2D tInput;
 uniform vec2 vSunPositionScreenSpace;
 uniform float fStepSize; // filter step size
 uniform bool firstPass;
+uniform float smoothstepLow;
+uniform float smoothstepHigh;
+uniform float density;
+uniform float weight;
+uniform float decay;
+uniform float exposure;
+uniform int numSamples;
 
 vec3 godrays(
     float density,
@@ -28,7 +35,7 @@ vec3 godrays(
 	float illuminationDecay = 1.0;
 
 
-	for(int i=0; i < 100 ; i++){
+	for(int i=0; i < 300 ; i++){
 
 
         /*
@@ -60,8 +67,8 @@ vec3 godrays(
 }
 
 void main() {
-
-	gl_FragColor.rgb = godrays(1.0,0.01,1.0,1.0,100, tInput, vSunPositionScreenSpace,vUv);
+    float factorGodRays = godrays(density,weight,decay,exposure, numSamples, tInput, vSunPositionScreenSpace,vUv).x;
+    factorGodRays = smoothstep(smoothstepLow,smoothstepHigh,factorGodRays);
+	gl_FragColor.rgb = vec3(factorGodRays);
 	gl_FragColor.a = 1.0;
-
 }

@@ -1,6 +1,6 @@
 'use strict';
 import {MixerProgram,GodraysProgram,GlowProgram,DepthMapProgram,fovToProjection} from '../../../util/util.js'
-import {BLEND,SKY} from '../../../data/const.js'
+import {BLEND,SKY,DEPTH_MAP,GODRAYS, GLOW} from '../../../data/const.js'
 import dat from '../../../../node_modules/dat.gui/build/dat.gui'
 import {methods} from './render-methods'
 
@@ -38,19 +38,6 @@ var render = {
 
 			this.renderMerge(this.rtLeft.rtBlend,this.renderRect.left,this.rtRight.rtBlend,this.renderRect.right);
 			this.el.effect.submitFrame();
-
-			/*
-			this.sceneTest.overrideMaterial = this.mixerProgram.mixerProgramMaterial;
-
-			this.mixerProgram.mixerProgramUniforms["tColors"].value = this.rtTextureColors.texture;
-			this.mixerProgram.mixerProgramUniforms["tGodrays"].value = this.rtTextureGodrays.texture;
-			this.mixerProgram.mixerProgramUniforms["tGlow"].value = this.rtTextureGlow.texture;
-
-			this.el.effect.render(this.sceneTest, this.camera);
-			this.el.effect.render(scene, camera);
-			*/
-
-			
 
 			this.el.time = time;
 			this.el.animationFrameID = window.requestAnimationFrame(this.el.render);
@@ -113,6 +100,11 @@ var render = {
 		let renderer = this.el.renderer;
 		this.scene.overrideMaterial = this.depthMapProgram.depthMapProgramMaterial;
 
+		this.depthMapProgram.depthMapProgramUniforms["smoothstepHigh"].value = DEPTH_MAP.smoothstepHigh
+		this.depthMapProgram.depthMapProgramUniforms["smoothstepLow"].value = DEPTH_MAP.smoothstepLow
+		this.depthMapProgram.depthMapProgramUniforms["near"].value = DEPTH_MAP.near
+		this.depthMapProgram.depthMapProgramUniforms["far"].value = DEPTH_MAP.far
+
 		this.depthMapProgram.depthMapProgramUniforms["tInput"].value = this.rtLeft.depthTexture;
 		renderer.render( this.scene, this.camera, this.rtLeft.rtDepthMap,true );
 
@@ -122,6 +114,13 @@ var render = {
 	computeGodRays(){
 		let renderer = this.el.renderer;	
 		this.scene.overrideMaterial = this.godraysProgram.godraysProgramMaterial;
+		this.godraysProgram.godraysProgramUniforms["smoothstepHigh"].value = GODRAYS.smoothstepHigh
+		this.godraysProgram.godraysProgramUniforms["smoothstepLow"].value = GODRAYS.smoothstepLow
+		this.godraysProgram.godraysProgramUniforms["density"].value = GODRAYS.density
+		this.godraysProgram.godraysProgramUniforms["weight"].value = GODRAYS.weight
+		this.godraysProgram.godraysProgramUniforms["decay"].value = GODRAYS.decay
+		this.godraysProgram.godraysProgramUniforms["exposure"].value = GODRAYS.exposure
+		this.godraysProgram.godraysProgramUniforms["numSamples"].value = GODRAYS.numSamples
 		
 		if(this.positionSun(this.cameraL)){ //this.el.camera : Otherwise not updated !
 			this.godraysProgram.godraysProgramUniforms[ "tInput" ].value = this.rtLeft.rtDepthMap;
@@ -147,6 +146,7 @@ var render = {
 		this.glowProgram.glowProgramUniforms[ "tInput" ].value = side.rtDepthMap.texture;
 		this.glowProgram.glowProgramUniforms["iResolution"].value = new THREE.Vector2(window.innerWidth,window.innerHeight);
 		this.glowProgram.glowProgramUniforms["direction"].value = new THREE.Vector2(8.0, 0.0)
+
 		renderer.render( this.scene, this.camera, side.rtGlow  );
 
 		this.glowProgram.glowProgramUniforms[ "tInput" ].value = side.rtGlow.texture;

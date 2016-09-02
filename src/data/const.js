@@ -4,13 +4,13 @@ export const CAMERA = {ANGLE:100,NEAR:0.1,FAR:10000}; // NEAR < 1.4 (<sqrt2) if 
 export const USE_FOG = true; // If set to true and Webgl, don't forget to bind the uniforms
 export const UPDATE_FPS_RATE = 100;
 export const SCALE={x:5,y:5,z:5}
-export const CENTER = {x:0.0,y:+10.0,z:-100.0}; // Center for the Single Jellyfish
+export const CENTER = {x:0.0,y:+15.0,z:-90.0}; // Center for the Single Jellyfish
 export const ROTATE = {x:0.0,y:0.1}
 export const RADIUS = {min:11,max:150,anglePHI:0.2}
 
 export const DISPLAY = "circle";
 
-export const BLEND = {fGodraysIntensity: 0.9, fGlowIntensity: 0.3}
+export const BLEND = {fGodraysIntensity: 0.3, fGlowIntensity: 0.0}
 
 export const OPACITY = {jellyfish : 0.6, surface:0.1};
 
@@ -25,3 +25,26 @@ export const SKY = {
 	mieDirectionalG:0.8,
 	sunSize:1.0
 	} 
+
+/*
+ * The smoothstepHigh and smoothstepLow help constrasting the depthMap or the godrays
+ * 0.2 -> 0
+ * 0.8 -> 1
+ */
+
+export const DEPTH_MAP = {
+ 	near:0.1,
+ 	far:200.0,
+ 	smoothstepHigh: 0.7,
+ 	smoothstepLow:0.1
+}
+
+export const GODRAYS = {
+ 	smoothstepHigh: 1.0,
+ 	smoothstepLow:0.8,
+ 	density:  1.0,
+	weight: 0.01,
+	decay: 1.0,
+	exposure: 1.0,
+	numSamples: 100
+}

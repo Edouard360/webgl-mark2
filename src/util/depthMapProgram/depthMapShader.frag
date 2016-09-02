@@ -2,12 +2,17 @@
 
 varying vec2 vUv;
 uniform sampler2D tInput;
+uniform float near;
+uniform float far;
+
+uniform float smoothstepLow;
+uniform float smoothstepHigh;
 
 float fromDepthMap(in sampler2D tInput,in vec2 vUv) {
     float fragCoordZ, viewZ;
     fragCoordZ = texture2D(tInput, vUv).x;
-    viewZ = perspectiveDepthToViewZ( fragCoordZ, 0.1, 50.0 );
-    return viewZToOrthographicDepth( viewZ, 0.1, 50.0 );
+    viewZ = perspectiveDepthToViewZ( fragCoordZ, near, far );
+    return smoothstep(smoothstepLow,smoothstepHigh,viewZToOrthographicDepth( viewZ, near, far ));
 }
 
 void main() {
