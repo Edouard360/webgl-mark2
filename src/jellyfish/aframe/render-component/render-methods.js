@@ -114,64 +114,44 @@ var methods = {
 		this.cameraL.layers.enable( 1 );
 		this.cameraR = new THREE.PerspectiveCamera();
 		this.cameraR.layers.enable( 2 );
-		this.eyeTranslationL = new THREE.Vector3();
-		this.eyeTranslationR = new THREE.Vector3();
+		this.eyeTranslation = new THREE.Vector3();
 	},
-	renderRight:function(scene, camera, renderTargetR, forceClear){
+	renderSide:function(scene, camera, renderTarget, forceClear, side){
 		let renderer = this.el.renderer;
 		let vrDisplay = this.el.effect.getVRDisplay();
-		if(vrDisplay==undefined){renderer.render( scene, camera, renderTargetR, forceClear );return;}
-		let eyeParamsR = vrDisplay.getEyeParameters( 'right' );
-		let eyeTranslationR = this.eyeTranslationR
+		if(vrDisplay==undefined){renderer.render( scene, camera, renderTarget, true );return;}
+		
+		let eyeTranslation = this.eyeTranslation
 
-		let cameraR = this.cameraR;
 		let scale = 1, isWebVR1 = true;
-
+		let eyeParams = vrDisplay.getEyeParameters(side);
 		if ( isWebVR1 ) {
-			eyeTranslationR.fromArray( eyeParamsR.offset );
-			this.eyeFOVR = eyeParamsR.fieldOfView;
+			eyeTranslation.fromArray( eyeParams.offset );
+			eyeFOV = eyeParams.fieldOfView;
 		} else {
-			eyeTranslationR.copy( eyeParamsR.eyeTranslation );
-			this.eyeFOVR = eyeParamsR.recommendedFieldOfView;
+			eyeTranslation.copy( eyeParams.eyeTranslation );
+			eyeFOV = eyeParams.recommendedFieldOfView;
 		}
 
 		if ( camera.parent === null ) camera.updateMatrixWorld();
 
-		cameraR.projectionMatrix = fovToProjection( this.eyeFOVR, true, camera.near, camera.far );
-		camera.matrixWorld.decompose( cameraR.position, cameraR.quaternion, cameraR.scale );
-		cameraR.translateOnAxis( eyeTranslationR, scale );
+		let cameraSide;
+		if(side == "left"){
+			cameraSide = this.cameraL;
 
-		renderer.render( scene, cameraR, renderTargetR, forceClear );
-	},
-	renderLeft:function(scene, camera, renderTargetL, forceClear){
-		let renderer = this.el.renderer;
-		let vrDisplay = this.el.effect.getVRDisplay();
-		if(vrDisplay==undefined){renderer.render( scene, camera, renderTargetL, true );return;}
-		let eyeParamsL = vrDisplay.getEyeParameters( 'left' );
-		let eyeTranslationL = this.eyeTranslationL
-
-		let cameraL = this.cameraL;
-		let scale = 1, isWebVR1 = true;
-
-		if ( isWebVR1 ) {
-			eyeTranslationL.fromArray( eyeParamsL.offset );
-			this.eyeFOVL = eyeParamsL.fieldOfView;
-		} else {
-			eyeTranslationL.copy( eyeParamsL.eyeTranslation );
-			this.eyeFOVL = eyeParamsL.recommendedFieldOfView;
+		}else{
+			cameraSide = this.cameraR;
 		}
 
-		if ( camera.parent === null ) camera.updateMatrixWorld();
+		cameraSide.projectionMatrix = fovToProjection( eyeFOV, true, camera.near, camera.far );
+		camera.matrixWorld.decompose( cameraSide.position, cameraSide.quaternion, cameraSide.scale );
+		cameraSide.translateOnAxis( eyeTranslation, scale );
 
-		cameraL.projectionMatrix = fovToProjection( this.eyeFOVL, true, camera.near, camera.far );
-		camera.matrixWorld.decompose( cameraL.position, cameraL.quaternion, cameraL.scale );
-		cameraL.translateOnAxis( eyeTranslationL, scale );
-
-		renderer.render( scene, cameraL, renderTargetL, forceClear );
+		renderer.render( scene, camera, renderTarget, forceClear );
 	},
 	renderToTargets(scene,camera){
-		this.renderLeft(scene,camera,this.rtLeft, true);
-		this.renderRight(scene,camera,this.rtRight, true);
+		this.renderSide(scene,camera,this.rtLeft, true, 'left' );
+		this.renderSide(scene,camera,this.rtRight, true, 'right' );
 	},
 	updateSize(){
 		let leftBounds = [ 0.0, 0.0, 0.5, 1.0 ]; 
