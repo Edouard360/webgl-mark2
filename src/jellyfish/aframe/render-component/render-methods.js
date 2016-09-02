@@ -42,6 +42,7 @@ var methods = {
 		this.rtLeft.rtDepthMap = new THREE.WebGLRenderTarget( 1, 1, parameters );
 		this.rtLeft.rtGodrays = new THREE.WebGLRenderTarget( 1, 1, parameters );
 		this.rtLeft.rtGlow = new THREE.WebGLRenderTarget( 1, 1, parameters );
+		this.rtLeft.rtGlowTmp = new THREE.WebGLRenderTarget( 1, 1, parameters );
 		this.rtLeft.rtBlend = new THREE.WebGLRenderTarget( 1, 1, parameters );
 
 		this.rtRight = new THREE.WebGLRenderTarget( 1, 1, parameters );
@@ -54,6 +55,7 @@ var methods = {
 		this.rtRight.rtDepthMap = new THREE.WebGLRenderTarget( 1, 1, parameters );
 		this.rtRight.rtGodrays = new THREE.WebGLRenderTarget( 1, 1, parameters );
 		this.rtRight.rtGlow = new THREE.WebGLRenderTarget( 1, 1, parameters );
+		this.rtRight.rtGlowTmp = new THREE.WebGLRenderTarget( 1, 1, parameters );
 		this.rtRight.rtBlend = new THREE.WebGLRenderTarget( 1, 1, parameters );
 	},
 	/** The setTargetsSize function
@@ -72,12 +74,14 @@ var methods = {
 		this.rtLeft.rtDepthMap.setSize(wL,hL);
 		this.rtLeft.rtGodrays.setSize(wL,hL);
 		this.rtLeft.rtGlow.setSize(wL,hL);
+		this.rtLeft.rtGlowTmp.setSize(wR,hR);
 		this.rtLeft.rtBlend.setSize(wL,hL);
 
 		this.rtRight.setSize(wR,hR);
 		this.rtRight.rtDepthMap.setSize(wR,hR);
 		this.rtRight.rtGodrays.setSize(wR,hR);
 		this.rtRight.rtGlow.setSize(wR,hR);
+		this.rtRight.rtGlowTmp.setSize(wR,hR);
 		this.rtRight.rtBlend.setSize(wR,hR);
 
 		renderer.setViewport(0,0,wL,hL);

@@ -10,7 +10,7 @@ export const RADIUS = {min:11,max:150,anglePHI:0.2}
 
 export const DISPLAY = "circle";
 
-export const BLEND = {fGodraysIntensity: 0.5, fGlowIntensity: 0.0}
+export const BLEND = {fGodraysIntensity: 0.5, fGlowIntensity: 0.1}
 
 export const OPACITY = {jellyfish : 0.6, surface:0.1};
 

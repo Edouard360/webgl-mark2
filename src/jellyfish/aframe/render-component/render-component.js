@@ -35,10 +35,10 @@ var render = {
 	
 			this.computeDepthMap();
 			this.computeGodRays();
-			//this.computeGlow();
+			this.computeGlow();
 			this.computeBlend();
 
-			this.renderMerge(this.rtLeft.rtGodrays,this.renderRect.left,this.rtRight.rtGodrays,this.renderRect.right);
+			this.renderMerge(this.rtLeft.rtBlend,this.renderRect.left,this.rtRight.rtBlend,this.renderRect.right);
 			this.el.effect.submitFrame();
 
 			/*
@@ -141,44 +141,42 @@ var render = {
 	},
 	computeGlow(){
 		this.scene.overrideMaterial = this.glowProgram.glowProgramMaterial;
-		this.glowProgram.glowProgramUniforms[ "tInput" ].value = this.rtDepthMap.texture;
+		this.computeGlowSide(this.rtLeft);
+		this.computeGlowSide(this.rtRight);
+	},
+	computeGlowSide(side){
+		this.glowProgram.glowProgramUniforms[ "tInput" ].value = side.rtDepthMap.texture;
 		this.glowProgram.glowProgramUniforms["iResolution"].value = new THREE.Vector2(window.innerWidth,window.innerHeight);
 		this.glowProgram.glowProgramUniforms["direction"].value = new THREE.Vector2(8.0, 0.0)
-		this.el.effect.render( this.scene, this.camera, this.rtTextureGlow  );
+		this.el.effect.render( this.scene, this.camera, side.rtGlow  );
 
-		this.scene.overrideMaterial = this.glowProgram.glowProgramMaterial;
-		this.glowProgram.glowProgramUniforms[ "tInput" ].value = this.rtTextureGlow.texture;
+		this.glowProgram.glowProgramUniforms[ "tInput" ].value = side.rtGlow.texture;
 		this.glowProgram.glowProgramUniforms["direction"].value = new THREE.Vector2(4.0, 0.0)
-		this.el.effect.render( this.scene, this.camera, this.rtTextureGlow2  );
+		this.el.effect.render( this.scene, this.camera, side.rtGlowTmp  );
 
-		this.scene.overrideMaterial = this.glowProgram.glowProgramMaterial;
-		this.glowProgram.glowProgramUniforms[ "tInput" ].value = this.rtTextureGlow2.texture;
+		this.glowProgram.glowProgramUniforms[ "tInput" ].value =  side.rtGlowTmp.texture ;
 		this.glowProgram.glowProgramUniforms["direction"].value = new THREE.Vector2(2.0, 0.0)
-		this.el.effect.render( this.scene, this.camera, this.rtTextureGlow  );
+		this.el.effect.render( this.scene, this.camera, side.rtGlow  );
 
-		this.scene.overrideMaterial = this.glowProgram.glowProgramMaterial;
-		this.glowProgram.glowProgramUniforms[ "tInput" ].value = this.rtTextureGlow.texture;
+		this.glowProgram.glowProgramUniforms[ "tInput" ].value = side.rtGlow.texture;
 		this.glowProgram.glowProgramUniforms["direction"].value = new THREE.Vector2(0.0, 8.0)
-		this.el.effect.render( this.scene, this.camera, this.rtTextureGlow2  );
+		this.el.effect.render( this.scene, this.camera, side.rtGlowTmp  );
 
-		this.scene.overrideMaterial = this.glowProgram.glowProgramMaterial;
-		this.glowProgram.glowProgramUniforms[ "tInput" ].value = this.rtTextureGlow2.texture;
+		this.glowProgram.glowProgramUniforms[ "tInput" ].value = side.rtGlowTmp.texture;
 		this.glowProgram.glowProgramUniforms["direction"].value = new THREE.Vector2(0.0, 4.0)
-		this.el.effect.render( this.scene, this.camera, this.rtTextureGlow  );
+		this.el.effect.render( this.scene, this.camera, side.rtGlow  );
 	},
 	computeBlend(){
-		let renderer = this.el.renderer;
 		this.scene.overrideMaterial = this.mixerProgram.mixerProgramMaterial;
-
-		this.mixerProgram.mixerProgramUniforms["tColors"].value = this.rtLeft.texture;
-		this.mixerProgram.mixerProgramUniforms["tGodrays"].value = this.rtLeft.rtGodrays.texture;
-		this.mixerProgram.mixerProgramUniforms["tGlow"].value = null;
-		renderer.render( this.scene, this.camera, this.rtLeft.rtBlend );
-
-		this.mixerProgram.mixerProgramUniforms["tColors"].value = this.rtRight.texture;
-		this.mixerProgram.mixerProgramUniforms["tGodrays"].value = this.rtRight.rtGodrays.texture;
-		this.mixerProgram.mixerProgramUniforms["tGlow"].value = null;
-		renderer.render( this.scene, this.camera, this.rtRight.rtBlend );
+		this.computeBlendSide(this.rtLeft)
+		this.computeBlendSide(this.rtRight)
+	},
+	computeBlendSide(side){
+		let renderer = this.el.renderer;
+		this.mixerProgram.mixerProgramUniforms["tColors"].value = side.texture;
+		this.mixerProgram.mixerProgramUniforms["tGodrays"].value = side.rtGodrays.texture;
+		this.mixerProgram.mixerProgramUniforms["tGlow"].value = side.rtGlow.texture;
+		renderer.render( this.scene, this.camera, side.rtBlend );
 	},
 	positionSun(camera){
 		let sunPosition = new THREE.Vector3(
