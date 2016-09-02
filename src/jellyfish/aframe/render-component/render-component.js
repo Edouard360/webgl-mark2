@@ -36,13 +36,12 @@ var render = {
 			this.computeGlow();
 			this.computeBlend();
 
-			this.renderMerge(this.rtLeft.rtBlend,this.renderRect.left,this.rtRight.rtBlend,this.renderRect.right);
+			this.renderMerge(this.rtLeft.rtGlow,this.renderRect.left,this.rtRight.rtGlow,this.renderRect.right);
 			this.el.effect.submitFrame();
 
 			this.el.time = time;
 			this.el.animationFrameID = window.requestAnimationFrame(this.el.render);
 		}
-
 	},
 	/**
 	 * The initializePostprocessing function.
@@ -141,29 +140,26 @@ var render = {
 		this.computeGlowSide(this.rtLeft);
 		this.computeGlowSide(this.rtRight);
 	},
-	computeGlowSide(side){
+	computeGlowSide(target){
 		let renderer = this.el.renderer;
-		this.glowProgram.glowProgramUniforms[ "tInput" ].value = side.rtDepthMap.texture;
+		this.glowProgram.glowProgramUniforms[ "tInput" ].value = target.rtDepthMap.texture;
 		this.glowProgram.glowProgramUniforms["iResolution"].value = new THREE.Vector2(window.innerWidth,window.innerHeight);
 		this.glowProgram.glowProgramUniforms["direction"].value = new THREE.Vector2(8.0, 0.0)
 
-		renderer.render( this.scene, this.camera, side.rtGlow  );
+		renderer.render( this.scene, this.camera, target.rtGlow  );
 
-		this.glowProgram.glowProgramUniforms[ "tInput" ].value = side.rtGlow.texture;
-		this.glowProgram.glowProgramUniforms["direction"].value = new THREE.Vector2(4.0, 0.0)
-		renderer.render( this.scene, this.camera, side.rtGlowTmp  );
-
-		this.glowProgram.glowProgramUniforms[ "tInput" ].value =  side.rtGlowTmp.texture ;
-		this.glowProgram.glowProgramUniforms["direction"].value = new THREE.Vector2(2.0, 0.0)
-		renderer.render( this.scene, this.camera, side.rtGlow  );
-
-		this.glowProgram.glowProgramUniforms[ "tInput" ].value = side.rtGlow.texture;
-		this.glowProgram.glowProgramUniforms["direction"].value = new THREE.Vector2(0.0, 8.0)
-		renderer.render( this.scene, this.camera, side.rtGlowTmp  );
-
-		this.glowProgram.glowProgramUniforms[ "tInput" ].value = side.rtGlowTmp.texture;
-		this.glowProgram.glowProgramUniforms["direction"].value = new THREE.Vector2(0.0, 4.0)
-		renderer.render( this.scene, this.camera, side.rtGlow  );
+		this.computeGlowWithUniforms(target, new THREE.Vector2(4.0, 0.0), 2)
+		this.computeGlowWithUniforms(target, new THREE.Vector2(0.0, 2.0), 3)
+		this.computeGlowWithUniforms(target, new THREE.Vector2(0.0, 8.0), 4)
+		this.computeGlowWithUniforms(target, new THREE.Vector2(0.0, 4.0), 5)
+	},
+	computeGlowWithUniforms(target, direction, passNumber){
+		let renderer = this.el.renderer;
+		let txt = (passNumber%2==0)? target.rtGlow.texture : target.rtGlowTmp.texture;
+		let rt = (passNumber%2==0)? target.rtGlowTmp : target.rtGlow;
+		this.glowProgram.glowProgramUniforms[ "tInput" ].value = txt;
+		this.glowProgram.glowProgramUniforms["direction"].value = direction;
+		renderer.render( this.scene, this.camera, rt);
 	},
 	computeBlend(){
 		this.scene.overrideMaterial = this.mixerProgram.mixerProgramMaterial;

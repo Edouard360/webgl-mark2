@@ -41,8 +41,8 @@ export const DEPTH_MAP = {
 
 export const GODRAYS = {
  	smoothstepHigh: 1.0,
- 	smoothstepLow:0.8,
- 	density:  1.0,
+ 	smoothstepLow:0.85,
+ 	density:  0.8,
 	weight: 0.01,
 	decay: 1.0,
 	exposure: 1.0,
