@@ -1,5 +1,5 @@
 import Timer from '../timer'
-import {SCALE,CENTER,ROTATE,USE_FOG,OPACITY} from '../../data/const.js'
+import {SCALE,ROTATE,USE_FOG,OPACITY} from '../../data/const.js'
 
 /** The abstract jellyfish object. */
 var abstractJellyfish = {
@@ -60,11 +60,11 @@ var abstractJellyfish = {
       mesh.rotation.y = 0;
       mesh.rotation.z = 0;
 
-      mesh.translateY(CENTER.y); 
-      mesh.translateZ(CENTER.z);
+      this.translate();
       mesh.rotateY((Math.PI/180)* Math.sin(this.timer.rotation / 10.0) * 30.0 * ROTATE.y);
       mesh.rotateX((Math.PI/180)* Math.sin(this.timer.rotation / 20.0) * 30.0 * ROTATE.x);
       mesh.translateY(Math.sin(this.timer.rotation / 10.0) * 2.5 * SCALE.y); 
+
     }
   },
   /**

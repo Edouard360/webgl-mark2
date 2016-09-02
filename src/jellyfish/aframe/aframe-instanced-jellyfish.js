@@ -26,6 +26,8 @@ instancedJellyfish.modifyMaterial = function(material){
   material.uniforms.shadeFactor = {value: 0.2};
 }
 
+instancedJellyfish.translate = function(){}
+
 export default instancedJellyfish;
 
 

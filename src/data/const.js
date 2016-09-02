@@ -4,13 +4,13 @@ export const CAMERA = {ANGLE:100,NEAR:0.1,FAR:10000}; // NEAR < 1.4 (<sqrt2) if 
 export const USE_FOG = true; // If set to true and Webgl, don't forget to bind the uniforms
 export const UPDATE_FPS_RATE = 100;
 export const SCALE={x:5,y:5,z:5}
-export const CENTER = {x:0.0,y:+5.0,z:-25.0};
+export const CENTER = {x:0.0,y:+10.0,z:-100.0};
 export const ROTATE = {x:0.0,y:0.1}
 export const RADIUS = {min:11,max:150,anglePHI:0.2}
 
 export const DISPLAY = "circle";
 
-export const BLEND = {fGodraysIntensity: 0.5, fGlowIntensity: 0.1}
+export const BLEND = {fGodraysIntensity: 0.9, fGlowIntensity: 0.0}
 
 export const OPACITY = {jellyfish : 0.6, surface:0.1};
 

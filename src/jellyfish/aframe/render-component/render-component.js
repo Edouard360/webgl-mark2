@@ -7,8 +7,6 @@ import {methods} from './render-methods'
 var render = {
 	init:function(){
 
-		//var ext = this.el.renderer.extensions.get('WEBGL_depth_texture')
-
 		this.initializeTargets();
 		this.initializeSceneMerge();
 		this.initializeCameras();
@@ -35,7 +33,7 @@ var render = {
 	
 			this.computeDepthMap();
 			this.computeGodRays();
-			this.computeGlow();
+			//this.computeGlow();
 			this.computeBlend();
 
 			this.renderMerge(this.rtLeft.rtBlend,this.renderRect.left,this.rtRight.rtBlend,this.renderRect.right);
