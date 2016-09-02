@@ -33,7 +33,7 @@ var render = {
 	
 			this.computeDepthMap();
 			this.computeGodRays();
-			//this.computeGlow();
+			this.computeGlow();
 			this.computeBlend();
 
 			this.renderMerge(this.rtLeft.rtBlend,this.renderRect.left,this.rtRight.rtBlend,this.renderRect.right);
@@ -143,26 +143,27 @@ var render = {
 		this.computeGlowSide(this.rtRight);
 	},
 	computeGlowSide(side){
+		let renderer = this.el.renderer;
 		this.glowProgram.glowProgramUniforms[ "tInput" ].value = side.rtDepthMap.texture;
 		this.glowProgram.glowProgramUniforms["iResolution"].value = new THREE.Vector2(window.innerWidth,window.innerHeight);
 		this.glowProgram.glowProgramUniforms["direction"].value = new THREE.Vector2(8.0, 0.0)
-		this.el.effect.render( this.scene, this.camera, side.rtGlow  );
+		renderer.render( this.scene, this.camera, side.rtGlow  );
 
 		this.glowProgram.glowProgramUniforms[ "tInput" ].value = side.rtGlow.texture;
 		this.glowProgram.glowProgramUniforms["direction"].value = new THREE.Vector2(4.0, 0.0)
-		this.el.effect.render( this.scene, this.camera, side.rtGlowTmp  );
+		renderer.render( this.scene, this.camera, side.rtGlowTmp  );
 
 		this.glowProgram.glowProgramUniforms[ "tInput" ].value =  side.rtGlowTmp.texture ;
 		this.glowProgram.glowProgramUniforms["direction"].value = new THREE.Vector2(2.0, 0.0)
-		this.el.effect.render( this.scene, this.camera, side.rtGlow  );
+		renderer.render( this.scene, this.camera, side.rtGlow  );
 
 		this.glowProgram.glowProgramUniforms[ "tInput" ].value = side.rtGlow.texture;
 		this.glowProgram.glowProgramUniforms["direction"].value = new THREE.Vector2(0.0, 8.0)
-		this.el.effect.render( this.scene, this.camera, side.rtGlowTmp  );
+		renderer.render( this.scene, this.camera, side.rtGlowTmp  );
 
 		this.glowProgram.glowProgramUniforms[ "tInput" ].value = side.rtGlowTmp.texture;
 		this.glowProgram.glowProgramUniforms["direction"].value = new THREE.Vector2(0.0, 4.0)
-		this.el.effect.render( this.scene, this.camera, side.rtGlow  );
+		renderer.render( this.scene, this.camera, side.rtGlow  );
 	},
 	computeBlend(){
 		this.scene.overrideMaterial = this.mixerProgram.mixerProgramMaterial;

@@ -11,6 +11,7 @@ singleJellyfish.createGeometry = function(){
 
 singleJellyfish.translate = function(){
 	var mesh = this.el.getOrCreateObject3D('mesh',THREE.Mesh);
+	mesh.translateX(CENTER.x); 
 	mesh.translateY(CENTER.y); 
     mesh.translateZ(CENTER.z);
 }
