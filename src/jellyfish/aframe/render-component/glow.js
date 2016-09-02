@@ -7,10 +7,9 @@ class Glow extends Program{
 		super(renderer,scene,camera)
 		this.glowProgram = new GlowProgram();
 	}
-	computeGlow(rtLeft,rtRigth){
+	compute(rt){
 		this.scene.overrideMaterial = this.glowProgram.glowProgramMaterial;
-		this.computeGlowSide(rtLeft);
-		this.computeGlowSide(rtRigth);
+		this.computeGlowSide(rt);
 	}
 	computeGlowSide(target){
 		let renderer = this.renderer;

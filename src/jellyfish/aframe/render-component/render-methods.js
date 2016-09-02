@@ -1,7 +1,5 @@
 'use strict';
-import {MixerProgram,GodraysProgram,GlowProgram,DepthMapProgram,fovToProjection} from '../../../util/util.js'
-import {BLEND,SKY} from '../../../data/const.js'
-import dat from '../../../../node_modules/dat.gui/build/dat.gui'
+import {fovToProjection} from '../../../util/util.js'
 
 var methods = {
 	/** The initializeMerge function - Sets a simple scene for post-processing

@@ -1,11 +1,11 @@
 'use strict';
-import {MixerProgram,GodraysProgram,GlowProgram,DepthMapProgram,fovToProjection} from '../../../util/util.js'
 import dat from '../../../../node_modules/dat.gui/build/dat.gui'
 import {methods} from './render-methods'
-import {computeGodRays} from './render-godrays'
-import {computeDepthMap} from './render-depth'
+import {MixerProgram} from '../../../util/util.js'
 import {Glow} from './glow'
 import {Blend} from './blend'
+import {Depth} from './depth'
+import {Godrays} from './godrays'
 
 var render = {
 	init:function(){
@@ -31,10 +31,14 @@ var render = {
 			this.setTargetsSize();this.rtLeft.setSize(window.innerWidth,window.innerHeight)
 			this.renderToTargets(scene,camera,this.renderRect.left,this.renderRect.right)
 	
-			this.computeDepthMap();
-			this.computeGodRays();
-			this.glow.computeGlow(this.rtLeft,this.rtRight);
-			this.blend.computeBlend(this.rtLeft,this.rtRight);
+			this.depth.compute(this.rtLeft);
+			this.depth.compute(this.rtRight);
+			this.godrays.compute(this.rtLeft,this.cameraL);
+			this.godrays.compute(this.rtRight,this.cameraR);
+			this.glow.compute(this.rtLeft);
+			this.glow.compute(this.rtRight);
+			this.blend.compute(this.rtLeft);
+			this.blend.compute(this.rtRight);
 
 			this.renderMerge(this.rtLeft.rtGlow,this.renderRect.left,this.rtRight.rtGlow,this.renderRect.right);
 			this.el.effect.submitFrame();
@@ -72,11 +76,7 @@ var render = {
 		this.rtTextureGlow2 = new THREE.WebGLRenderTarget( w, h, parameters );
 		this.rtTextureGodrays = new THREE.WebGLRenderTarget( w, h, parameters );
 		this.rtDepthMap = new THREE.WebGLRenderTarget( w, h, parameters );
-
-		// program initilization
-		this.godraysProgram = new GodraysProgram();
-		this.depthMapProgram = new DepthMapProgram();
-
+		
 		this.mixerProgram = new MixerProgram();
 		this.mixerProgram.mixerProgramUniforms.fGodraysIntensity.value = 0.75;
 
@@ -94,13 +94,13 @@ var render = {
 		this.scene.add( quad );
 		this.sceneTest.add( quadTest );
 
-		this.blend = new Blend(this.el.renderer, this.scene,this.camera) 
+		this.blend = new Blend(this.el.renderer, this.scene,this.camera); 
 		this.glow = new Glow(this.el.renderer, this.scene,this.camera);
+		this.depth = new Depth(this.el.renderer, this.scene,this.camera);
+		this.godrays = new Godrays(this.el.renderer, this.scene,this.camera);
 	}
 }
 
 Object.assign(render,methods);
-Object.assign(render,computeGodRays);
-Object.assign(render,computeDepthMap);
 
 export {render};

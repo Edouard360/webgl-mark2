@@ -5,6 +5,9 @@ class Program{
 		this.scene = scene;
 		this.camera = camera;
 	}
+	compute(rtLeft,rtRight){
+		throw "This should be overriden"
+	}
 }
 
 export {Program};

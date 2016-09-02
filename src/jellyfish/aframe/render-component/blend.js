@@ -11,10 +11,9 @@ class Blend extends Program{
 		this.mixerProgram.mixerProgramUniforms.fGlowIntensity.value = BLEND.fGlowIntensity;
 
 	}
-	computeBlend(rtLeft,rtRight){
+	compute(rt){
 		this.scene.overrideMaterial = this.mixerProgram.mixerProgramMaterial;
-		this.computeBlendSide(rtLeft)
-		this.computeBlendSide(rtRight)
+		this.computeBlendSide(rt)
 	}
 	computeBlendSide(target){
 		let renderer = this.renderer;
