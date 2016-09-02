@@ -5,11 +5,17 @@ import {Blend} from './blend'
 import {Depth} from './depth'
 import {Godrays} from './godrays'
 import {Merge} from './merge'
+import {Target} from './target'
 
 var render = {
 	init:function(){
 
-		this.initializeTargets();
+		this.el.renderer.setClearColor("#ffffff");
+		// renderer.setViewport(0,0,wL,hL);
+		// renderer.setScissorTest( false );
+
+		let paramTargets = { minFilter: THREE.LinearFilter, magFilter: THREE.LinearFilter, format: THREE.RGBFormat }
+		this.target = new Target(this.el.renderer,paramTargets)
 		this.initializeCameras();
 		this.initializePostprocessing();
 
@@ -20,24 +26,23 @@ var render = {
 			
 			if (this.el.isPlaying) { this.el.tick(time, timeDelta); }
 
-			this.updateSize();
-			this.setTargetsSize();this.rtLeft.setSize(window.innerWidth,window.innerHeight)
+			this.target.update();
 			
 			this.updateCameras();
 
-			this.el.renderer.render(scene,this.cameraL,this.rtLeft, true);
-			this.el.renderer.render(scene,this.cameraR,this.rtRight, true);
+			this.el.renderer.render(scene,this.cameraL,this.target.rtLeft, true);
+			this.el.renderer.render(scene,this.cameraR,this.target.rtRight, true);
 	
-			this.depth.compute(this.rtLeft);
-			this.depth.compute(this.rtRight);
-			this.godrays.compute(this.rtLeft,this.cameraL);
-			this.godrays.compute(this.rtRight,this.cameraR);
-			this.glow.compute(this.rtLeft);
-			this.glow.compute(this.rtRight);
-			this.blend.compute(this.rtLeft);
-			this.blend.compute(this.rtRight);
+			this.depth.compute(this.target.rtLeft);
+			this.depth.compute(this.target.rtRight);
+			this.godrays.compute(this.target.rtLeft,this.cameraL);
+			this.godrays.compute(this.target.rtRight,this.cameraR);
+			this.glow.compute(this.target.rtLeft);
+			this.glow.compute(this.target.rtRight);
+			this.blend.compute(this.target.rtLeft);
+			this.blend.compute(this.target.rtRight);
 
-			this.merge.merge(this.rtLeft.rtBlend,this.renderRect.left,this.rtRight.rtBlend,this.renderRect.right);
+			this.merge.merge(this.target.rtLeft.rtBlend,this.target.renderRect.left,this.target.rtRight.rtBlend,this.target.renderRect.right);
 			this.el.effect.submitFrame();
 
 			this.el.time = time;
@@ -52,8 +57,7 @@ var render = {
 	initializePostprocessing(){
 		this.scene = new THREE.Scene();
 
-		let w = window.innerWidth;
-		let h = window.innerHeight;
+		let w = 1,h = 1;
 
 		this.camera = new THREE.OrthographicCamera( w / - 2, w / 2,  h / 2, h / - 2, -10000, 10000 );
 		this.camera.position.z = 100;
