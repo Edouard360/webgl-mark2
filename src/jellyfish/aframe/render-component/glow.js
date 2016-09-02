@@ -1,12 +1,11 @@
 'use strict';
 import {GlowProgram} from '../../../util/util.js'
+import {Program} from './program'
 
-class Glow{
+class Glow extends Program{
 	constructor(renderer,scene,camera){
+		super(renderer,scene,camera)
 		this.glowProgram = new GlowProgram();
-		this.renderer = renderer;
-		this.scene = scene;
-		this.camera = camera;
 	}
 	computeGlow(rtLeft,rtRigth){
 		this.scene.overrideMaterial = this.glowProgram.glowProgramMaterial;
