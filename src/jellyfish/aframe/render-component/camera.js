@@ -1,21 +1,20 @@
 'use strict';
 import {fovToProjection} from '../../../util/util.js'
 
-var methods = {
-	initializeCameras:function(){
-		let camera = this.el.camera
+class Camera{
+	constructor(camera){
+		this.camera = camera;
 		this.cameraL = camera.clone();
 		this.cameraR = camera.clone();
 		this.cameraL.layers.enable( 1 );
 		this.cameraR.layers.enable( 2 );
 		this.eyeTranslation = new THREE.Vector3();
-	},
-	updateCameras(){
-		this.updateCamera('left');
-		this.updateCamera('right');
-	},
-	updateCamera(side){
-		let vrDisplay = this.el.effect.getVRDisplay();
+	}
+	update(vrDisplay){
+		this.updateCamera(vrDisplay,'left');
+		this.updateCamera(vrDisplay,'right');
+	}
+	updateCamera(vrDisplay,side){
 		if(vrDisplay==undefined){return;}
 		let eyeTranslation = this.eyeTranslation
 
@@ -39,4 +38,4 @@ var methods = {
 	}
 }
 
-export {methods};
+export {Camera};

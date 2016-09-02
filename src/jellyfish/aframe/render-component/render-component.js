@@ -1,5 +1,5 @@
 'use strict';
-import {methods} from './render-methods'
+import {Camera} from './camera'
 import {Glow} from './glow'
 import {Blend} from './blend'
 import {Depth} from './depth'
@@ -9,14 +9,10 @@ import {Target} from './target'
 
 var render = {
 	init:function(){
-
 		this.el.renderer.setClearColor("#ffffff");
-		// renderer.setViewport(0,0,wL,hL);
-		// renderer.setScissorTest( false );
-
 		let paramTargets = { minFilter: THREE.LinearFilter, magFilter: THREE.LinearFilter, format: THREE.RGBFormat }
 		this.target = new Target(this.el.renderer,paramTargets)
-		this.initializeCameras();
+		this.cameraBucket = new Camera(this.el.camera);
 		this.initializePostprocessing();
 
 		this.el.render = (time)=>{
@@ -28,15 +24,15 @@ var render = {
 
 			this.target.update();
 			
-			this.updateCameras();
+			this.cameraBucket.update(this.el.effect.getVRDisplay())
 
-			this.el.renderer.render(scene,this.cameraL,this.target.rtLeft, true);
-			this.el.renderer.render(scene,this.cameraR,this.target.rtRight, true);
+			this.el.renderer.render(scene,this.cameraBucket.cameraL,this.target.rtLeft, true);
+			this.el.renderer.render(scene,this.cameraBucket.cameraR,this.target.rtRight, true);
 	
 			this.depth.compute(this.target.rtLeft);
 			this.depth.compute(this.target.rtRight);
-			this.godrays.compute(this.target.rtLeft,this.cameraL);
-			this.godrays.compute(this.target.rtRight,this.cameraR);
+			this.godrays.compute(this.target.rtLeft,this.cameraBucket.cameraL);
+			this.godrays.compute(this.target.rtRight,this.cameraBucket.cameraR);
 			this.glow.compute(this.target.rtLeft);
 			this.glow.compute(this.target.rtRight);
 			this.blend.compute(this.target.rtLeft);
@@ -79,7 +75,5 @@ var render = {
 		this.merge = new Merge(this.el.renderer, this.scene,this.camera);
 	}
 }
-
-Object.assign(render,methods);
 
 export {render};
