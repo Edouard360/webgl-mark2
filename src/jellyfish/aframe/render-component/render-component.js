@@ -5,8 +5,8 @@ import dat from '../../../../node_modules/dat.gui/build/dat.gui'
 import {methods} from './render-methods'
 import {computeGodRays} from './render-godrays'
 import {computeDepthMap} from './render-depth'
-import {computeGlow} from './render-glow'
 import {computeBlend} from './render-blend'
+import {Glow} from './glow'
 
 var render = {
 	init:function(){
@@ -37,7 +37,7 @@ var render = {
 	
 			this.computeDepthMap();
 			this.computeGodRays();
-			this.computeGlow();
+			this.glow.computeGlow(this.rtLeft,this.rtRight);
 			this.computeBlend();
 
 			this.renderMerge(this.rtLeft.rtGlow,this.renderRect.left,this.rtRight.rtGlow,this.renderRect.right);
@@ -79,7 +79,6 @@ var render = {
 
 		// program initilization
 		this.godraysProgram = new GodraysProgram();
-		this.glowProgram = new GlowProgram();
 		this.depthMapProgram = new DepthMapProgram();
 
 		this.mixerProgram = new MixerProgram();
@@ -98,13 +97,14 @@ var render = {
 		quadTest.position.z = -9900;
 		this.scene.add( quad );
 		this.sceneTest.add( quadTest );
+
+		this.glow = new Glow(this.el.renderer, this.scene,this.camera);
 	}
 }
 
 Object.assign(render,methods);
 Object.assign(render,computeGodRays);
 Object.assign(render,computeDepthMap);
-Object.assign(render,computeGlow);
 Object.assign(render,computeBlend);
 
 export {render};
