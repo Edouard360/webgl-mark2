@@ -2,31 +2,6 @@
 import {fovToProjection} from '../../../util/util.js'
 
 var methods = {
-	/** The initializeMerge function - Sets a simple scene for post-processing
-	 */
-	initializeSceneMerge: function(){
-		let width = 400;
-		let height = 400;
-
-		this.sceneMerge = new THREE.Scene();
-
-		this.cameraMerge = new THREE.OrthographicCamera( width / - 2, width / 2,  height / 2, height / - 2, -10000, 10000 );
-		this.cameraMerge.position.z = 100;
-
-		this.sceneMerge.add( this.cameraMerge );
-		this.material = new THREE.MeshBasicMaterial();
-
-		let quad = new THREE.Mesh(
-			new THREE.PlaneBufferGeometry( width, height ),
-			this.material
-		);
-
-		quad.position.z = -9900;
-
-		this.sceneMerge.add( quad );
-		this.sceneMerge.overrideMaterial = this.material;
-
-	},
 	initializeTargets:function(){
 		let parameters = { minFilter: THREE.LinearFilter, magFilter: THREE.LinearFilter, format: THREE.RGBFormat };
 		this.rtLeft = new THREE.WebGLRenderTarget( 1, 1, parameters );
@@ -85,74 +60,6 @@ var methods = {
 		renderer.setViewport(0,0,wL,hL);
 		renderer.setScissorTest( false );
 	},
-	/** The renderMerge function - 
-	 * @param {WebGLRenderTarget} renderTargetL - Size renderRectL.width * renderRectL.height
-	 * @param {Object} renderRectL - x,y,width,height
-	 * @param {WebGLRenderTarget} renderTargetR - Size renderRectR.width * renderRectR.height
-	 * @param {Object} renderRectR - x,y,width,height
-	 */
-	renderMerge:function(renderTargetL, renderRectL, renderTargetR, renderRectR){
-		let renderer = this.el.renderer;
-
-		if(this.sceneMerge == undefined){this.initializeSceneMerge();}
-		renderer.setScissorTest( true );
-
-		// Left Render
-		this.material.map = renderTargetL.texture;
-		renderer.setViewport( renderRectL.x, renderRectL.y, renderRectL.width, renderRectL.height );
-		renderer.setScissor( renderRectL.x, renderRectL.y, renderRectL.width, renderRectL.height );
-		renderer.render( this.sceneMerge, this.cameraMerge);
-
-		// Right Render
-		this.material.map = renderTargetR.texture;
-		renderer.setViewport( renderRectR.x, renderRectR.y, renderRectR.width, renderRectR.height );
-		renderer.setScissor( renderRectR.x, renderRectR.y, renderRectR.width, renderRectR.height );
-		renderer.render( this.sceneMerge, this.cameraMerge);
-	},
-	initializeCameras:function(){
-		this.cameraL = new THREE.PerspectiveCamera();
-		this.cameraL.layers.enable( 1 );
-		this.cameraR = new THREE.PerspectiveCamera();
-		this.cameraR.layers.enable( 2 );
-		this.eyeTranslation = new THREE.Vector3();
-	},
-	renderSide:function(scene, camera, renderTarget, forceClear, side){
-		let renderer = this.el.renderer;
-		let vrDisplay = this.el.effect.getVRDisplay();
-		if(vrDisplay==undefined){renderer.render( scene, camera, renderTarget, true );return;}
-		
-		let eyeTranslation = this.eyeTranslation
-
-		let scale = 1, isWebVR1 = true;
-		let eyeParams = vrDisplay.getEyeParameters(side);
-		if ( isWebVR1 ) {
-			eyeTranslation.fromArray( eyeParams.offset );
-			eyeFOV = eyeParams.fieldOfView;
-		} else {
-			eyeTranslation.copy( eyeParams.eyeTranslation );
-			eyeFOV = eyeParams.recommendedFieldOfView;
-		}
-
-		if ( camera.parent === null ) camera.updateMatrixWorld();
-
-		let cameraSide;
-		if(side == "left"){
-			cameraSide = this.cameraL;
-
-		}else{
-			cameraSide = this.cameraR;
-		}
-
-		cameraSide.projectionMatrix = fovToProjection( eyeFOV, true, camera.near, camera.far );
-		camera.matrixWorld.decompose( cameraSide.position, cameraSide.quaternion, cameraSide.scale );
-		cameraSide.translateOnAxis( eyeTranslation, scale );
-
-		renderer.render( scene, camera, renderTarget, forceClear );
-	},
-	renderToTargets(scene,camera){
-		this.renderSide(scene,camera,this.rtLeft, true, 'left' );
-		this.renderSide(scene,camera,this.rtRight, true, 'right' );
-	},
 	updateSize(){
 		let leftBounds = [ 0.0, 0.0, 0.5, 1.0 ]; 
 		let rightBounds = [ 0.5, 0.0, 0.5, 1.0 ];
@@ -172,6 +79,41 @@ var methods = {
 				height:  Math.round(size.height * rightBounds[ 3 ] )
 			}
 		}
+	},
+	initializeCameras:function(){
+		let camera = this.el.camera
+		this.cameraL = camera.clone();
+		this.cameraR = camera.clone();
+		this.cameraL.layers.enable( 1 );
+		this.cameraR.layers.enable( 2 );
+		this.eyeTranslation = new THREE.Vector3();
+	},
+	updateCameras(){
+		this.updateCamera('left');
+		this.updateCamera('right');
+	},
+	updateCamera(side){
+		let vrDisplay = this.el.effect.getVRDisplay();
+		if(vrDisplay==undefined){return;}
+		let eyeTranslation = this.eyeTranslation
+
+		let scale = 1, isWebVR1 = true;
+		let eyeParams = vrDisplay.getEyeParameters(side);
+		if ( isWebVR1 ) {
+			eyeTranslation.fromArray( eyeParams.offset );
+			eyeFOV = eyeParams.fieldOfView;
+		} else {
+			eyeTranslation.copy( eyeParams.eyeTranslation );
+			eyeFOV = eyeParams.recommendedFieldOfView;
+		}
+
+		if ( camera.parent === null ) camera.updateMatrixWorld();
+
+		let cameraSide = (side == "left")?this.cameraL:this.cameraR;
+
+		cameraSide.projectionMatrix = fovToProjection( eyeFOV, true, camera.near, camera.far );
+		camera.matrixWorld.decompose( cameraSide.position, cameraSide.quaternion, cameraSide.scale );
+		cameraSide.translateOnAxis( eyeTranslation, scale );
 	}
 }
 

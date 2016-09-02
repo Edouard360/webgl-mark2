@@ -4,12 +4,12 @@ import {Glow} from './glow'
 import {Blend} from './blend'
 import {Depth} from './depth'
 import {Godrays} from './godrays'
+import {Merge} from './merge'
 
 var render = {
 	init:function(){
 
 		this.initializeTargets();
-		this.initializeSceneMerge();
 		this.initializeCameras();
 		this.initializePostprocessing();
 
@@ -22,7 +22,11 @@ var render = {
 
 			this.updateSize();
 			this.setTargetsSize();this.rtLeft.setSize(window.innerWidth,window.innerHeight)
-			this.renderToTargets(scene,camera,this.renderRect.left,this.renderRect.right)
+			
+			this.updateCameras();
+
+			this.el.renderer.render(scene,this.cameraL,this.rtLeft, true);
+			this.el.renderer.render(scene,this.cameraR,this.rtRight, true);
 	
 			this.depth.compute(this.rtLeft);
 			this.depth.compute(this.rtRight);
@@ -33,7 +37,7 @@ var render = {
 			this.blend.compute(this.rtLeft);
 			this.blend.compute(this.rtRight);
 
-			this.renderMerge(this.rtLeft.rtBlend,this.renderRect.left,this.rtRight.rtBlend,this.renderRect.right);
+			this.merge.merge(this.rtLeft.rtBlend,this.renderRect.left,this.rtRight.rtBlend,this.renderRect.right);
 			this.el.effect.submitFrame();
 
 			this.el.time = time;
@@ -68,6 +72,7 @@ var render = {
 		this.glow = new Glow(this.el.renderer, this.scene,this.camera);
 		this.depth = new Depth(this.el.renderer, this.scene,this.camera);
 		this.godrays = new Godrays(this.el.renderer, this.scene,this.camera);
+		this.merge = new Merge(this.el.renderer, this.scene,this.camera);
 	}
 }
 
