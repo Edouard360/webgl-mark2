@@ -10,4 +10,6 @@ export {GodraysProgram} from './godraysProgram/godraysProgram';
 export {GlowProgram} from './glowProgram/glowProgram';
 export {DepthMapProgram} from './depthMapProgram/depthMapProgram';
 
+export {fovToProjection} from './vrUtils'
+
 

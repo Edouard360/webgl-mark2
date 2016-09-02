@@ -1,5 +1,5 @@
 import Timer from '../timer'
-import {SCALE,CENTER,ROTATE,USE_FOG} from '../../data/const.js'
+import {SCALE,CENTER,ROTATE,USE_FOG,OPACITY} from '../../data/const.js'
 
 /** The abstract jellyfish object. */
 var abstractJellyfish = {
@@ -94,7 +94,8 @@ var abstractJellyfish = {
       side: THREE.DoubleSide,
       depthTest: true,
       transparent: true,
-      defines:{THREE_JS:true,USE_FOG:USE_FOG},
+      opacity:0.0,
+      defines:{THREE_JS:true,USE_FOG:USE_FOG,USE_OPACITY:true},
       uniforms:{
         uSampler:           {type: "t", value: this.textures[0]},
         uSampler1:          {type: "t", value: this.textures[1]},
@@ -107,7 +108,8 @@ var abstractJellyfish = {
         uCurrentTime:       {value: 0.0},
         fogColor:           {value: new THREE.Vector3(27.0/255.0, 27.0/255.0, 162.0/255.0)},
         fogNear:            {value: 10.0},
-        fogFar:             {value: 400.0}
+        fogFar:             {value: 400.0},
+        opacity:            {value: OPACITY.jellyfish}
       }
     });
     this.modifyMaterial(material); // Only effective for instanced jellyfish

@@ -27,10 +27,6 @@ const mixerProgram = {
 				value: 0.69
 			},
 
-			fGodraysAmbient: {
-				value: 0.8
-			},
-
 			fGlowIntensity:{
 				value: 0.5
 			}
@@ -41,6 +37,9 @@ const mixerProgram = {
 		fragmentShader: require("./mixerShader.frag")
 
 };
+
+// glslify!raw!
+// glslify!raw!
 
 class MixerProgram{
 	constructor() {

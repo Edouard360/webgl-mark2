@@ -5,7 +5,7 @@ import instancedJellyfish from "./aframe-instanced-jellyfish"
 import {gradient} from "./aframe-gradient"
 import {sky} from "./aframe-sky"
 import {surface} from "./aframe-surface"
-import {render} from "./scene-component"
+import {render} from "./render-component/render-component"
 
 import 'aframe-particle-system-component'
 

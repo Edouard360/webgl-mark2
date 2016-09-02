@@ -21,7 +21,7 @@ const godraysProgram = {
 
 		},
 		vertexShader: require("./godraysShader.vert"),
-		fragmentShader: require("./godraysShader2.frag")
+		fragmentShader: require("./godraysShader.frag")
 
 };
 

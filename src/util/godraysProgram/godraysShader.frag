@@ -1,7 +1,5 @@
 #include <packing>
 
-#define TAPS_PER_PASS 6.0
-
 varying vec2 vUv;
 
 uniform sampler2D tInput;
@@ -10,86 +8,60 @@ uniform vec2 vSunPositionScreenSpace;
 uniform float fStepSize; // filter step size
 uniform bool firstPass;
 
-float readDepth (sampler2D depthSampler, vec2 coord) {
-	float fragCoordZ = texture2D(depthSampler, coord).x;
-	float viewZ = perspectiveDepthToViewZ( fragCoordZ, 0.1, 50.0 );
-	return viewZToOrthographicDepth( viewZ, 0.1, 50.0 );
-}
+vec3 godrays(
+    float density,
+    float weight,
+    float decay,
+    float exposure,
+    int numSamples,
+    sampler2D occlusionTexture,
+    vec2 screenSpaceLightPos,
+    vec2 uv
+    ) {
 
-// vec3 diffuse = texture2D(tDiffuse, vUv).rgb;
-// float depth = readDepth(tDepth, vUv);
+    vec3 fragColor = vec3(0.0,0.0,0.0);
+
+	vec2 deltaTextCoord = vec2( uv - screenSpaceLightPos.xy );
+
+	vec2 textCoo = uv.xy ;
+	deltaTextCoord *= (1.0 /  float(numSamples)) * density;
+	float illuminationDecay = 1.0;
+
+
+	for(int i=0; i < 100 ; i++){
+
+
+        /*
+        This makes sure that the loop only runs `numSamples` many times.
+        We have to do it this way in WebGL, since you can't have a for loop
+        that runs a variable number times in WebGL.
+        This little hack gets around that.
+
+        But the drawback of this is that we have to specify an upper bound to the
+        number of iterations(but 100 is good enough for almost all cases.)
+        */
+	    if(numSamples < i) {
+            break;
+	    }
+
+		textCoo -= deltaTextCoord;
+
+		vec3 samp = texture2D(occlusionTexture, textCoo   ).xyz;
+
+
+		samp *= illuminationDecay * weight;
+		fragColor += samp;
+		illuminationDecay *= decay;
+	}
+
+	fragColor *= exposure;
+
+    return fragColor;
+}
 
 void main() {
 
-
-
-	// delta from current pixel to sun position
-
-	vec2 delta = vSunPositionScreenSpace - vUv;
-	float dist = length( delta );
-
-	// Step vector (uv space)
-
-	vec2 stepv = fStepSize * delta / dist;
-
-	// Number of iterations between pixel and sun
-
-	float iters = dist/fStepSize;
-
-	vec2 uv = vUv.xy;
-	float col = 1.0;//readDepth(tInput,uv);
-
-	// Unrolling loop manually makes it work in ANGLE
-
-	if ( 0.0 <= iters ) col += (0.05*readDepth(tInput,uv)-0.05);
-	uv += stepv;
-
-	if ( 1.0 <= iters ) col += (0.05*readDepth(tInput,uv)-0.05);
-	uv += stepv;
-	
-	if ( 2.0 <= iters ) col += (0.05*readDepth(tInput,uv)-0.05);
-	uv += stepv;
-
-	if ( 3.0 <= iters ) col += (0.05*readDepth(tInput,uv)-0.05);
-	uv += stepv;
-
-	if ( 4.0 <= iters ) col += (0.05*readDepth(tInput,uv)-0.05);
-	uv += stepv;
-
-	if ( 5.0 <= iters ) col += (0.05*readDepth(tInput,uv)-0.05);
-	uv += stepv;
-/*
-
-	if ( 0.0 <= iters && uv.y < 1.0 ) col += (1.0*readDepth(tInput,uv)-1.0);
-	uv += stepv;
-
-	if ( 1.0 <= iters && uv.y < 1.0 ) col += (1.0*readDepth(tInput,uv)-1.0);
-	uv += stepv;
-
-	if ( 2.0 <= iters && uv.y < 1.0 ) col += (1.0*readDepth(tInput,uv)-1.0);
-	uv += stepv;
-
-	if ( 3.0 <= iters && uv.y < 1.0 ) col += (1.0*readDepth(tInput,uv)-1.0);
-	uv += stepv;
-
-	if ( 4.0 <= iters && uv.y < 1.0 ) col += (1.0*readDepth(tInput,uv)-1.0);
-	uv += stepv;
-
-	if ( 5.0 <= iters && uv.y < 1.0 ) col += (1.0*readDepth(tInput,uv)-1.0);
-	uv += stepv;
-*/
-	// Should technically be dividing by 'iters', but 'TAPS_PER_PASS' smooths out
-	// objectionable artifacts, in particular near the sun position. The side
-	// effect is that the result is darker than it should be around the sun, as
-	// TAPS_PER_PASS is greater than the number of samples actually accumulated.
-	// When the result is inverted (in the shader 'godrays_combine', this produces
-	// a slight bright spot at the position of the sun, even when it is occluded.
-
-	if(col>0.95){col=1.0;}else{col = (col + 2.0*1.0)/3.0;}
-
-
-
-	gl_FragColor = vec4( col );//vec4(readDepth(tInput,vUv));//
+	gl_FragColor.rgb = godrays(1.0,0.01,1.0,1.0,100, tInput, vSunPositionScreenSpace,vUv);
 	gl_FragColor.a = 1.0;
 
 }

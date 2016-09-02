@@ -5,7 +5,23 @@ export const USE_FOG = true; // If set to true and Webgl, don't forget to bind t
 export const UPDATE_FPS_RATE = 100;
 export const SCALE={x:5,y:5,z:5}
 export const CENTER = {x:0.0,y:+5.0,z:-25.0};
-export const ROTATE = {x:0.1,y:0.1}
-export const RADIUS = {min:30,max:40,anglePHI:0.2}
+export const ROTATE = {x:0.0,y:0.1}
+export const RADIUS = {min:11,max:150,anglePHI:0.2}
 
 export const DISPLAY = "circle";
+
+export const BLEND = {fGodraysIntensity: 0.0, fGlowIntensity: 0.0}
+
+export const OPACITY = {jellyfish : 0.6, surface:0.1};
+
+export const SKY = {
+	distance: 400000,
+	phi:Math.PI/2,
+	theta:Math.PI*2/3,// Sky is perfectly in front of us
+	luminance:1,
+	turbidity:2,
+	reileigh:1,
+	mieCoefficient:0.005,
+	mieDirectionalG:0.8,
+	sunSize:1.0
+	} 

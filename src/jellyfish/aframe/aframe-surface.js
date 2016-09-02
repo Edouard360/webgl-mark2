@@ -1,4 +1,6 @@
 'use strict';
+import {OPACITY} from '../../data/const.js'
+
 var surface = {
 	schema:{
 		assets:{type:'selectorAll', default:null},
@@ -25,11 +27,11 @@ var surface = {
 	    	// 	map:texture, transparent:true, opacity:1.0,alphaMap:this.textures[0]
 	    	// })
 	    	return new THREE.ShaderMaterial({
-				vertexShader:   require('../../shaders/gradient/surface.vert'),
-				fragmentShader: require('../../shaders/gradient/surface.frag'),
-				transparent:true, opacity:0.0,
+				vertexShader:   require('../../shaders/surface/surface.vert'),
+				fragmentShader: require('../../shaders/surface/surface.frag'),
+				transparent:true, 
 				uniforms:{
-					opacity: 	{type: "f", value: 0.1},
+					opacity: 	{type: "f", value: OPACITY.surface},
 					map: 		{type: "t", value: texture},
 					alphaMap: 	{type: "t", value: this.textures[0]}					
 				}

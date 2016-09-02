@@ -10,6 +10,10 @@ varying vec3 vDiffuse;
 varying vec3 vAmbient;
 varying vec3 vFresnel;
 
+#ifdef USE_OPACITY
+	uniform float opacity;
+#endif
+
 #ifdef USE_SHADE
 	uniform float shadeFactor;
     varying vec3 vShade;
@@ -48,5 +52,9 @@ void main(void)
 
 	#ifdef USE_SHADE
 		gl_FragColor.rgb = mix( gl_FragColor.rgb, vShade, shadeFactor );
+	#endif
+	
+	#ifdef USE_OPACITY
+		gl_FragColor.a *= opacity;
 	#endif
 }

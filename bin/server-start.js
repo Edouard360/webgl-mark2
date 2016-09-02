@@ -2,7 +2,8 @@ var tmp = console.log
 console.log = function () {}
 
 try {
-  require('simple-server')
+  require('simple-server')//192.168.7.205
+
   console.log = tmp
   console.log('To see the benchmark, please open your browser at http://localhost:3000/index.html')
 } catch (err) {

@@ -21,24 +21,22 @@
           <a-mixin id="bubble" particle-system="opacity:1;texture:./data/img/bubble.png; particleCount: 5000"></a-mixin>
           <a-mixin id="smoke" particle-system="opacity:0.1;texture:./data/img/smokeparticle.png; particleCount: 500"></a-mixin>
           <img id="gradient" src="./data/img/gradient.png" > 
+
         </a-assets>
 
         <a-plane width="8000" height="8000" position="0 600 0" rotation="90 0 0"
         surface="assets:#texture;transparency:#gradient"></a-plane>
 
-        <a-entity position="0 0 -10" mixin="particle bubble" ></a-entity>
+<!--         <a-entity position="0 0 -10" mixin="particle bubble" ></a-entity>
         <a-entity position="0 0 -10" mixin="particle smoke" ></a-entity>
-
+ -->
 
         <a-entity id="jellyfish">
           <!-- This will put the camera as it is in Three.js -->
            <a-entity camera id="cameraJellyfish"></a-entity>
         </a-entity>
 
-        <a-sky id="sky" shader="sky"></a-sky>
-
-
-
+        <a-sky id="sky" material="shader:sky;"></a-sky>
       </a-scene>
     </body>
     <script src="./dist/script-aframe.js"></script>

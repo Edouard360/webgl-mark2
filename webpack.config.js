@@ -16,17 +16,13 @@ var JS_LOADERS = [
     },
     module: {
        loaders: [
-          {
-              test: /\.glsl$/,
-              loader: 'webpack-glsl'
+          { 
+              test: /\.(glsl|frag|vert)$/,
+              loader: 'raw', exclude: /node_modules/ 
           },
-          {
-              test: /\.vert$/,
-              loader: 'webpack-glsl'
-          },
-          {
-              test: /\.frag$/,
-              loader: 'webpack-glsl'
+          { 
+              test: /\.(glsl|frag|vert)$/,
+              loader: 'glslify', exclude: /node_modules/ 
           },
           {
               test: /\.js$/,
