@@ -1,12 +1,11 @@
 'use strict';
 import {MixerProgram,GodraysProgram,GlowProgram,DepthMapProgram,fovToProjection} from '../../../util/util.js'
-import {BLEND} from '../../../data/const.js'
 import dat from '../../../../node_modules/dat.gui/build/dat.gui'
 import {methods} from './render-methods'
 import {computeGodRays} from './render-godrays'
 import {computeDepthMap} from './render-depth'
-import {computeBlend} from './render-blend'
 import {Glow} from './glow'
+import {Blend} from './blend'
 
 var render = {
 	init:function(){
@@ -15,9 +14,6 @@ var render = {
 		this.initializeSceneMerge();
 		this.initializeCameras();
 		this.initializePostprocessing();
-
-		this.mixerProgram.mixerProgramUniforms.fGodraysIntensity.value = BLEND.fGodraysIntensity;
-		this.mixerProgram.mixerProgramUniforms.fGlowIntensity.value = BLEND.fGlowIntensity;
 
 		var gui = new dat.GUI({})
 
@@ -38,7 +34,7 @@ var render = {
 			this.computeDepthMap();
 			this.computeGodRays();
 			this.glow.computeGlow(this.rtLeft,this.rtRight);
-			this.computeBlend();
+			this.blend.computeBlend(this.rtLeft,this.rtRight);
 
 			this.renderMerge(this.rtLeft.rtGlow,this.renderRect.left,this.rtRight.rtGlow,this.renderRect.right);
 			this.el.effect.submitFrame();
@@ -98,6 +94,7 @@ var render = {
 		this.scene.add( quad );
 		this.sceneTest.add( quadTest );
 
+		this.blend = new Blend(this.el.renderer, this.scene,this.camera) 
 		this.glow = new Glow(this.el.renderer, this.scene,this.camera);
 	}
 }
@@ -105,6 +102,5 @@ var render = {
 Object.assign(render,methods);
 Object.assign(render,computeGodRays);
 Object.assign(render,computeDepthMap);
-Object.assign(render,computeBlend);
 
 export {render};
